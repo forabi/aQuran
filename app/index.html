@@ -1,16 +1,57 @@
 <!doctype html>
-<html>
+<html ng-app="quran">
     <head>
         <meta charset="utf-8">
         <title>Quran for Chrome</title>
         <!-- build:css styles/main.css -->
         <link rel="stylesheet" href="styles/main.css">
+        <link rel="stylesheet" href="bower_components/angular/angular-csp.css">
         <!-- endbuild -->
     </head>
     <body>
-        <h1>'Allo</h1>
-
+        <h1>القرآن الكريم</h1>
+        <page ng-controller='ContentController'>
+            <div ng-switch on="progress.status">
+                <div ng-switch-when="ready">
+                    <sura ng-repeat="sura in content.suras">
+                        <name>{{ sura.sura_name }}</name>
+                        <aya ng-repeat="aya in sura.ayas">
+                            {{ aya[mode] }} ({{ aya.aya_id }})
+                        </aya>
+                    </sura>
+                </div>
+                <div ng-switch-default>
+                    Loading...
+                </div>
+            </div>
+            <hr>
+            <input type="number", ng-model="content.page_id">
+            <select ng-model="mode" ng-options="mode.id as mode.name for mode in modes">
+            </select>
+        </page>
+        <progressBar ng-controller='OfflineController'>
+            <div ng-switch on="progress.status">
+                <div ng-switch-when="fetching">
+                    Loading...
+                </div>
+                <div ng-switch-when="saving">
+                    Saving ({{ progress.current }} / {{ progress.total }})...
+                </div>
+                <div ng-switch-when="ready">
+                    All done.
+                </div>
+                <div ng-switch-when="error">
+                    Unable to save/fetch.
+                </div>
+            </div>
+        </progressBar>
+        <div id="whatever"></div>
         <!-- build:js scripts/index.js -->
+        <script src="bower_components/async/lib/async.js"></script>
+        <script src="bower_components/lodash/dist/lodash.min.js"></script>
+        <script src="bower_components/db.js/src/db.js"></script>
+        <script src="bower_components/angular/angular.min.js"></script>
+        <!-- <script src="bower_components/bootstrap/"></script> -->
         <script src="scripts/index.js"></script>
         <!-- endbuild -->
     </body>

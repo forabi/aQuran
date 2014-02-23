@@ -1,0 +1,10 @@
+html
+    head
+        meta(charset="utf-8")
+        title
+        for style in styles
+            link(rel="stylesheet", href=style)
+
+    body
+        for script in scripts
+            script(src=script)

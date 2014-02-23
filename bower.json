@@ -1,6 +1,15 @@
 {
   "name": "quran-for-chrome",
   "version": "0.0.0",
-  "dependencies": {},
+  "dependencies": {
+    "ydn-db": "~0.8.12",
+    "angular": "~1.2.13",
+    "bootstrap": "angular-ui/bootstrap#~0.10.0",
+    "lodash": "~2.4.1",
+    "idbwrapper": "~1.4.1",
+    "async": "~0.2.10",
+    "db.js": "aaronpowell/db.js#~0.9.0",
+    "nedb": "louischatriot/nedb"
+  },
   "devDependencies": {}
 }

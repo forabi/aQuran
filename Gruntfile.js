@@ -246,6 +246,9 @@ module.exports = function (grunt) {
                     dest: ''
                 }]
             }
+        },
+        database: {
+            path: './src/database/main.db'
         }
     });
 
@@ -286,4 +289,6 @@ module.exports = function (grunt) {
         'test',
         'build'
     ]);
+
+    grunt.loadTasks('./tasks');
 };
