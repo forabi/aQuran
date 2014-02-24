@@ -1,6 +1,6 @@
+src/database/*.db
 node_modules
 temp
 .tmp
 dist
 .sass-cache
-bower_components
