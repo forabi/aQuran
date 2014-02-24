@@ -76,7 +76,7 @@ Quran.controller('OfflineController', function($http, $log, $scope, $rootScope) 
     db.open({
         server: 'quran',
         version: 2,
-        schema: {`
+        schema: {
             info: { 
                 key: { keyPath: 'id' }
             },

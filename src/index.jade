@@ -1,10 +1,24 @@
-html
+html(ng-app="quran")
     head
         meta(charset="utf-8")
-        title
+        title {{ title }}
         for style in styles
             link(rel="stylesheet", href=style)
 
     body
+        h1 {{ The Holy Quran }}
+        main(ng-controller="ContentController")
+            article.content
+                div(ng-switch, on="status")
+                    div(ng-switch-when="ready")
+                        sura(ng-repeat="sura in content.sura")
+                            h2.sura-name {{ sura.sura_name }}
+                            aya(ng-repeat="aya in sura")
+                                span.aya-text {{ aya[mode] }}
+                                span.aya-number {{ aya.aya_id }}
+                    div(ng-switch-default) Loading...
+            nav()
+                input(type="number", ng-model="content.page_id")
+                select(ng-model="mode", ng-options="mode.id as mode.name for mode in modes")
         for script in scripts
             script(src=script)

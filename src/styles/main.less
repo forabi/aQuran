@@ -1,0 +1,26 @@
+@import "variables";
+@import (reference) "mixins";
+
+body {
+    direction: "rtl";
+}
+
+.content {
+    border: @content-border;
+    text-align: justify;
+    .sura-name {
+        display: block;
+        text-align: center;
+        border: @sura-name-border;
+        line-height: 2.5;
+    }
+    aya {
+        display: inline;
+        line-height: @aya-line-height;
+        font-family: @aya-font-family;
+        font-size: @aya-font-size;
+        .aya-number {
+
+        }
+    }
+}
