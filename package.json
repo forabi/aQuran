@@ -6,7 +6,8 @@
     "lodash": "^2.4.1",
     "angular-ui-bootstrap": "git://github.com/angular-ui/bootstrap",
     "nedb": "^0.10.4",
-    "angular": "^1.2.10"
+    "angular": "^1.2.10",
+    "q": "^1.0.0"
   },
   "devDependencies": {
     "gulp": "^3.5.2",
@@ -18,10 +19,12 @@
     "coffeeify": "^0.6.0",
     "gulp-rename": "^1.1.0",
     "gulp-uglify": "^0.2.1",
-    "gulp-ngmin": "^0.1.2",
     "gulp-changed": "^0.2.1",
     "gulp-livereload": "^1.1.1",
-    "gulp-coffeelint": "^0.2.2"
+    "gulp-coffeelint": "^0.2.2",
+    "gulp-coffee": "^1.4.1",
+    "gulp-util": "^2.2.14",
+    "gulp-filter": "^0.3.0"
   },
   "engines": {
     "node": ">=0.8.0"

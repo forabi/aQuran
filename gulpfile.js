@@ -1,4 +1,5 @@
 var gulp = require('gulp'),
+    gutil = require('gulp-util'),
     rename = require('gulp-rename'),
     jade = require('gulp-jade'),
     less = require('gulp-less'),
@@ -14,12 +15,13 @@ var copy = function(src, dest, options) {
 }
 
 var paths = {
-    scripts: ['src/scripts/*.coffee'],
+    scripts: ['src/*.coffee', 'src/scripts/*.coffee'],
     styles: 'src/styles/main.less',
     jade: 'src/index.jade',
     images: 'src/images/*',
     manifest: 'src/manifest.json',
-    locales: ['src/_locales/**/*.*']
+    locales: ['src/_locales/**/*.*'],
+    resources: ['src/resources/*.json']
 };
 
 gulp.task('styles', function() {
@@ -32,8 +34,7 @@ gulp.task('styles', function() {
 });
 
 gulp.task('scripts', function() {
-    return gulp.src(paths.scripts, { read: false })
-    .pipe(ngmin())
+    return gulp.src(paths.scripts, { read: false, base: 'src' })
     .pipe(browserify({
         transform: ['coffeeify'],
         extensions: ['.coffee'],
@@ -42,7 +43,7 @@ gulp.task('scripts', function() {
     .pipe(rename(function(file) {
         file.extname = '.js';
     }))
-    .pipe(gulp.dest('dist/chrome/scripts'));
+    .pipe(gulp.dest('dist/chrome'));
 });
 
 gulp.task('html', function() {
@@ -68,13 +69,17 @@ gulp.task('locales', function() {
     return copy(paths.locales, 'dist/chrome', { base: 'src' });
 });
 
+gulp.task('res', function() {
+    return copy(paths.resources, 'dist/chrome/resources');
+});
+
 gulp.task('build', ['manifest', 'locales', 'scripts', 'html', 'styles', 'images']);
 
 gulp.task('watch', function() {
-    // var server = livereload();
-    gulp.watch(paths.scripts, ['scripts'])/*.on('change', function(file) {
+    var server = livereload();
+    gulp.watch(paths.scripts, ['scripts']).on('change', function(file) {
         server.changed(file.path);
-    })*/;
+    });
 });
 
 gulp.task('default', ['build', 'watch']);

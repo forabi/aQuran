@@ -2,17 +2,20 @@
 @import (reference) "mixins";
 
 body {
-    direction: "rtl";
+
 }
 
 .content {
+    direction: "rtl";
     border: @content-border;
     text-align: justify;
     .sura-name {
         display: block;
         text-align: center;
-        border: @sura-name-border;
-        line-height: 2.5;
+        font-family: @sura-name-font-family;
+        font-weight: bold;
+        .border(@sura-name-border);
+        line-height: @sura-name-line-height;
     }
     aya {
         display: inline;
@@ -20,7 +23,15 @@ body {
         font-family: @aya-font-family;
         font-size: @aya-font-size;
         .aya-number {
-
+            border-radius: 50px;
+            margin-right: 3px;
+            margin-left: 3px;
+            &::before {
+                content: '('
+            }
+            &::after {
+                content: ')'
+            }
         }
     }
 }

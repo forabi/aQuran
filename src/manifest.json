@@ -17,7 +17,7 @@
   	"app": {
   		"background": {
   			"scripts": [
-  				"scripts/main.js",
+  				"launcher.js",
   				"scripts/chromereload.js"
   			]
   		}

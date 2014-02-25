@@ -1,24 +1,26 @@
-html(ng-app="quran")
+html(ng-app='quran', ng-csp)
     head
-        meta(charset="utf-8")
+        meta(charset='utf-8')
         title {{ title }}
         for style in styles
-            link(rel="stylesheet", href=style)
-
+            link(rel='stylesheet', href=style)
     body
-        h1 {{ The Holy Quran }}
-        main(ng-controller="ContentController")
-            article.content
-                div(ng-switch, on="status")
-                    div(ng-switch-when="ready")
-                        sura(ng-repeat="sura in content.sura")
-                            h2.sura-name {{ sura.sura_name }}
-                            aya(ng-repeat="aya in sura")
-                                span.aya-text {{ aya[mode] }}
-                                span.aya-number {{ aya.aya_id }}
-                    div(ng-switch-default) Loading...
+        //- h1 {{ The Holy Quran }}
+        main(ng-controller='ContentController')
+            article.content(ng-switch='progress.status')
+                div(ng-switch-when='ready')
+                    sura(ng-repeat='sura in content.view')
+                        h2.sura-name {{ sura.sura_name }}
+                        aya(ng-repeat='aya in sura.ayas')
+                            span.aya-text {{ aya[content.options.mode] }}
+                            span.aya-number {{ aya.aya_id }}
+                div(ng-switch-default) Loading...
             nav()
-                input(type="number", ng-model="content.page_id")
-                select(ng-model="mode", ng-options="mode.id as mode.name for mode in modes")
+                input(type='number', ng-model='content.current')
+                select(ng-model='content.options.mode', ng-options='mode.id as mode.name for mode in content.options.modes')
+                br
+                form(ng-submit='search.execute()')
+                    input(type='search', ng-model='search.text', placeholder='Search the Quran')
+                    input(type='submit', value='Search', ng-disable='progress.status == "searching"')
         for script in scripts
             script(src=script)

@@ -1,4 +1,3 @@
-src/database/*.db
 node_modules
 temp
 .tmp
