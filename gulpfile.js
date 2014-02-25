@@ -21,7 +21,7 @@ var paths = {
     images: 'src/images/*',
     manifest: 'src/manifest.json',
     locales: ['src/_locales/**/*.*'],
-    resources: ['src/resources/*.json']
+    resources: ['src/resources/*.json', 'src/styles/fonts/*']
 };
 
 gulp.task('styles', function() {
@@ -70,7 +70,7 @@ gulp.task('locales', function() {
 });
 
 gulp.task('res', function() {
-    return copy(paths.resources, 'dist/chrome/resources');
+    return copy(paths.resources, 'dist/chrome', { base: 'src' });
 });
 
 gulp.task('build', ['manifest', 'locales', 'scripts', 'html', 'styles', 'images']);

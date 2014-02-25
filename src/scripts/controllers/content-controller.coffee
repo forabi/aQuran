@@ -1,34 +1,36 @@
 _ = require 'lodash'
 q = require 'q'
 module.exports = (app) ->
-    app.controller 'ContentController', ['$scope', '$log', '$rootScope', 'ContentService', ($scope, $log, $rootScope, ContentService) ->
+    app.controller 'ContentController', ['$scope', '$log', '$rootScope', 'ContentService', 'SearchService', ($scope, $log, $rootScope, ContentService, SearchService) ->
         database = undefined
 
         $scope.content =
             type: 'page'
             view: null
-            previous: no
             current: 1
-            next: no
             total: undefined
             options:
                 mode: 'standard'
-                modes: [
-                    (id: 'standard'     , name: 'Standard')
-                    (id: 'standard_full', name: 'Standard (Full)')
-                    (id: 'uthmani'      , name: 'Uthmani (Full)')
-                    (id: 'uthmani_min'  , name: 'Uthmani (Minimum)')
-                ]
+
+        $scope.static =
+            modes: [
+                (id: 'standard'     , name: 'Standard')
+                (id: 'standard_full', name: 'Standard (Full)')
+                (id: 'uthmani'      , name: 'Uthmani (Full)')
+                (id: 'uthmani_min'  , name: 'Uthmani (Minimum)')
+            ]
 
         $scope.search =
             execute: () -> 
-                search standard: $regex: new RegExp $scope.search.text, 'g'
+                $scope.progress.status = 'searching'
+                $scope.$apply() 
+                SearchService.search $scope.search.text
                 .then (results) ->
                     $scope.progress.status = 'ready'
                     $scope.content.view = transform results
                     $scope.content.type = 'search'
                     $scope.$apply()
-                .catch (error)
+                .catch(error)
 
         $scope.progress =
             status: 'init'
@@ -37,8 +39,8 @@ module.exports = (app) ->
 
         ContentService.database.then (db) -> 
             database = db
-            loadContent()
             $scope.$watch 'content.current', loadContent
+            loadContent()
 
         loadContent = () ->
             $scope.progress.status = 'loading'
@@ -56,30 +58,15 @@ module.exports = (app) ->
                     $scope.content.view = transform docs
                     $scope.progress.status = 'ready'
                     $log.debug 'Content ready', $scope.content
-                    $scope.$apply()    
-        
-        search = (query, options) -> 
-            $scope.progress.status = 'searching'
-            deferred = q.defer()
-            options = _(options).defaults
-                matches: 'autocomplete'
-                scope: 'all'
-                sort:
-                    gid: 1
-                limit: 50
-
-            database.find query
-            .sort options.sort
-            .limit options.limit
-            .exec (err, docs) ->
-                if err then deferred.reject err
-                else deferred.resolve docs
-            deferred.promise
+                    $scope.$apply()
 
         transform = (docs) ->
+            # default sorting
             _.chain docs
-            .groupBy 'sura_name'
-            .map (ayas, key) -> ayas: ayas, sura_name: key
+            .sortBy 'gid'
+            .groupBy 'sura_id'
+            .map (ayas, key) -> ayas: ayas, sura_name: ayas[0].sura_name, sura_id: ayas[0].sura_id
+            .sortBy 'sura_id'
             .value()
 
         error = (err) ->

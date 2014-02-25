@@ -1,12 +1,9 @@
 @import "variables";
 @import (reference) "mixins";
-
-body {
-
-}
+@import (inline) "icon-font.css";
 
 .content {
-    direction: "rtl";
+    direction: rtl;
     border: @content-border;
     text-align: justify;
     .sura-name {
@@ -32,6 +29,14 @@ body {
             &::after {
                 content: ')'
             }
+        }
+    }
+    .search {
+        aya {
+            display: block;
+        }
+        sura-name {
+            text-align: initial;
         }
     }
 }
