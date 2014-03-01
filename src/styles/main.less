@@ -1,42 +1,88 @@
 @import "variables";
 @import (reference) "mixins";
-@import (inline) "icon-font.css";
+// @import "icon-font.css";
+// @import "bootstrap.min.css";
+// @import "bootstrap-theme.min.css";
 
-.content {
-    direction: rtl;
-    border: @content-border;
-    text-align: justify;
-    .sura-name {
-        display: block;
-        text-align: center;
-        font-family: @sura-name-font-family;
-        font-weight: bold;
-        .border(@sura-name-border);
-        line-height: @sura-name-line-height;
+// {
+    .icon.icon-large {
+        font-size: 250%;
     }
-    aya {
-        display: inline;
+    
+    .sura-name {
+        direction: rtl;
+        &:not(.search) {
+            font-family: @sura-name-font-family;
+            font-size: @sura-name-font-size;
+            text-align: center;
+            font-weight: bold;
+        }
+        .search {
+
+        }
+    }
+    .sura-body {
+        direction: rtl;
+        font-family: @aya-font-family;
+        text-align: justify;
+        text-align-last: justify;
+        text-justify: auto;
+        &:not(.search) {
+            line-height: @aya-line-height;
+            font-size: @aya-font-size;
+        }
+        .search {
+            line-height: @aya-line-height * .8;
+            font-size: @aya-font-size * .8;
+        }
+    }
+    .layers {
+        display: inline-block;
+        position: relative;
+        text-overflow: initial !important;
+        .original {
+            color: transparent;
+        }
+        .letters, .diacritics, .quranic-signs {
+            position: absolute;
+            top: 0;
+            right: 0;
+        }
+        .diacritics {
+            color: @diacritic-color;
+            opacity: 0.9
+        }
+        .quranic-signs {
+            color: @quranic-sings-color;
+            opacity: 0.9
+        }
+        .letters {
+            color: inherit;
+        }
+    }
+    // .original {
+    //     color: black;
+    //     position: absolute;
+    //     top: 0;
+    //     left: 0;
+    // }
+    // .overlay {
+    //     position: absolute;
+    //     color: red;
+    //     top: 0;
+    //     left: 0;
+    // }
+    .aya-number {
         line-height: @aya-line-height;
         font-family: @aya-font-family;
         font-size: @aya-font-size;
-        .aya-number {
-            border-radius: 50px;
-            margin-right: 3px;
-            margin-left: 3px;
-            &::before {
-                content: '('
-            }
-            &::after {
-                content: ')'
-            }
+        margin-right: 5px;
+        margin-left: 5px;
+        &::before {
+            content: '('
+        }
+        &::after {
+            content: ')'
         }
     }
-    .search {
-        aya {
-            display: block;
-        }
-        sura-name {
-            text-align: initial;
-        }
-    }
-}
+// }

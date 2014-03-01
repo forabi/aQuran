@@ -3,6 +3,7 @@ var gulp = require('gulp'),
     rename = require('gulp-rename'),
     jade = require('gulp-jade'),
     less = require('gulp-less'),
+    coffee = require('gulp-coffee'),
     // coffeelint = require('gulp-coffeelint'),
     livereload = require('gulp-livereload'),
     ngmin = require('gulp-ngmin'),
@@ -15,44 +16,77 @@ var copy = function(src, dest, options) {
 }
 
 var paths = {
-    scripts: ['src/*.coffee', 'src/scripts/*.coffee'],
-    styles: 'src/styles/main.less',
-    jade: 'src/index.jade',
+    ionic: 'src/ionic/**/*',
+    coffee: ['src/*.coffee', 'src/scripts/**/*.coffee'],
+    js: ['src/scripts/*.js'],
+    styles: ['src/styles/main.less', 'src/styles/*.css'],
+    jade: ['src/index.jade', 'src/views/*.jade'],
     images: 'src/images/*',
     manifest: 'src/manifest.json',
     locales: ['src/_locales/**/*.*'],
     resources: ['src/resources/*.json', 'src/styles/fonts/*']
 };
 
+gulp.task('ionic', function() {
+    return gulp.src(paths.ionic, { base: 'src' })
+    .pipe(gulp.dest('dist/chrome'));
+});
+
 gulp.task('styles', function() {
-    return gulp.src(paths.styles, { base: './src/styles' })
+    return gulp.src(paths.styles, { base: 'src/styles' })
     .pipe(less({
         sourceMap: true,
-        compress: true
+        compress: false
     }))
     .pipe(gulp.dest('dist/chrome/styles'));
 });
 
 gulp.task('scripts', function() {
-    return gulp.src(paths.scripts, { read: false, base: 'src' })
-    .pipe(browserify({
-        transform: ['coffeeify'],
-        extensions: ['.coffee'],
-        debug: true
-    }))
-    .pipe(rename(function(file) {
-        file.extname = '.js';
-    }))
+    gulp.src(paths.coffee, { /*read: false,*/ base: 'src' })
+    // .pipe(browserify({
+    //     transform: ['coffeeify'],
+    //     extensions: ['.coffee'],
+    //     debug: true
+    // }))
+    // .pipe(rename(function(file) {
+    //     file.extname = '.js';
+    // }))
+    .pipe(coffee({ bare: true }))
     .pipe(gulp.dest('dist/chrome'));
+    
+    gulp.src(paths.js, { base: 'src' })
+    .pipe(gulp.dest('dist/chrome'))
 });
 
 gulp.task('html', function() {
-    return gulp.src(paths.jade)
+    return gulp.src(paths.jade, { base: 'src' })
     .pipe(jade({
-        pretty: false,
+        pretty: true,
         locals: {
-            scripts: ['scripts/main.js'],
-            styles: ['styles/main.css']
+            scripts:  [
+                // 'ionic/js/angular/angular.js',
+                // 'ionic/js/angular/angular-resource.js',
+                // 'ionic/js/angular/angular-animate.js',
+                // 'ionic/js/angular-ui/angular-ui-router.js',
+                // 'ionic/js/ionic.js',
+                'scripts/lodash.js',
+                'scripts/q.js',
+                'scripts/async.js',
+                'scripts/nedb.js',
+                'ionic/js/ionic.bundle.min.js',
+                'scripts/main.js',
+                'scripts/services/localization-service.js',
+                'scripts/directives/auto-direction-directive.js',
+                'scripts/controllers/search-controller.js',
+                'scripts/controllers/reading-controller.js',
+                'scripts/directives/colorize-directive.js',
+                'scripts/services/storage-service.js',
+                'scripts/services/arabic-service.js',
+                'scripts/filters/arabic-number-filter.js',
+                'scripts/services/content-service.js',
+                'scripts/services/search-service.js'
+                ],
+            styles: ['ionic/css/ionic.min.css', 'styles/main.css']
         }
     })).pipe(gulp.dest('dist/chrome'));
 });
@@ -76,10 +110,11 @@ gulp.task('res', function() {
 gulp.task('build', ['manifest', 'locales', 'scripts', 'html', 'styles', 'images']);
 
 gulp.task('watch', function() {
-    var server = livereload();
-    gulp.watch(paths.scripts, ['scripts']).on('change', function(file) {
-        server.changed(file.path);
-    });
+    // var server = livereload();
+    gulp.watch([paths.coffee, paths.js], ['scripts', 'html']);
+    gulp.watch(paths.jade, ['html']);
+    gulp.watch(paths.styles, ['styles']);
+    
 });
 
 gulp.task('default', ['build', 'watch']);

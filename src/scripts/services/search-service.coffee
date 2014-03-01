@@ -1,36 +1,32 @@
-q = require 'q'
-_ = require 'lodash'
-module.exports = (app) ->
-    app.service 'SearchService', ['ContentService', '$log', '$http', (ContentService, $log, $http) -> 
-        
-        diacritics = '(ّ|َ|ً|ُ|ٌ|ِ|ِ|ٍ|ْ)'
-        diacritics_regex = new RegExp diacritics, 'g'
+# Q = require 'q'
+# _ = require 'lodash'
+# module.exports = (app) ->
+    app.service 'SearchService', ['ContentService', 'ArabicService', '$log', '$http', (ContentService, Arabic, $log, $http) -> 
 
-        hamzas = '(آ|إ|أ|ء|ئ|ؤ|ا|ى|و)'
-        hamzas_regex = new RegExp hamzas, 'g'
-
-        search: (query, options = { }) -> 
+        search: (str, options = { }) -> 
             ContentService.database.then (database) ->
             
                 options = _.defaults options, (
-                    matches: 'autocomplete'
-                    srtictDiacritics: no
-                    ignoreHamzaCase: yes
-                    onlyStartAya: no
-                    wholeWord: yes
-                    scope: 'all'
-                    sort: [
-                        (sura_id: 1)
-                        (aya_id: 1)
-                    ]
-                    limit: 50,
-                    skip: 0,
-                    field: 'standard'
-                )
+                        matches: 'autocomplete'
+                        srtictDiacritics: no
+                        ignoreHamzaCase: yes
+                        onlyStartAya: no
+                        wholeWord: yes
+                        scope: 'all'
+                        sort: [
+                            (sura_id: 1)
+                            (aya_id: 1)
+                        ]
+                        limit: 50,
+                        skip: 0,
+                        field: 'standard'
+                    )
                
-                deferred = q.defer()
+                deferred = Q.defer()
 
-                # query = query.replace(hamzas_regex, hamzas.split(/./).join('|')) if options.ignoreHamzaCase
+                deferred.reject 'No query provided' if not str
+
+                # str = str.replace(Arabic.Hamzas.RegExp, Arabic.Hamzas.String.split(/./).join('|')) if options.ignoreHamzaCase
                 # dicatrics are [\u0650-\u065f]
 
                 if options.srtictDiacritics
@@ -40,24 +36,31 @@ module.exports = (app) ->
                     # when matching against the full text
                     #
                     # TODO
-                    _re = new RegExp "[](?! " + diacritics + ")", 'g'
-                    query = query.replace _re, + '{1}(?' + diacritics + ')*'
+                    _re = new RegExp "[](?! " + Arabic.Diacritics.String + ")", 'g'
+                    str = str.replace _re, + '$1(?' + Arabic.Diacritics.String + ')*'
                     options.field = 'standard_full'
 
                 else
-                    query = query.replace diacritics_regex, ''
+                    str = str.replace Arabic.Diacritics.RegExp, ''
 
                 if options.ignoreHamzaCase
-                    query = query.replace hamzas_regex, hamzas
+                    str = str.replace Arabic.Hamzas.RegExp, Arabic.Hamzas.String
 
                 # remove unnecessary spaces
-                query = query.replace /\s{2,}/g, ' '
-                query = query.trim()
+                str = str.replace /\s{2,}/g, ' '
+                str = str.trim()
 
-                query = new RegExp query, 'gi'
-                $log.debug 'Matching against', query
+                # if options.wholeWord
+                #     str = str
+                #     .split /\s/g
+                #     .map (word) -> '\b' + word + '\b'
+                #     .join ' ' 
 
-                query[options.field] = $regex: query
+                regex = new RegExp str, 'gi'
+                # $log.debug 'Matching against', regex
+
+                query = { }
+                query[options.field] = $regex: regex
                 cursor = database.find query
                 
                 # cursor.sort options.sort # This will not work
@@ -71,13 +74,13 @@ module.exports = (app) ->
                 # TODO: find some way to calculate total, so we
                 # can know in advance if more is available
                 # cursor.count (err, docs) ->
-                console.log cursor
+                # console.log cursor
 
                 cursor
                 .skip options.skip
                 .limit options.limit
                 .exec (err, docs) ->
                     if err then deferred.reject err
-                    else deferred.resolve docs, query ## RegExp that was used
+                    else deferred.resolve docs, regex
                 deferred.promise
     ]

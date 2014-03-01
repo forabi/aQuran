@@ -7,7 +7,8 @@
     "angular-ui-bootstrap": "git://github.com/angular-ui/bootstrap",
     "nedb": "^0.10.4",
     "angular": "^1.2.10",
-    "q": "^1.0.0"
+    "q": "^1.0.0",
+    "bootstrap": "git+https://github.com/twbs/bootstrap.git"
   },
   "devDependencies": {
     "gulp": "^3.5.2",
