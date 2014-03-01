@@ -9,16 +9,17 @@ html(ng-app='quran', lang='en')
     body
 
         ion-nav-bar(animation='nav-title-slide-android', 
-           type='bar-stable',
+           type='bar-positive',
            back-button-type='button-positive',
-           back-button-icon='ion-android-arrow-back')
+           back-button-icon='ion-ios7-arrow-back')
 
         ion-nav-view(animation='slide-left-right')
 
-        ion-footer-bar.bar.bar-footer(type='bar-positive')
-            button.button.icon.ion-chevron-left
-            h1.title Footer
-            button.button.icon.ion-chevron-right
+        ion-footer-bar.bar.bar-footer(type='bar-stable')
+            //- .button-bar
+            button.button.icon.ion-navicon
+            a(ui-sref='navigate').button.icon.ion-navigate
+            button.button.icon.ion-more
 
 
         //- main(ng-controller='ContentController')

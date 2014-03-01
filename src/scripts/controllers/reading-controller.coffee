@@ -1,26 +1,36 @@
 # _ = require 'lodash'
 # q = require 'q'
 # module.exports = (app) ->
-    app.controller 'ReadingController', ['$scope', '$state', '$stateParams', '$timeout', '$log', '$rootScope', 'ContentService', 'SearchService', ($scope, $state, $stateParams, $timeout, $log, $rootScope, ContentService, SearchService) ->
+    app.controller 'ReadingController', ['$ionicLoading', '$scope', '$state', '$stateParams', '$timeout', '$log', 'ContentService', 'SearchService', 'Preferences', ($ionicLoading, $scope, $state, $stateParams, $timeout, $log, ContentService, SearchService, Preferences) ->
         database = undefined
+
+        $scope.loading = $ionicLoading.show 
+                content: '<i class="text-center icon icon-large ion-loading-c"></i>'
+                animation: 'fade-in'
+                showBackdrop: yes
+                maxWidth: 200
+                showDelay: 0
 
         $scope.rightButtons = [
             (
                 type: 'button-positive'
-                content: '<i class="icon ion-android-search"></i>'
+                content: '<i class="icon ion-ios7-search-strong"></i>'
                 tap: (e) ->
                     $state.go 'search'
             )
         ]
+
+        $scope.playlist = []
 
         $scope.data = _.defaults $stateParams, (
                 type: 'page'
                 current: 1
                 view: []
                 total: undefined
+                highlight: null
             )
 
-        $scope.options =
+        $scope.options = _.defaults Preferences, 
             aya_mode: 'uthmani'
             view_mode: 'page_id'
             sura_name: 'sura_name'
@@ -52,7 +62,9 @@
         ContentService.database.then (db) -> 
             database = db
             loadContent()
+            $scope.loading.hide()
             $scope.$watch 'data.current', loadContent
+
 
         loadContent = () ->
             $scope.progress.status = 'loading'
@@ -71,17 +83,32 @@
                 if err then error err
                 else
                     $scope.data.view = transform docs
+                    # $scope.playlist = []
+                    # $scope.data.utmani = ''
+                    # $scope.data.standard = ''
+                    $scope.title = docs[0].sura_name
                     $scope.progress.status = 'ready'
                     $log.debug 'Content ready', $scope.data
                     $scope.$apply()
+                    audioPlayer.load($scope.playlist, true)
 
         transform = (docs) ->
             # default sorting
+            number = (n) ->
+                n = '000' + n
+                n.substr(n.length - 3)
             _.chain docs
             .sortBy 'gid'
             .groupBy 'sura_id'
             .map (ayas, key) -> 
-                        ayas: ayas
+                        ayas: ayas.map (aya) ->
+                            aya = _.extend aya, 
+                                recitation: 'http://www.everyayah.com/data/Abdullah_Basfar_192kbps/' +
+                                    number(aya.sura_id) +
+                                    number(aya.aya_id) + '.mp3'
+                            $scope.playlist.push src: aya.recitation, type: 'audio/mp3'
+                            console.log $scope.playlist
+                            aya
                         sura_name: ayas[0].sura_name
                         sura_name_romanization: ayas[0].sura_name_romanization
                         sura_id: ayas[0].sura_id

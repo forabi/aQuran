@@ -1,5 +1,6 @@
 # module.exports = (app) ->
     app.service 'ArabicService', [() ->
+
         _arabic_alphapet = /[\u060c-\u06fe\ufb50-\ufefc]/g
         _diacritics_str = '([\u064b-\u0652])'
         _quranic_annotation_signs = /[\u0617-\u061a\u06d6-\u06ed]/g
@@ -17,6 +18,19 @@
             "\u0669"
         ]
 
+        _replaces = [
+            (id: 'alefHamzas', replace: /[أإآا]/g, with: '[أإآا]')
+            # (id: 'wawHamza', replace: /[وؤ]/g, with: '[ؤو]')
+            # (id: 'ya2Hamza', replace: /[ىئي]/g, with: '[ىئي]')
+            # (id: 'alefMaqsura', replace: /[ىي]/g, with: '[ىي]')
+            (id: 'alefMadda', replace: /آ|(?:ءا)/g, with: '(?:آ|(?:ءا))')
+            # (id: 'diacritics', replace: /[\u064b-\u0652]/g, with: '[\u064b-\u0652]?')
+        ]
+
+        getRegExp: (text) ->
+            _replaces.forEach (obj) ->
+                text = text.replace obj.replace, obj.with
+            new RegExp "(#{text})", 'g'
         Alphabet:
             RegExp: _arabic_alphapet
         Diacritics:

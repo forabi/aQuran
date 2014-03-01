@@ -1,8 +1,17 @@
-ion-view(title='"Home"', right-buttons='rightButtons')
+ion-view(title='title', right-buttons='rightButtons')
     ion-content(has-header='true', overflow-scroll='true', has-footer='true')
+        bar.bar-subheader
+            .button-bar
+                audio(audio-player, player-control='audioPlayer', playlist='playlist', player-name='audioPlayer')
+                    | Play
+                button.button.button-icon.ion-play(ng-click='audioPlayer.play()')
+                button.button.button-icon.ion-pause(ng-click='audioPlayer.pause()')
+        //- ion-slide-box ion-slide
         .sura.list(ng-repeat='sura in data.view')
-            h2.sura-name.item.item-devider(ng-if='sura.ayas[0].aya_id == 1') {{ sura[options.sura_name] }}
+            h2.sura-name.item.item-devider(ng-if='sura.ayas[0].aya_id == 1'): b {{ sura[options.sura_name] }}
             .sura-body.item.item-text-wrap
                 span(ng-repeat='aya in sura.ayas')
-                    span.aya-text(colorize='{{ aya.uthmani }}') {{ aya[options.aya_mode] }}
+                    span.aya-text(colorize='{{ aya.uthmani }}') {{ aya.uthmani }}
                     i.aya-number {{ aya.aya_id }}
+
+        

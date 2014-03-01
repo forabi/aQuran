@@ -23,7 +23,6 @@
     }
     .sura-body {
         direction: rtl;
-        font-family: @aya-font-family;
         text-align: justify;
         text-align-last: justify;
         text-justify: auto;
@@ -36,14 +35,22 @@
             font-size: @aya-font-size * .8;
         }
     }
+    .aya-text {
+        font-family: @aya-font-family;
+        pointer-events: none;
+    }
     .layers {
         display: inline-block;
         position: relative;
         text-overflow: initial !important;
+        .highlighted {
+            background-color: yellow;
+        }
         .original {
             color: transparent;
+            display: inline;
         }
-        .letters, .diacritics, .quranic-signs {
+        .letters, .diacritics, .quranic-signs, .overlay {
             position: absolute;
             top: 0;
             right: 0;
@@ -72,10 +79,15 @@
     //     top: 0;
     //     left: 0;
     // }
+    em {
+        font-weight: bold;
+        font-style: italic;
+    }
     .aya-number {
         line-height: @aya-line-height;
-        font-family: @aya-font-family;
-        font-size: @aya-font-size;
+        // font-family: @aya-font-family;
+        // font-size: @aya-font-size;
+        // "\06DD"
         margin-right: 5px;
         margin-left: 5px;
         &::before {

@@ -1,17 +1,9 @@
 # _ = require 'lodash'
 # q = require 'q'
 # module.exports = (app) ->
-    app.controller 'SearchController', ['$scope', '$timeout', '$log', '$rootScope', 'ContentService', 'SearchService', ($scope, $timeout, $log, $rootScope, ContentService, SearchService) ->
-        database = undefined
+    app.controller 'SearchController', ['$scope', '$state', '$timeout', '$log', '$stateParams', 'SearchService', 'APIService', 'Preferences', ($scope, $state, $timeout, $log, $stateParams, SearchService, APIService, Preferences) ->
 
-        $scope.options =
-            aya_mode: 'standard_full'
-            view_mode: 'page_id'
-            sura_name: 'sura_name'
-            preferred: 'ayas'
-            search:
-                online:
-                    enabled: true
+        $scope.options = Preferences
 
         $scope.progress =
             status: 'init'
@@ -19,27 +11,37 @@
             current: 0
 
         $scope.search =
-            query: ''
+            query: $stateParams.query || ''
+            suggestions: []
             results: []
             history: ['قرآن', 'سبحانك']
             execute: (query = $scope.search.query) -> 
+                $log.debug 'Search executing...'
                 if query
                     $scope.progress.status = 'searching'
-                    $scope.$apply() 
-                    SearchService.search query
-                    .then (results, regex) ->
-                        $scope.search.results = transform results || []
-                        # $scope.search.regex = regex.toString()
-                        if results.length
-                            _($scope.search.history).remove query if $scope.search.history.indexOf query > -1
-                            $scope.search.history.unshift query
-                        $scope.progress.status = 'ready'
-                        $scope.$apply()
-                    .catch(error)
+                    $timeout () ->
+                        SearchService.search query
+                        .then (transform)
+                        .then (results) ->
+                            $scope.search.results = results
+                            if results.length
+                                _.pull $scope.search.history, query
+                                $scope.search.history.unshift query
+                                $scope.progress.status = 'ready'
+                                $scope.$apply()
+                            else if $scope.options.search.online.enabled and $scope.online
+                                $log.debug 'No results found, going to fetch suggestions'
+                                APIService.suggest(query).then (suggestions) ->
+                                    $scope.search.suggestions = suggestions || []
+                                    $log.debug 'Suggestions:', $scope.search.suggestions
+                                    $scope.progress.status = 'ready'
+                                    $scope.$apply()
+                            else 
+                                $scope.progress.status = 'ready'
+                                $scope.$apply()
+                        .catch(error)
 
-        ContentService.database.then (db) -> 
-            database = db
-            # $scope.$watch 'search.query', $scope.search.execute
+        $scope.search.execute()
 
         transform = (docs) ->
             # default sorting
@@ -52,7 +54,7 @@
                         sura_name_romanization: ayas[0].sura_name_romanization
                         sura_id: ayas[0].sura_id
             .sortBy 'sura_id'
-            .value()
+            .value() || []
 
         error = (err) ->
             $scope.progress.status = 'error'

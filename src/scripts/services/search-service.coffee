@@ -1,8 +1,8 @@
 # Q = require 'q'
 # _ = require 'lodash'
 # module.exports = (app) ->
-    app.service 'SearchService', ['ContentService', 'ArabicService', '$log', '$http', (ContentService, Arabic, $log, $http) -> 
-
+    app.service 'SearchService', ['APIService', 'ContentService', 'ArabicService', '$log', '$http', (APIService, ContentService, Arabic, $log, $http) -> 
+        # console.log API
         search: (str, options = { }) -> 
             ContentService.database.then (database) ->
             
@@ -17,7 +17,7 @@
                             (sura_id: 1)
                             (aya_id: 1)
                         ]
-                        limit: 50,
+                        limit: 0,
                         skip: 0,
                         field: 'standard'
                     )

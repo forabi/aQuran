@@ -10,16 +10,20 @@ ion-view(title='"Search"')
                     ng-change='progress.status="init"'
                     )
                 button.button.button-small.button-positive.button-icon(type='submit') Search
-                    i.icon.placeholder-icon.ion-search
+                    i.icon.placeholder-icon.ion-ios7-search-strong
                 
         div(ng-switch='progress.status')
             div(ng-switch-when='ready')
                 .card.list.sura(ng-repeat='sura in search.results')
-                    h2.sura-name.search.item.item-devider {{ sura[options.sura_name] }}
+                    h2.sura-name.search.item.item-devider: b {{ sura[options.reader.view.sura_name] }}
                     a.sura-body.item.item-text-wrap(
                      ui-sref='reader({ current: {{ aya.page_id }}, type: "page", highlight: "{{ search.query }}" })',
                      ng-repeat='aya in sura.ayas')
-                        span.aya-text.layers.search(colorize='{{ aya.uthmani }}') {{ aya[options.aya_mode] }}
+                        span.aya-text.layers.search(
+                            colorize='{{ aya.standard_full }}',
+                            search-text='{{ aya.standard }}',
+                            highlight='{{ search.query }}'
+                            ) {{ aya[options.reader.view.aya_mode] }}
                         i.aya-number.search {{ aya.aya_id }}
                     //- a.item.item-devider
                         | 2 more results
@@ -29,16 +33,16 @@ ion-view(title='"Search"')
                     i.icon.placeholder-icon.ion-loading-c.icon-large
 
             div(ng-switch-default)
-                .card(ng-if='!options.search.online.enabled')
+                .card(ng-if='online && options.search.online.prompt && !options.search.online.enabled')
                     .item.item-text-wrap
                         | This app can provide advanced search results using Al-Fanous Quranic API.
                         br
                         b Do you want to turn on online results?
-                    a(href='#').item.item-text-wrap.item-icon-left.positive
-                        i.icon.ion-checkmark
+                    a(ng-click='options.search.online.enabled = true').item.item-text-wrap.item-icon-left.positive
+                        i.icon.ion-checkmark-round
                         | Yes
-                    a(href='#').item.item-text-wrap.item-icon-left
-                        i.icon.ion-close
+                    a(ng-click='options.search.online.prompt = false').item.item-text-wrap.item-icon-left
+                        i.icon.ion-close-round
                         | Maybe later
                     small.item.item-text-wrap.item-devider
                         | You can change this setting later in the Settings section
@@ -51,7 +55,16 @@ ion-view(title='"Search"')
                         i.icon.placeholder-icon.ion-android-clock
                         | {{ query }}
 
-        .card.text-center(ng-if='progress.status == "ready" && search.results.length == 0')
-            .item.item-body.item-devider
+        .card(ng-if='progress.status == "ready" && search.results.length == 0')
+            .item.item-body.item-devider.text-center
                 i.icon.placeholder-icon.ion-alert.icon-large
-            b.item.item-text-wrap Could not find anything matching "{{ search.query }}"
+                h2 Could not find anything matching "{{ search.query }}"
+            div(ng-if='search.suggestions.length > 0')
+                .item.item-text-wrap.item-devider: b Here are some suggestions:
+                a.item.item-text-wrap.assertive(
+                        ui-sref='search({ query: "{{ suggestion.string }}" })',
+                        ng-repeat='suggestion in search.suggestions',
+                        auto-direction='{{ suggestion.string }}',
+                        emphasize='{{ suggestion.with }}',
+                    )
+                    | {{ suggestion.string }}
