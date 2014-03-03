@@ -7,55 +7,18 @@ html(ng-app='quran', lang='en')
         for style in styles
             link(rel='stylesheet', href=style)
     body
-
         ion-nav-bar(animation='nav-title-slide-android', 
            type='bar-positive',
            back-button-type='button-positive',
-           back-button-icon='ion-ios7-arrow-back')
+           back-button-icon='ion-android-arrow-back')
 
         ion-nav-view(animation='slide-left-right')
 
         ion-footer-bar.bar.bar-footer(type='bar-stable')
-            //- .button-bar
-            button.button.icon.ion-navicon
-            a(ui-sref='navigate').button.icon.ion-navigate
-            button.button.icon.ion-more
-
-
-        //- main(ng-controller='ContentController')
-        //-     nav.navbar.navbar-default.navbar-static-top
-        //-         ul.nav.navbar-nav
-        //-             li: a(href='#') Juz {{ content.view[0].ayas[0].juz_gid }}
-        //-             li: a(href='#') {{ content.view[0].ayas[0][content.options.sura_name] }}
-        //-         form.navbar-form(ng-submit='search.execute()')
-        //-             input.form-control(type='number', ng-model='content.current')
-        //-             select(ng-model='content.options.view', ng-options='view.id as view.name for view in static.views')
-        //-             select(ng-model='content.options.aya_mode', ng-options='mode.id as mode.name for mode in static.modes')
-        //-             input.form-control(type='search', ng-model='search.text', required, placeholder='Search the Quran')
-        //-             button.btn.btn-default(type='submit', value='Search', ng-disabled='progress.status == "searching"')
-        //-                 i.icon-search
-        //-                 label.sr-only Search
-        //-     article.well.clearfix.content(ng-switch='progress.status')
-        //-         .col-sm-12.col-md-6
-        //-             div(ng-switch-when='ready')
-        //-                 div(ng-switch='content.type')
-        //-                     div.read(ng-switch-default)
-        //-                         sura.card(ng-repeat='sura in content.view')
-        //-                             .item.item-devider.sura-name(ng-hide='sura.ayas[0]["aya_id"] > 1') {{ sura[content.options.sura_name] }}
-        //-                             .sura-body
-        //-                                 .item.item-text-wrap.aya(ng-repeat='aya in sura.ayas')
-        //-                                     span.aya-text(colorized='aya') {{ aya[content.options.aya_mode] }}
-        //-                                     span.label.label-default.aya-number {{ aya.aya_id }}
-        //-                     div.search(ng-switch-when='search')
-        //-                         h2 Searh Results
-        //-                         sura.card.list(ng-repeat='sura in content.view')
-        //-                             .list-group
-        //-                                 .item.item-devider.sura_name {{ sura[content.options.sura_name] }}
-        //-                                 a.aya.item.item-icon-left(ng-repeat='aya in sura.ayas', href='#')
-        //-                                     span.aya-text {{ aya[content.options.aya_mode] }}
-        //-                                     i.icon.aya-number {{ aya.aya_id }} 
-        //-                                 .item.item-devider: a(href='#') 2 more results
-        //-             div(ng-switch-when='searching') Searching...
-        //-             div(ng-switch-default) Loading...
+            .button-bar
+                button.button.icon.ion-navicon
+                a(ui-sref='navigate').button.icon.ion-navigate
+                button.button.icon.ion-more
+                .bar.bar-footer
         for script in scripts
             script(src=script)

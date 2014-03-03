@@ -1,17 +1,16 @@
 ion-view(title='title', right-buttons='rightButtons')
     ion-content(has-header='true', overflow-scroll='true', has-footer='true')
-        bar.bar-subheader
-            .button-bar
-                audio(audio-player, player-control='audioPlayer', playlist='playlist', player-name='audioPlayer')
-                    | Play
-                button.button.button-icon.ion-play(ng-click='audioPlayer.play()')
-                button.button.button-icon.ion-pause(ng-click='audioPlayer.pause()')
-        //- ion-slide-box ion-slide
+        .button-bar.bar-subheader
+            audio(audio-player, player-control='audioPlayer', playlist='playlist', player-name='audioPlayer')
+                | Play
+            button.button.button.icon.ion-ios7-rewind(ng-click='audioPlayer.prev()')
+            button.button.button.icon.ion-play(ng-show='!audioPlayer.playing', ng-click='audioPlayer.play()')
+            button.button.button.icon.ion-pause(ng-show='audioPlayer.playing', ng-click='audioPlayer.pause()')
+            button.button.button.icon.ion-ios7-fastforward(ng-click='audioPlayer.next()')
+        //- TODO: fix index issue
         .sura.list(ng-repeat='sura in data.view')
             h2.sura-name.item.item-devider(ng-if='sura.ayas[0].aya_id == 1'): b {{ sura[options.sura_name] }}
             .sura-body.item.item-text-wrap
-                span(ng-repeat='aya in sura.ayas')
+                span(ng-repeat='aya in sura.ayas', ng-click='audioPlayer.play({{ aya.aya_id - 1 }})')
                     span.aya-text(colorize='{{ aya.uthmani }}') {{ aya.uthmani }}
                     i.aya-number {{ aya.aya_id }}
-
-        

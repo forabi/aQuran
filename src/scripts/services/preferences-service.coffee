@@ -12,6 +12,11 @@ app.service 'Preferences', [() ->
                 colorized: yes
                 aya_mode: 'uthmani'
                 sura_name: 'sura_name'
+        audio:
+            recitation: 'Hudaify'
+            quality: 32
+            enabled: yes
+            
 
     # get: (section) -> Storage.get section
     # set: (section) -> Storage.set section

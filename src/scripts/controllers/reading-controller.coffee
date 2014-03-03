@@ -1,7 +1,7 @@
 # _ = require 'lodash'
 # q = require 'q'
 # module.exports = (app) ->
-    app.controller 'ReadingController', ['$ionicLoading', '$scope', '$state', '$stateParams', '$timeout', '$log', 'ContentService', 'SearchService', 'Preferences', ($ionicLoading, $scope, $state, $stateParams, $timeout, $log, ContentService, SearchService, Preferences) ->
+    app.controller 'ReadingController', ['$ionicLoading', '$scope', '$state', '$stateParams', '$timeout', '$log', 'ContentService', 'SearchService', 'RecitationService', 'Preferences', ($ionicLoading, $scope, $state, $stateParams, $timeout, $log, ContentService, SearchService, RecitationService, Preferences) ->
         database = undefined
 
         $scope.loading = $ionicLoading.show 
@@ -14,7 +14,13 @@
         $scope.rightButtons = [
             (
                 type: 'button-positive'
-                content: '<i class="icon ion-ios7-search-strong"></i>'
+                content: '<i class="icon ion-android-search"></i>'
+                tap: (e) ->
+                    $state.go 'search'
+            ),
+            (
+                type: 'button-positive'
+                content: '<i class="icon ion-android-more"></i>'
                 tap: (e) ->
                     $state.go 'search'
             )
@@ -103,7 +109,7 @@
             .map (ayas, key) -> 
                         ayas: ayas.map (aya) ->
                             aya = _.extend aya, 
-                                recitation: 'http://www.everyayah.com/data/Abdullah_Basfar_192kbps/' +
+                                recitation: 'http://www.everyayah.com/data/Hudhaify_32kbps/' +
                                     number(aya.sura_id) +
                                     number(aya.aya_id) + '.mp3'
                             $scope.playlist.push src: aya.recitation, type: 'audio/mp3'

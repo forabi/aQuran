@@ -1,0 +1,51 @@
+[{
+    "id": "Saood_ash-Shuraym_64kbps",
+    "reciter": "سعود الشريم",
+    "bitrate": 64,
+    "lang": "ar"
+}, {
+    "id": "Saood_ash-Shuraym_128kbps",
+    "reciter": "سعود الشريم",
+    "bitrate": 128,
+    "lang": "ar"
+}, {
+    "id": "Salaah_AbdulRahman_Bukhatir_128kbps",
+    "reciter": "صلاح عبد الرحمن أبو خاطر",
+    "bitrate": 128,
+    "lang": "ar"
+}, {
+    "id": "AbdulSamad_64kbps_QuranExplorer.Com",
+    "reciter": "عبد الباسط عبد الصمد",
+    "bitrate": 64,
+    "lang": "ar"
+}, {
+    "id": "Abdul_Basit_Murattal_{bitrate}kbps",
+    "reciter": "عبد الباسط عبد الصمد",
+    "tags": ["مرتَّل"],
+    "bitrates": [192, 64],
+    "lang": "ar"
+}, {
+    "id": "Abdul_Basit_Murattal_64kbps",
+    "reciter": "عبد الباسط عبد الصمد",
+    "tags": ["مرتَّل"],
+    "bitrate": 64,
+    "lang": "ar"
+}, {
+    "id": "Abdul_Basit_Murattal_192kbps",
+    "reciter": "عبد الباسط عبد الصمد",
+    "tags": ["مرتَّل"],
+    "bitrate": 192,
+    "lang": "ar"
+}, {
+    "id": "Abdul_Basit_Mujawwad_64kbps",
+    "reciter": "عبد الباسط عبد الصمد",
+    "tags": ["مجوَّد"],
+    "bitrate": 64,
+    "lang": "ar"
+}, {
+    "id": "Abdul_Basit_Mujawwad_192kbps",
+    "reciter": "عبد الباسط عبد الصمد",
+    "tags": ["مجوَّد"],
+    "bitrate": 192,
+    "lang": "ar"
+}]

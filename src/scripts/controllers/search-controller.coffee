@@ -1,7 +1,7 @@
 # _ = require 'lodash'
 # q = require 'q'
 # module.exports = (app) ->
-    app.controller 'SearchController', ['$scope', '$state', '$timeout', '$log', '$stateParams', 'SearchService', 'APIService', 'Preferences', ($scope, $state, $timeout, $log, $stateParams, SearchService, APIService, Preferences) ->
+    app.controller 'SearchController', ['$scope', '$rootScope', '$state', '$timeout', '$log', '$stateParams', 'SearchService', 'APIService', 'Preferences', ($scope, $rootScope, $state, $timeout, $log, $stateParams, SearchService, APIService, Preferences) ->
 
         $scope.options = Preferences
 
@@ -9,6 +9,8 @@
             status: 'init'
             total: 0
             current: 0
+
+        $scope.online = $rootScope.online
 
         $scope.search =
             query: $stateParams.query || ''
@@ -29,7 +31,7 @@
                                 $scope.search.history.unshift query
                                 $scope.progress.status = 'ready'
                                 $scope.$apply()
-                            else if $scope.options.search.online.enabled and $scope.online
+                            else if $scope.options.search.online.enabled and $scope.online()
                                 $log.debug 'No results found, going to fetch suggestions'
                                 APIService.suggest(query).then (suggestions) ->
                                     $scope.search.suggestions = suggestions || []

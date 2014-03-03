@@ -88,6 +88,7 @@ gulp.task('html', function() {
                 'scripts/services/arabic-service.js',
                 'scripts/filters/arabic-number-filter.js',
                 'scripts/services/api-service.js',
+                'scripts/services/recitation-service.js',
                 'scripts/services/content-service.js',
                 'scripts/services/search-service.js'
                 ],
@@ -112,13 +113,14 @@ gulp.task('res', function() {
     return copy(paths.resources, 'dist/chrome', { base: 'src' });
 });
 
-gulp.task('build', ['manifest', 'locales', 'scripts', 'html', 'styles', 'images']);
+gulp.task('build', ['manifest', 'res', 'locales', 'scripts', 'html', 'styles', 'images']);
 
 gulp.task('watch', function() {
     // var server = livereload();
     gulp.watch([paths.coffee, paths.js], ['scripts', 'html']);
     gulp.watch(paths.jade, ['html']);
     gulp.watch(paths.styles, ['styles']);
+    gulp.watch(paths.resources, ['res']);
     
 });
 

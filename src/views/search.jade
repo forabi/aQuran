@@ -33,7 +33,7 @@ ion-view(title='"Search"')
                     i.icon.placeholder-icon.ion-loading-c.icon-large
 
             div(ng-switch-default)
-                .card(ng-if='online && options.search.online.prompt && !options.search.online.enabled')
+                .card(ng-if='online() && options.search.online.prompt && !options.search.online.enabled')
                     .item.item-text-wrap
                         | This app can provide advanced search results using Al-Fanous Quranic API.
                         br
