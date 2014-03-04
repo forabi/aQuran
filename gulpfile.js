@@ -24,7 +24,7 @@ var paths = {
     images: 'src/images/*',
     manifest: 'src/manifest.json',
     locales: ['src/_locales/**/*.*'],
-    resources: ['src/resources/*.json', 'src/styles/fonts/*']
+    resources: ['src/resources/**/*', 'src/styles/fonts/*']
 };
 
 gulp.task('ionic', function() {
@@ -78,7 +78,10 @@ gulp.task('html', function() {
                 'scripts/main.js',
                 'scripts/services/preferences-service.js',
                 'scripts/services/localization-service.js',
+                'scripts/services/explanation-service.js',
                 'scripts/directives/auto-direction-directive.js',
+                'scripts/controllers/aya-controller.js',
+                'scripts/controllers/preferences-controller.js',
                 'scripts/controllers/navigation-controller.js',
                 'scripts/controllers/search-controller.js',
                 'scripts/controllers/reading-controller.js',

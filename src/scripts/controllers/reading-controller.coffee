@@ -96,25 +96,19 @@
                     $scope.progress.status = 'ready'
                     $log.debug 'Content ready', $scope.data
                     $scope.$apply()
-                    audioPlayer.load($scope.playlist, true)
+                    # audioPlayer.load($scope.playlist, true)
 
         transform = (docs) ->
             # default sorting
-            number = (n) ->
-                n = '000' + n
-                n.substr(n.length - 3)
             _.chain docs
+            .each (aya, index) -> _.extend aya, index: index
+            .forEach (aya, index) ->
+                recitation = RecitationService.getAya(aya.sura_id, aya.aya_id)
+                $scope.playlist.push recitation
             .sortBy 'gid'
             .groupBy 'sura_id'
             .map (ayas, key) -> 
-                        ayas: ayas.map (aya) ->
-                            aya = _.extend aya, 
-                                recitation: 'http://www.everyayah.com/data/Hudhaify_32kbps/' +
-                                    number(aya.sura_id) +
-                                    number(aya.aya_id) + '.mp3'
-                            $scope.playlist.push src: aya.recitation, type: 'audio/mp3'
-                            console.log $scope.playlist
-                            aya
+                        ayas: ayas
                         sura_name: ayas[0].sura_name
                         sura_name_romanization: ayas[0].sura_name_romanization
                         sura_id: ayas[0].sura_id

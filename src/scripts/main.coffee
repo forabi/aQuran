@@ -2,7 +2,7 @@
 app   =   angular.module 'quran', ['ionic', 'audioPlayer']
 
 app.constant 'API', 'http://www.alfanous.org/jos2'
-app.constant 'EveryAyah', 'http://www.everyayah.com/data'
+app.constant 'EveryAyah', 'http://www.everyayah.com/data/'
 
 app.run ['$rootScope', ($rootScope) ->
     $rootScope.online = () -> navigator.onLine
@@ -18,6 +18,11 @@ app.config ['$stateProvider', '$urlRouterProvider', '$locationProvider' , ($stat
       url: '/reader/:current?highlight'
       templateUrl: 'views/reader.html'
       controller: 'ReadingController'
+
+    .state 'aya', 
+      url: '/aya/:gid?highlight'
+      templateUrl: 'views/aya.html'
+      controller: 'AyaController'
     
     .state 'navigate', 
       url: '/navigate'
@@ -32,10 +37,11 @@ app.config ['$stateProvider', '$urlRouterProvider', '$locationProvider' , ($stat
     .state 'preferences', 
       url: '/preferences'
       templateUrl: 'views/preferences.html'
+      controller: 'PreferencesController'
     
 
     $urlRouterProvider.otherwise '/reader/1'
-    # $locationProvider.html5Mode(true);
+    # $locationProvider.html5Mode on
 ]
 
 # (require './services/arabic-service') Quran

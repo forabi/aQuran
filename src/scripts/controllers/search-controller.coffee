@@ -16,7 +16,7 @@
             query: $stateParams.query || ''
             suggestions: []
             results: []
-            history: ['قرآن', 'سبحانك']
+            history: Preferences.search.history
             execute: (query = $scope.search.query) -> 
                 $log.debug 'Search executing...'
                 if query
@@ -33,10 +33,11 @@
                                 $scope.$apply()
                             else if $scope.options.search.online.enabled and $scope.online()
                                 $log.debug 'No results found, going to fetch suggestions'
+                                $scope.progress.status = 'ready'
+                                $scope.$apply()
                                 APIService.suggest(query).then (suggestions) ->
                                     $scope.search.suggestions = suggestions || []
                                     $log.debug 'Suggestions:', $scope.search.suggestions
-                                    $scope.progress.status = 'ready'
                                     $scope.$apply()
                             else 
                                 $scope.progress.status = 'ready'

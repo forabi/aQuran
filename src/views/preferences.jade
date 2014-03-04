@@ -1,0 +1,21 @@
+ion-view(title='"Preferences"')
+    ion-content(has-header='true', overflow-scroll='true', has-footer='true')
+        list
+            .item.item-divider Quran display
+            .item.item-toggle.item-text-wrap Show Arabic text
+                label.toggle
+                    input(type='checkbox', ng-model='options.reader.arabic_text')
+                    .track: .handle
+            div(ng-show='options.reader.arabic_text')
+                .item.item-toggle.item-text-wrap Standard text
+                    label.toggle
+                        input(type='checkbox', ng-model='options.reader.standard_text')
+                        .track: .handle
+                .item.item-toggle.item-text-wrap Show diacritics
+                    label.toggle
+                        input(type='checkbox', ng-model='options.reader.diacritics')
+                        .track: .handle
+                .item.item-toggle.item-text-wrap Use different colors for diacritics and Quranic annotation signs
+                    label.toggle
+                        input(type='checkbox', ng-model='options.reader.colorized')
+                        .track: .handle

@@ -15,7 +15,7 @@ ion-view(title='"Search"')
         div(ng-switch='progress.status')
             div(ng-switch-when='ready')
                 .card.list.sura(ng-repeat='sura in search.results')
-                    h2.sura-name.search.item.item-devider: b {{ sura[options.reader.view.sura_name] }}
+                    h2.sura-name.search.item.item-divider: b {{ sura[options.reader.view.sura_name] }}
                     a.sura-body.item.item-text-wrap(
                      ui-sref='reader({ current: {{ aya.page_id }}, type: "page", highlight: "{{ search.query }}" })',
                      ng-repeat='aya in sura.ayas')
@@ -25,7 +25,7 @@ ion-view(title='"Search"')
                             highlight='{{ search.query }}'
                             ) {{ aya[options.reader.view.aya_mode] }}
                         i.aya-number.search {{ aya.aya_id }}
-                    //- a.item.item-devider
+                    //- a.item.item-divider
                         | 2 more results
 
             .card.text-center(ng-switch-when='searching')
@@ -44,8 +44,8 @@ ion-view(title='"Search"')
                     a(ng-click='options.search.online.prompt = false').item.item-text-wrap.item-icon-left
                         i.icon.ion-close-round
                         | Maybe later
-                    small.item.item-text-wrap.item-devider
-                        | You can change this setting later in the Settings section
+                    .item.item-text-wrap
+                        small You can change this setting later in the Settings section
                 .card.list
                     a.item.item-text-wrap.item-icon-left.positive(
                         ng-repeat='query in search.history',
@@ -56,11 +56,11 @@ ion-view(title='"Search"')
                         | {{ query }}
 
         .card(ng-if='progress.status == "ready" && search.results.length == 0')
-            .item.item-body.item-devider.text-center
+            .item.item-body.text-center
                 i.icon.placeholder-icon.ion-alert.icon-large
                 h2 Could not find anything matching "{{ search.query }}"
             div(ng-if='search.suggestions.length > 0')
-                .item.item-text-wrap.item-devider: b Here are some suggestions:
+                .item.item-text-wrap.item-divider: b Here are some suggestions:
                 a.item.item-text-wrap.assertive(
                         ui-sref='search({ query: "{{ suggestion.string }}" })',
                         ng-repeat='suggestion in search.suggestions',

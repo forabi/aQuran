@@ -18,7 +18,8 @@ html(ng-app='quran', lang='en')
             .button-bar
                 button.button.icon.ion-navicon
                 a(ui-sref='navigate').button.icon.ion-navigate
-                button.button.icon.ion-more
-                .bar.bar-footer
+                a(ui-sref='preferences').button.icon.ion-ios7-gear
+                button.button.icon.ion-ios7-more
+        
         for script in scripts
             script(src=script)

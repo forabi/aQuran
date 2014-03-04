@@ -18,13 +18,7 @@
     "reciter": "عبد الباسط عبد الصمد",
     "bitrate": 64,
     "lang": "ar"
-}, {
-    "id": "Abdul_Basit_Murattal_{bitrate}kbps",
-    "reciter": "عبد الباسط عبد الصمد",
-    "tags": ["مرتَّل"],
-    "bitrates": [192, 64],
-    "lang": "ar"
-}, {
+},{
     "id": "Abdul_Basit_Murattal_64kbps",
     "reciter": "عبد الباسط عبد الصمد",
     "tags": ["مرتَّل"],

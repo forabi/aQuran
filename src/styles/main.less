@@ -26,11 +26,15 @@
         text-align: justify;
         text-align-last: justify;
         text-justify: auto;
+        text-overflow: initial !important;
         &:not(.search) {
             line-height: @aya-line-height;
             font-size: @aya-font-size;
         }
-        .search {
+        &.single-aya {
+            font-size: @aya-font-size * 1.2;
+        }
+        &.search {
             line-height: @aya-line-height * .8;
             font-size: @aya-font-size * .8;
         }
@@ -38,6 +42,12 @@
     .aya-text {
         font-family: @aya-font-family;
         pointer-events: none;
+        // &.playing {
+        //     color: red;
+        // }
+    }
+    .translation {
+        font-family: @translation-font-family;
     }
     .layers {
         display: inline-block;
@@ -60,7 +70,7 @@
             opacity: 0.9
         }
         .quranic-signs {
-            color: @quranic-sings-color;
+            color: @annotation-sings-color;
             opacity: 0.9
         }
         .letters {
