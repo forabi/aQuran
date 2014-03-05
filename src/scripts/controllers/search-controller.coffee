@@ -10,8 +10,6 @@
             total: 0
             current: 0
 
-        $scope.online = $rootScope.online
-
         $scope.search =
             query: $stateParams.query || ''
             suggestions: []
@@ -31,7 +29,7 @@
                                 $scope.search.history.unshift query
                                 $scope.progress.status = 'ready'
                                 $scope.$apply()
-                            else if $scope.options.search.online.enabled and $scope.online()
+                            else if $scope.options.search.online.enabled and $scope.online
                                 $log.debug 'No results found, going to fetch suggestions'
                                 $scope.progress.status = 'ready'
                                 $scope.$apply()

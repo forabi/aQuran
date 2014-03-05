@@ -6,8 +6,12 @@ app.constant 'EveryAyah', 'http://www.everyayah.com/data/'
 
 app.run ['$rootScope', ($rootScope) ->
     $rootScope.online = () -> navigator.onLine
-    window.addEventListener 'online',  () -> $rootScope.online = () -> yes
-    window.addEventListener 'offline', () -> $rootScope.online = () -> no
+    window.addEventListener 'online',  () -> 
+      $rootScope.online = yes
+      $rootScope.$apply()
+    window.addEventListener 'offline', () -> 
+      $rootScope.online = no
+      $rootScope.$apply()
   ]
 
 

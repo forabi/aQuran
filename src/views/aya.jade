@@ -1,31 +1,36 @@
 ion-view(title='"Aya"')
     ion-content(has-header='true', overflow-scroll='true', has-footer='true')
-        .card.list(ng-if='progress.status == "ready"')
-            .item.item-text-wrap
-                small
-                    a.subdued(href='#') Juz {{ aya.juz_id }}
-                    a.subdued(href='#') {{ aya.sura_name_en }}
-                    a.subdued(ui-sref='reader({ current: {{ aya.page_id }} })') Aya {{ aya.aya_id }}
-                .sura-body.single-aya
-                    span.aya-text(colorize='{{ aya.uthmani }}') {{ aya.uthmani }}
-                    //- i.aya-number {{ aya.aya_id }}
-            .item.item-text-wrap.translation(ng-repeat='explanation in aya.explanations', auto-direction='')
-                | {{ explanation.text }}
-            a.item.item-text-wrap.subdued(href='#', auto-direction='', ng-if='aya.topic.length > 0'): small الموضوع: {{ aya.topic }}
-            .item.tabs.tabs-secondary.tabs-icon-left
-                a.tab-item
-                    i.icon.ion-bookmark
-                    | Bookmark
-                a.tab-item
-                    i.icon.ion-pricetag
-                    | Tag
-                
-                audio(audio-player, player-control='ayaPlayer', player-name='ayaPlayer')
-                    source(ng-src='{{ aya.recitation.src }}', type='{{ aya.recitation.type }}')
+        div(ng-switch='progress.status')
+            .card.text-center(ng-switch-default)
+                    .item.item-body
+                        i.icon.placeholder-icon.ion-loading-c.icon-large
 
-                a.tab-item(ng-show='!ayaPlayer.playing', ng-click='ayaPlayer.play()')
-                    i.icon.ion-volume-medium
-                    | Listen
-                a.tab-item(ng-show='ayaPlayer.playing', ng-click='ayaPlayer.pause()')
-                    i.icon.ion-pause
-                    | Pause
+            .card.list(ng-switch-when='ready')
+                .item.item-text-wrap
+                    small
+                        a.subdued(href='#') Juz {{ aya.juz_id }}
+                        a.subdued(href='#') {{ aya.sura_name_en }}
+                        a.subdued(ui-sref='reader({ current: {{ aya.page_id }} })') Aya {{ aya.aya_id }}
+                    .sura-body.single-aya
+                        span.aya-text(colorize='{{ aya.uthmani }}') {{ aya.uthmani }}
+                        //- i.aya-number {{ aya.aya_id }}
+                .item.item-text-wrap.translation(ng-repeat='explanation in aya.explanations', auto-direction='')
+                    | {{ explanation.text }}
+                a.item.item-text-wrap.subdued(href='#', auto-direction='', ng-if='aya.topic.length > 0'): small الموضوع: {{ aya.topic }}
+                .item.tabs.tabs-secondary.tabs-icon-left
+                    a.tab-item
+                        i.icon.ion-bookmark
+                        | Bookmark
+                    a.tab-item
+                        i.icon.ion-pricetag
+                        | Tag
+                    
+                    audio(audio-player, player-control='ayaPlayer', player-name='ayaPlayer')
+                        source(ng-src='{{ aya.recitation.src }}', type='{{ aya.recitation.type }}')
+
+                    button.button.button-icon.tab-item(ng-disabled='!online', ng-show='!ayaPlayer.playing', ng-click='ayaPlayer.play()')
+                        i.icon.ion-volume-medium
+                        | Listen
+                    button.button.button-icon.tab-item.tab-item(ng-show='ayaPlayer.playing', ng-click='ayaPlayer.pause()')
+                        i.icon.ion-pause
+                        | Pause
