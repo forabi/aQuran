@@ -76,14 +76,16 @@ app.controller 'ReadingController', ['$ionicLoading', '$scope', '$state', '$stat
             when 'juz'  then juz:     current
 
 
-        ContentService.find query, (err, docs) ->
+        ContentService.find query, (err, ayas) ->
             if err then error err
             else
-                $scope.data.view = transform docs
-                $scope.title = docs[0].sura_name
+                $log.debug 'Got content:', ayas
+                $scope.data.view = transform ayas
+                $log.debug 'Transformed content:', $scope.data.view
+                $scope.title = ayas[0].sura_name
                 $scope.progress.status = 'ready'
                 $log.debug 'Content ready', $scope.data
-                $scope.$apply()
+                # $scope.$apply()
                 # audioPlayer.load($scope.playlist, true)
 
     loadContent()
@@ -95,8 +97,7 @@ app.controller 'ReadingController', ['$ionicLoading', '$scope', '$state', '$stat
         _.chain docs
         .each (aya, index) -> _.extend aya, index: index
         .forEach (aya, index) ->
-            recitation = RecitationService.getAya(aya.sura_id, aya.aya_id)
-            $scope.playlist.push recitation
+            $scope.playlist.push aya.recitation
         .sortBy 'gid'
         .groupBy 'sura_id'
         .map (ayas, key) -> 

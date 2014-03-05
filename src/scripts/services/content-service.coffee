@@ -29,37 +29,29 @@ app.service 'ContentService', ['RecitationService', 'ExplanationService', 'Prefe
                     $log.info "#{docs.length} documents inserted"
                     deferred.resolve db
             deferred.promise
+    transform = (aya, callback) ->
+        aya.recitation = RecitationService.getAya aya.sura_id, aya.aya_id
+        async.mapSeries Preferences.explanations.ids, (id, callback) ->
+            ExplanationService.getExplanation(id).then (explanation) ->
+                callback null, text: explanation.content[aya.gid - 1]
+        , (err, results) ->
+            if err then callback err
+            else
+                aya.explanations = results
+                callback null, aya
+
     findOne: (query, callback) ->
         database.then (db) ->
             db.findOne query, (err, aya) ->
                 if err then callback err
-                else
-                    aya.recitation = RecitationService.getAya aya.sura_id, aya.aya_id
-                    async.map Preferences.explanations.ids, (id, callback) ->
-                        ExplanationService.getExplanation(id).then (explanation) ->
-                            callback null, text: explanation.content[aya.gid - 1]
-                    , (err, results) ->
-                        if err then callback err
-                        else
-                            aya.explanations = results
-                            callback null, aya
+                else transform aya, callback
 
     find: (query, callback) ->
         database.then (db) ->
             db.find query, (err, ayas) ->
                 if err then callback err
                 else
-                    async.map ayas, (aya, callback) ->
-                        aya.recitation = RecitationService.getAya aya.sura_id, aya.aya_id
-                        async.map Preferences.explanations.ids, (id, callback) ->
-                            ExplanationService.getExplanation(id).then (explanation) ->
-                                callback null, text: explanation.content[aya.gid - 1]
-                        , (err, results) ->
-                            if err then callback err
-                            else
-                                aya.explanations = results
-                                callback null, aya
-                    , (err, results) ->
+                    async.mapSeries ayas, transform, (err, ayas) ->
                         if err then callback err
-                        else callback null, results
+                        else callback null, ayas
 ]
