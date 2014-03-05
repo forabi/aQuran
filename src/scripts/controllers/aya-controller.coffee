@@ -1,3 +1,4 @@
+# async = require 'async'
 app.controller 'AyaController', ['$scope', 'ContentService' , 'RecitationService', 'ExplanationService', '$stateParams', 'Preferences', '$log', ($scope, ContentService, RecitationService, ExplanationService, $stateParams, Preferences, $log) ->
     # $log.debug 'Here we go'
     $scope.options = Preferences
@@ -14,12 +15,11 @@ app.controller 'AyaController', ['$scope', 'ContentService' , 'RecitationService
             $scope.aya = aya
             $scope.aya.recitation = RecitationService.getAya aya.sura_id, aya.aya_id
             async.map Preferences.explanations.ids, (id, callback) ->
-                ExplanationService.getTranslation(id).then (explanation) ->
+                ExplanationService.getExplanation(id).then (explanation) ->
                     callback null, text: explanation.content[aya.gid - 1]
             , (err, results) ->
                 if err then $scope.progress.status = 'error'
                 else
                     $scope.aya.explanations = results
                     $scope.progress.status = 'ready'
-                $scope.$apply()
 ]

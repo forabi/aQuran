@@ -1,5 +1,5 @@
 app.service 'ExplanationService', ['$http', '$log', ($http, $log) ->
-    getTranslation: (id) ->
+    getExplanation: (id) ->
         $http.get "resources/#{id}.trans/#{id}.txt"
         .then (response) ->
             $log.debug 'Translation response:', response

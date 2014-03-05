@@ -1,110 +1,92 @@
 @import "variables";
 @import (reference) "mixins";
-// @import "icon-font.css";
-// @import "bootstrap.min.css";
-// @import "bootstrap-theme.min.css";
 
-// {
-    .icon.icon-large {
-        font-size: 250%;
-    }
-    
-    .sura-name {
-        direction: rtl;
-        &:not(.search) {
-            font-family: @sura-name-font-family;
-            font-size: @sura-name-font-size;
-            text-align: center;
-            font-weight: bold;
-        }
-        .search {
-
-        }
-    }
-    .sura-body {
-        direction: rtl;
-        text-align: justify;
-        text-align-last: justify;
-        text-justify: auto;
-        text-overflow: initial !important;
-        &:not(.search) {
-            line-height: @aya-line-height;
-            font-size: @aya-font-size;
-        }
-        &.single-aya {
-            font-size: @aya-font-size * 1.2;
-        }
-        &.search {
-            line-height: @aya-line-height * .8;
-            font-size: @aya-font-size * .8;
-        }
-    }
-    .aya-text {
-        font-family: @aya-font-family;
-        pointer-events: none;
-        // &.playing {
-        //     color: red;
-        // }
-    }
-    .translation {
-        font-family: @translation-font-family;
-    }
-    .layers {
-        display: inline-block;
-        position: relative;
-        text-overflow: initial !important;
-        .highlighted {
-            background-color: yellow;
-        }
-        .original {
-            color: transparent;
-            display: inline;
-        }
-        .letters, .diacritics, .quranic-signs, .overlay {
-            position: absolute;
-            top: 0;
-            right: 0;
-        }
-        .diacritics {
-            color: @diacritic-color;
-            opacity: 0.9
-        }
-        .quranic-signs {
-            color: @annotation-sings-color;
-            opacity: 0.9
-        }
-        .letters {
-            color: inherit;
-        }
-    }
-    // .original {
-    //     color: black;
-    //     position: absolute;
-    //     top: 0;
-    //     left: 0;
-    // }
-    // .overlay {
-    //     position: absolute;
-    //     color: red;
-    //     top: 0;
-    //     left: 0;
-    // }
-    em {
+.icon.icon-large {
+    font-size: 250%;
+}
+.sura-name {
+    direction: rtl;
+    &:not(.search) {
+        font-family: @sura-name-font-family;
+        font-size: @sura-name-font-size;
+        text-align: center;
         font-weight: bold;
-        font-style: italic;
     }
-    .aya-number {
+    .search {
+
+    }
+}
+.sura-body {
+    direction: rtl;
+    text-align: justify;
+    text-align-last: justify;
+    text-justify: auto;
+    text-overflow: initial !important;
+    &:not(.search) {
         line-height: @aya-line-height;
-        // font-family: @aya-font-family;
-        // font-size: @aya-font-size;
-        // "\06DD"
-        margin-right: 5px;
-        margin-left: 5px;
-        &::before {
-            content: '('
-        }
-        &::after {
-            content: ')'
-        }
+        font-size: @aya-font-size;
     }
-// }
+    &.single-aya {
+        font-size: @aya-font-size * 1.2;
+    }
+    &.search {
+        line-height: @aya-line-height * .8;
+        font-size: @aya-font-size * .8;
+    }
+}
+.aya-text {
+    font-family: @aya-font-family;
+    pointer-events: none;
+    // &.playing {
+    //     color: red;
+    // }
+}
+.aya-number {
+    line-height: @aya-line-height;
+    // font-family: @aya-font-family;
+    // font-size: @aya-font-size;
+    // "\06DD"
+    margin-right: 5px;
+    margin-left: 5px;
+    &::before {
+        content: '('
+    }
+    &::after {
+        content: ')'
+    }
+}
+.translation {
+    font-family: @translation-font-family;
+}
+.layers {
+    display: inline-block;
+    position: relative;
+    text-overflow: initial !important;
+    .highlighted {
+        background-color: yellow;
+    }
+    .original {
+        color: transparent;
+        display: inline;
+    }
+    .letters, .diacritics, .quranic-signs, .overlay {
+        position: absolute;
+        top: 0;
+        right: 0;
+    }
+    .diacritics {
+        color: @diacritic-color;
+        opacity: 0.9
+    }
+    .quranic-signs {
+        color: @annotation-sings-color;
+        opacity: 0.9
+    }
+    .letters {
+        color: inherit;
+    }
+}
+em {
+    font-weight: bold;
+    font-style: italic;
+}
