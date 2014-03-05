@@ -1,5 +1,5 @@
 # async = require 'async'
-app.controller 'AyaController', ['$scope', 'ContentService' , 'RecitationService', 'ExplanationService', '$stateParams', 'Preferences', '$log', ($scope, ContentService, RecitationService, ExplanationService, $stateParams, Preferences, $log) ->
+app.controller 'AyaController', ['$scope', 'ContentService' , '$stateParams', 'Preferences', '$log', ($scope, ContentService, $stateParams, Preferences, $log) ->
     # $log.debug 'Here we go'
     $scope.options = Preferences
 

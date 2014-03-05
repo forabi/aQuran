@@ -1,7 +1,7 @@
 # _ = require 'lodash'
 # q = require 'q'
 # module.exports = (app) ->
-app.controller 'ReadingController', ['$ionicLoading', '$scope', '$state', '$stateParams', '$timeout', '$log', 'ContentService', 'SearchService', 'RecitationService', 'Preferences', ($ionicLoading, $scope, $state, $stateParams, $timeout, $log, ContentService, SearchService, RecitationService, Preferences) ->
+app.controller 'ReadingController', ['$ionicLoading', '$scope', '$state', '$stateParams', '$timeout', '$log', 'ContentService', 'SearchService', 'Preferences', ($ionicLoading, $scope, $state, $stateParams, $timeout, $log, ContentService, SearchService, Preferences) ->
     # database = undefined
 
     $scope.loading = $ionicLoading.show 
