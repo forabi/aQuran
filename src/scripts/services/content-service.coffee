@@ -2,31 +2,64 @@
 # async = require 'async'
 # Q = require 'q'
 # module.exports = (app) -> 
-    app.service 'ContentService', ['$http', '$log', ($http, $log) -> 
-        database:
-            $http.get 'resources/ayas.json'
-            .then (response) ->
-                db = new Nedb()
-                indexes = [
-                    (fieldName: 'gid', unique: yes)
-                    (fieldName: 'page_id')
-                    (fieldName: 'sura_id')
-                    (fieldName: 'aya_id')
-                    (fieldName: 'standard')
-                ]
+app.service 'ContentService', ['RecitationService', 'ExplanationService', 'Preferences', '$http', '$log', (RecitationService, ExplanationService, Preferences, $http, $log) -> 
+    database =
+        $http.get 'resources/ayas.json'
+        .then (response) ->
+            db = new Nedb()
+            indexes = [
+                (fieldName: 'gid', unique: yes)
+                (fieldName: 'page_id')
+                (fieldName: 'sura_id')
+                (fieldName: 'aya_id')
+                (fieldName: 'standard')
+            ]
 
-                async.each indexes,
-                ((index, callback) -> db.ensureIndex index, callback),
-                (err) -> if err then $log.debug 'Error indexing datastore', err
-                else $log.info 'Indexes created'
+            async.each indexes,
+            ((index, callback) -> db.ensureIndex index, callback),
+            (err) -> if err then $log.debug 'Error indexing datastore', err
+            else $log.info 'Indexes created'
 
-                deferred = Q.defer()
-                db.insert response.data, (err, docs) ->
-                    if err
-                        $log.error err
-                        deferred.reject err
-                    else
-                        $log.info "#{docs.length} documents inserted"
-                        deferred.resolve db
-                deferred.promise
-    ]
+            deferred = Q.defer()
+            db.insert response.data, (err, docs) ->
+                if err
+                    $log.error err
+                    deferred.reject err
+                else
+                    $log.info "#{docs.length} documents inserted"
+                    deferred.resolve db
+            deferred.promise
+    findOne: (query, callback) ->
+        database.then (db) ->
+            db.findOne query, (err, aya) ->
+                if err then callback err
+                else
+                    aya.recitation = RecitationService.getAya aya.sura_id, aya.aya_id
+                    async.map Preferences.explanations.ids, (id, callback) ->
+                        ExplanationService.getExplanation(id).then (explanation) ->
+                            callback null, text: explanation.content[aya.gid - 1]
+                    , (err, results) ->
+                        if err then callback err
+                        else
+                            aya.explanations = results
+                            callback null, aya
+
+    find: (query, callback) ->
+        database.then (db) ->
+            db.find query, (err, ayas) ->
+                if err then callback err
+                else
+                    async.map ayas, (aya, callback) ->
+                        aya.recitation = RecitationService.getAya aya.sura_id, aya.aya_id
+                        async.map Preferences.explanations.ids, (id, callback) ->
+                            ExplanationService.getExplanation(id).then (explanation) ->
+                                callback null, text: explanation.content[aya.gid - 1]
+                        , (err, results) ->
+                            if err then callback err
+                            else
+                                aya.explanations = results
+                                callback null, aya
+                    , (err, results) ->
+                        if err then callback err
+                        else callback null, results
+]

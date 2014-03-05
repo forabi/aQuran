@@ -9,17 +9,9 @@ app.controller 'AyaController', ['$scope', 'ContentService' , 'RecitationService
     $scope.aya = 
         gid: Number $stateParams.gid || 1
 
-    ContentService.database.then (db) ->
-        db.findOne gid: $scope.aya.gid, (err, aya) ->
-            $log.debug 'Found', aya
+    ContentService.findOne gid: $scope.aya.gid, (err, aya) ->
+        if err then $scope.progress.status = 'error'
+        else 
             $scope.aya = aya
-            $scope.aya.recitation = RecitationService.getAya aya.sura_id, aya.aya_id
-            async.map Preferences.explanations.ids, (id, callback) ->
-                ExplanationService.getExplanation(id).then (explanation) ->
-                    callback null, text: explanation.content[aya.gid - 1]
-            , (err, results) ->
-                if err then $scope.progress.status = 'error'
-                else
-                    $scope.aya.explanations = results
-                    $scope.progress.status = 'ready'
+            $scope.progress.status = 'ready'
 ]

@@ -120,7 +120,7 @@ gulp.task('build', ['manifest', 'res', 'locales', 'scripts', 'html', 'styles', '
 
 gulp.task('watch', function() {
     // var server = livereload();
-    gulp.watch([paths.coffee, paths.js], ['scripts', 'html']);
+    gulp.watch(paths.coffee, paths.js, ['scripts', 'html']);
     gulp.watch(paths.jade, ['html']);
     gulp.watch(paths.styles, ['styles']);
     gulp.watch(paths.resources, ['res']);

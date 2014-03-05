@@ -5,7 +5,7 @@ app.constant 'API', 'http://www.alfanous.org/jos2'
 app.constant 'EveryAyah', 'http://www.everyayah.com/data/'
 
 app.run ['$rootScope', ($rootScope) ->
-    $rootScope.online = () -> navigator.onLine
+    $rootScope.online = navigator.onLine
     window.addEventListener 'online',  () -> 
       $rootScope.online = yes
       $rootScope.$apply()
