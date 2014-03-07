@@ -82,6 +82,7 @@ gulp.task('html', function() {
                 'ionic/js/ionic.bundle.min.js',
                 'scripts/angular-audio-player.min.js',
                 'scripts/main.js',
+                'scripts/services/cache-service.js',
                 'scripts/services/preferences-service.js',
                 'scripts/services/localization-service.js',
                 'scripts/services/explanation-service.js',

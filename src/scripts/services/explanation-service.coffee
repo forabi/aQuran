@@ -27,18 +27,18 @@ app.service 'ExplanationService', ['$q', '$http', 'CacheService', '$log', ($q, $
     getExplanation: (id) ->
         cached = CacheService.get "trans:#{id}"
         if cached
-            $log.debug "Translation #{id} retrieved from cache"
-            cached
+            $log.debug "Translation #{id} retrieved from cache:", cached
+            $q.when cached
         else 
             database.then (db) ->
                 deferred = $q.defer()
                 db.findOne id: id, (err, properties) ->
-                    if err deferred.reject err
+                    if err then deferred.reject err
                     else deferred.resolve properties
                 deferred.promise
             .then (properties) ->
-                $q.all [properites, ($http.get "resources/translations/#{properties.file}", cache: yes)]
-            .then (results)
+                $q.all [properties, ($http.get "resources/translations/#{properties.file}", cache: yes)]
+            .then (results) ->
                 $log.debug "Translation #{id} response:", results
                 properties: results[0]
                 content:

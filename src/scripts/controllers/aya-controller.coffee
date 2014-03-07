@@ -7,9 +7,12 @@ app.controller 'AyaController', ['$scope', 'ContentService' , '$stateParams', 'P
         status: 'init'
 
     $scope.aya = 
-        gid: Number $stateParams.gid || 1
+        sura_id: Number $stateParams.sura_id || 1
+        aya_id: Number $stateParams.aya_id || 1
 
-    ContentService.findOne gid: $scope.aya.gid, (err, aya) ->
+    console.log 'Here!'
+    ContentService.findOne $scope.aya, (err, aya) ->
+        console.log 'Here!'
         if err then $scope.progress.status = 'error'
         else 
             $scope.aya = aya

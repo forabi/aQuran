@@ -28,6 +28,7 @@ app.service 'ContentService', ['RecitationService', 'ExplanationService', 'Prefe
                     $log.info "#{docs.length} ayas inserted"
                     deferred.resolve db
             deferred.promise
+    
     transform = (aya, callback) ->
         aya.recitation = RecitationService.getAya aya.sura_id, aya.aya_id
         async.mapSeries Preferences.explanations.ids, (id, callback) ->
