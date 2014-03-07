@@ -1,30 +1,50 @@
-app.service 'ExplanationService', ['$q', '$http', '$log', ($q, $http, $log) ->
-    ###
-    TODO: fix this so we won't have to load the file every time
-    we fetch a translation because this way performance will suffer
+app.service 'ExplanationService', ['$q', '$http', 'CacheService', '$log', ($q, $http, CacheService, $log) ->
 
-    Maybe a Nedb per translation is a good idea, but we will have
-    to load all translations ahead of time as this service is independent
-    of the Preferences service and the selected translations may change
-    during runtime
-    ###
+    database = $http.get 'resources/translations.json'
+    .then (response) ->
+        db = new Nedb()
+        indexes = [
+            (fieldName: 'id', unique: yes)
+            (fieldName: 'language')
+            (fieldName: 'country')
+        ]
+
+        async.each indexes,
+        ((index, callback) -> db.ensureIndex index, callback),
+        (err) -> if err then $log.debug 'Error indexing translations', err
+        else $log.info 'Indexes created for translations'
+
+        deferred = $q.defer()
+        db.insert response.data, (err, docs) ->
+            if err
+                $log.error err
+                deferred.reject err
+            else
+                $log.info "#{docs.length} translations inserted"
+                deferred.resolve db
+        deferred.promise
+
     getExplanation: (id) ->
-    	$q.all [
-    		($http.get "resources/#{id}.trans/#{id}.txt", cache: yes)
-    		($http.get "resources/#{id}.trans/translation.properties", cache: yes)
-    	]
-    	.then (results) ->
-            $log.debug 'Translation response:', results
-            p = results[1].data
-
-            localizedName = p.match(/localizedName=(.+)/)[1]
-            name = p.match(/name=(.+)/)[0]
-            copyright = p.match(/copyright=(.+)/)[0]
-
-            properties:
-            	name: name
-            	localizedName: localizedName
-            	copyright: copyright
-            content:
-                results[0].data.split /\n/g
+        cached = CacheService.get "trans:#{id}"
+        if cached
+            $log.debug "Translation #{id} retrieved from cache"
+            cached
+        else 
+            database.then (db) ->
+                deferred = $q.defer()
+                db.findOne id: id, (err, properties) ->
+                    if err deferred.reject err
+                    else deferred.resolve properties
+                deferred.promise
+            .then (properties) ->
+                $q.all [properites, ($http.get "resources/translations/#{properties.file}", cache: yes)]
+            .then (results)
+                $log.debug "Translation #{id} response:", results
+                properties: results[0]
+                content:
+                    results[1].data.split /\n/g
+            .then (translation) ->
+                # Store in cache
+                CacheService.put "trans:#{id}", translation
+                translation
 ]

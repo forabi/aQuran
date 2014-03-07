@@ -17,7 +17,7 @@ app.service 'ContentService', ['RecitationService', 'ExplanationService', 'Prefe
             async.each indexes,
             ((index, callback) -> db.ensureIndex index, callback),
             (err) -> if err then $log.debug 'Error indexing datastore', err
-            else $log.info 'Indexes created'
+            else $log.info 'Indexes created for ayas'
 
             deferred = $q.defer()
             db.insert response.data, (err, docs) ->
@@ -25,7 +25,7 @@ app.service 'ContentService', ['RecitationService', 'ExplanationService', 'Prefe
                     $log.error err
                     deferred.reject err
                 else
-                    $log.info "#{docs.length} documents inserted"
+                    $log.info "#{docs.length} ayas inserted"
                     deferred.resolve db
             deferred.promise
     transform = (aya, callback) ->
