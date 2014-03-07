@@ -1,5 +1,10 @@
 var gulp = require('gulp'),
     gutil = require('gulp-util'),
+    fs = require('fs'),
+    async = require('async'),
+    admZip = require('adm-zip'),
+    properties = require('properties'),
+    glob = require('glob'),
     rename = require('gulp-rename'),
     jade = require('gulp-jade'),
     less = require('gulp-less'),
@@ -24,7 +29,8 @@ var paths = {
     images: 'src/images/*',
     manifest: 'src/manifest.json',
     locales: ['src/_locales/**/*.*'],
-    resources: ['src/resources/**/*', 'src/styles/fonts/*']
+    resources: ['src/resources/**/*', 'src/styles/fonts/*'],
+    translations: 'src/resources/translations/*.trans.zip'
 };
 
 gulp.task('ionic', function() {
@@ -114,6 +120,33 @@ gulp.task('locales', function() {
 
 gulp.task('res', function() {
     return copy(paths.resources, 'dist/chrome', { base: 'src' });
+});
+
+gulp.task('translations', function(callback) {
+    var files = glob.sync(paths.translations);
+    console.log('Translations files:', files);
+    var processFile = function(file) {
+        console.log('Processing file', file);
+        var zip = new admZip(file);
+        var entries = zip.getEntries();
+        var props = {};
+        async.each(entries, function(entry, callback) {
+            if (entry.name.match(/.properties$/gi)) {
+                properties.parse(entry.getData().toString('utf-8'), function(err, obj) {
+                    props = obj;
+                    callback(err);
+                });
+            } else if (entry.name.match(/.txt$/gi)) {
+                zip.extractEntryTo(entry.name, 'dist/chrome/resources/translations', false, true);
+            }
+        }, function(err) {
+            callback(err, props)
+        });
+    };
+    async.map(files, processFile, function(err, translations) {
+        translations = JSON.stringify(translations);
+        fs.writeFile('dist/chrome/resources/translations.json', translations, {flags: 'w+'}, callback);
+    });
 });
 
 gulp.task('build', ['manifest', 'res', 'locales', 'scripts', 'html', 'styles', 'images']);

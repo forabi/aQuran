@@ -26,7 +26,11 @@
     "gulp-coffeelint": "^0.2.2",
     "gulp-coffee": "^1.4.1",
     "gulp-util": "^2.2.14",
-    "gulp-filter": "^0.3.0"
+    "gulp-filter": "^0.3.0",
+    "async": "^0.2.10",
+    "adm-zip": "^0.4.4",
+    "glob": "^3.2.9",
+    "properties": "^1.2.1"
   },
   "engines": {
     "node": ">=0.8.0"
