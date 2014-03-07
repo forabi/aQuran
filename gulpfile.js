@@ -70,7 +70,7 @@ gulp.task('html', function() {
                 // 'ionic/js/angular-ui/angular-ui-router.js',
                 // 'ionic/js/ionic.js',
                 'scripts/lodash.js',
-                'scripts/q.js',
+                // 'scripts/q.js',
                 'scripts/async.js',
                 'scripts/nedb.js',
                 'ionic/js/ionic.bundle.min.js',

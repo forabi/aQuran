@@ -4,3 +4,5 @@ temp
 .tmp
 dist
 .sass-cache
+*.sublime-workspace
+*.sublime-project

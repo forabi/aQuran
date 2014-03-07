@@ -14,8 +14,7 @@ ion-view(title='"Aya"')
                     .sura-body.single-aya
                         span.aya-text(colorize='{{ aya.uthmani }}') {{ aya.uthmani }}
                         //- i.aya-number {{ aya.aya_id }}
-                .item.item-text-wrap.translation(ng-repeat='explanation in aya.explanations', auto-direction='')
-                    | {{ explanation.text }}
+                
                 a.item.item-text-wrap.subdued(href='#', auto-direction='', ng-if='aya.topic.length > 0'): small الموضوع: {{ aya.topic }}
                 .item.tabs.tabs-secondary.tabs-icon-left
                     a.tab-item
@@ -34,3 +33,14 @@ ion-view(title='"Aya"')
                     button.button.button-icon.tab-item.tab-item(ng-show='ayaPlayer.playing', ng-click='ayaPlayer.pause()')
                         i.icon.ion-pause
                         | Pause
+
+            .card.list(ng-repeat='explanation in aya.explanations')
+                .item.item-text-wrap.item-divider(auto-direction='') {{ explanation.properties.name }}
+                .item.item-text-wrap.translation(auto-direction='') {{ explanation.text }}
+                .item.tabs.tabs-secondary.tabs-icon-left
+                    a.tab-item
+                        i.icon.ion-share
+                        | Share
+                    a.tab-item
+                        i.icon.ion-ios7-copy-outline
+                        | Copy

@@ -1,4 +1,4 @@
-app.service 'ExplanationService', ['$http', '$log', ($http, $log) ->
+app.service 'ExplanationService', ['$q', '$http', '$log', ($q, $http, $log) ->
     ###
     TODO: fix this so we won't have to load the file every time
     we fetch a translation because this way performance will suffer
@@ -9,10 +9,22 @@ app.service 'ExplanationService', ['$http', '$log', ($http, $log) ->
     during runtime
     ###
     getExplanation: (id) ->
-        $http.get "resources/#{id}.trans/#{id}.txt", cache: yes
-        .then (response) ->
-            $log.debug 'Translation response:', response
-            properties: null
+    	$q.all [
+    		($http.get "resources/#{id}.trans/#{id}.txt", cache: yes)
+    		($http.get "resources/#{id}.trans/translation.properties", cache: yes)
+    	]
+    	.then (results) ->
+            $log.debug 'Translation response:', results
+            p = results[1].data
+
+            localizedName = p.match(/localizedName=(.+)/)[1]
+            name = p.match(/name=(.+)/)[0]
+            copyright = p.match(/copyright=(.+)/)[0]
+
+            properties:
+            	name: name
+            	localizedName: localizedName
+            	copyright: copyright
             content:
-                response.data.split /\n/g
+                results[0].data.split /\n/g
 ]

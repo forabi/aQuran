@@ -1,7 +1,6 @@
-# Q = require 'q'
 # _ = require 'lodash'
 # module.exports = (app) ->
-app.service 'SearchService', ['APIService', 'ContentService', 'ArabicService', '$log', '$http', (APIService, ContentService, Arabic, $log, $http) -> 
+app.service 'SearchService', ['APIService', 'ContentService', 'ArabicService', '$log', '$http', '$q', (APIService, ContentService, Arabic, $log, $http, $q) -> 
     search: (str, options = { }) -> 
         
         options = _.defaults options, (
@@ -20,7 +19,7 @@ app.service 'SearchService', ['APIService', 'ContentService', 'ArabicService', '
                 field: 'standard'
             )
        
-        deferred = Q.defer()
+        deferred = $q.defer()
 
         deferred.reject 'No query provided' if not str
 
