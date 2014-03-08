@@ -6,3 +6,4 @@ dist
 .sass-cache
 *.sublime-workspace
 *.sublime-project
+*.dtapart
