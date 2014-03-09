@@ -8,12 +8,16 @@ app.service 'SearchService', ['APIService', 'ContentService', 'ArabicService', '
             unit: 'aya'
             traduction: 1
             query: str
-            sortedBy: 'score'
+            sortedBy: 'mushaf'
             word_info: 'False'
             recitation: 0
-            aya_position_info: 'False',
+            aya_position_info: 'True',
             aya_sajda_info: 'False',
             fuzzy: 'True'
+            script: 'standard'
+            vocalized: 'True'
+            range: '25'
+            perpage: '25'
         .then (response) ->
             $log.debug 'Online search response:', response
             # Remap response to match assumed schema
@@ -24,6 +28,7 @@ app.service 'SearchService', ['APIService', 'ContentService', 'ArabicService', '
                     standard_full: aya.aya.text_no_highlight
                     sura_name: aya.sura.arabic_name
                     sura_name_en: aya.sura.english_name
+                    page_id: aya.position.page
             .value()
             $log.debug 'Tranformed online search data:', data
             data
