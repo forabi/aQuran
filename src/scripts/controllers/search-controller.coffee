@@ -20,7 +20,7 @@
                 if query
                     $scope.progress.status = 'searching'
                     $timeout () ->
-                        SearchService.search query
+                        SearchService.searchOnline query
                         .then (transform)
                         .then (results) ->
                             $scope.search.results = results

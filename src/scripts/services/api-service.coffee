@@ -3,7 +3,7 @@ app.service 'APIService', ['API', '$http', '$log', (API, $http, $log) ->
         throw 'API Error' if response.data.error.code is not 0
         response
     query: (params) ->
-        $http.get API, params: _.defaults params, (unit: 'aya', traduction: 1)
+        $http.get API, cache: true, params: _.defaults params, (action: 'search', unit: 'aya', traduction: 1, fuzzy: 'True')
     suggest: (term) ->
         $http.get API, params: (query: term, action: 'suggest', unit: 'aya')
         .then (checkForErrors)

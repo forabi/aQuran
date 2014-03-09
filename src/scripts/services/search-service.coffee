@@ -1,6 +1,33 @@
 # _ = require 'lodash'
 # module.exports = (app) ->
 app.service 'SearchService', ['APIService', 'ContentService', 'ArabicService', '$log', '$http', '$q', (APIService, ContentService, Arabic, $log, $http, $q) -> 
+    searchOnline: (str) ->
+        $log.debug 'Searching online...'
+        APIService.query
+            action: 'search'
+            unit: 'aya'
+            traduction: 1
+            query: str
+            sortedBy: 'score'
+            word_info: 'False'
+            recitation: 0
+            aya_position_info: 'False',
+            aya_sajda_info: 'False',
+            fuzzy: 'True'
+        .then (response) ->
+            $log.debug 'Online search response:', response
+            # Remap response to match assumed schema
+            data = _(response.data.search.ayas).toArray().map (aya) -> 
+                $log.log 'Processing aya:', aya
+                _.extend aya.identifier,
+                    html: aya.aya.text
+                    standard_full: aya.aya.text_no_highlight
+                    sura_name: aya.sura.arabic_name
+                    sura_name_en: aya.sura.english_name
+            .value()
+            $log.debug 'Tranformed online search data:', data
+            data
+
     search: (str, options = { }) -> 
         
         options = _.defaults options, (

@@ -24,6 +24,7 @@ ion-view(title='"Search"')
                             search-text='{{ aya.standard }}',
                             highlight='{{ search.query }}'
                             ) {{ aya[options.reader.aya_mode] }}
+                        //- span.aya-text(ng-bind-html='aya.html')
                         i.aya-number.search {{ aya.aya_id }}
                     //- a.item.item-divider
                         | 2 more results

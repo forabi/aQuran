@@ -80,6 +80,7 @@ gulp.task('html', function() {
                 'scripts/async.js',
                 'scripts/nedb.js',
                 'ionic/js/ionic.bundle.min.js',
+                'ionic/js/angular/angular-sanitize.min.js',
                 'scripts/angular-audio-player.min.js',
                 'scripts/main.js',
                 'scripts/services/cache-service.js',
