@@ -33,7 +33,6 @@ http://tanzil.ca/trans/en.sahih.trans.zip
 http://tanzil.ca/trans/en.sarwar.trans.zip
 http://tanzil.ca/trans/en.shakir.trans.zip
 http://tanzil.ca/trans/en.transliteration.trans.zip
-http://en.wikipedia.org/wiki/Wahiduddin_Khan
 http://tanzil.ca/trans/en.wahiduddin.trans.zip
 http://tanzil.ca/trans/en.yusufali.trans.zip
 http://tanzil.ca/trans/fr.hamidullah.trans.zip
