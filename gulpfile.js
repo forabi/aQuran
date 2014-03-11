@@ -9,16 +9,19 @@ var gulp = require('gulp'),
     jade = require('gulp-jade'),
     less = require('gulp-less'),
     coffee = require('gulp-coffee'),
+    download = require('gulp-download'),
     // coffeelint = require('gulp-coffeelint'),
     livereload = require('gulp-livereload'),
     ngmin = require('gulp-ngmin'),
     uglify = require('gulp-uglify'),
     browserify = require('gulp-browserify');
 
+
+/* A helper function */
 var copy = function(src, dest, options) {
     return gulp.src(src, options)
     .pipe(gulp.dest(dest));
-}
+};
 
 var paths = {
     ionic: 'src/ionic/**/*',
@@ -30,7 +33,7 @@ var paths = {
     manifest: 'src/manifest.json',
     locales: ['src/_locales/**/*.*'],
     resources: ['src/resources/**/*', 'src/styles/fonts/*'],
-    translations: 'src/resources/translations/*.trans.zip'
+    translations: 'src/resources/translations/*.trans.zip',
     translations_txt: 'src/resources/translations.txt'
 };
 
@@ -64,7 +67,7 @@ gulp.task('scripts', function() {
     gulp.src(paths.js, { base: 'src' })
     .pipe(gulp.dest('dist/chrome'))
 });
-
+    
 gulp.task('html', function() {
     return gulp.src(paths.jade, { base: 'src' })
     .pipe(jade({
@@ -123,6 +126,17 @@ gulp.task('locales', function() {
 
 gulp.task('res', function() {
     return copy(paths.resources, 'dist/chrome', { base: 'src' });
+});
+
+gulp.task('download_translations', function() {
+    var text = fs.readFileSync(paths.translations_txt).toString();
+    var urls = text.split(/\n/g);
+    console.log('Found', urls.length, 'URLs');
+    
+    var destination = 'src/resources/translations';
+    return download(urls)
+    .pipe(gulp.dest(destination));
+
 });
 
 gulp.task('translations', function(callback) {

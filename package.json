@@ -30,7 +30,8 @@
     "async": "^0.2.10",
     "adm-zip": "^0.4.4",
     "glob": "^3.2.9",
-    "properties": "^1.2.1"
+    "properties": "^1.2.1",
+    "gulp-download": "0.0.1"
   },
   "engines": {
     "node": ">=0.8.0"
