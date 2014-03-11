@@ -31,6 +31,7 @@ var paths = {
     locales: ['src/_locales/**/*.*'],
     resources: ['src/resources/**/*', 'src/styles/fonts/*'],
     translations: 'src/resources/translations/*.trans.zip'
+    translations_txt: 'src/resources/translations.txt'
 };
 
 gulp.task('ionic', function() {

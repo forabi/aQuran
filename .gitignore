@@ -7,3 +7,4 @@ dist
 *.sublime-workspace
 *.sublime-project
 *.dtapart
+*.trans.zip
