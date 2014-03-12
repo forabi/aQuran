@@ -24,6 +24,7 @@ app.service 'ExplanationService', ['$q', '$http', 'CacheService', '$log', ($q, $
                 deferred.resolve db
         deferred.promise
 
+    properties: database
     getExplanation: (id) ->
         cached = CacheService.get "trans:#{id}"
         if cached

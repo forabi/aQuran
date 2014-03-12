@@ -32,7 +32,7 @@ var paths = {
     images: 'src/images/*',
     manifest: 'src/manifest.json',
     locales: ['src/_locales/**/*.*'],
-    resources: ['src/resources/**/*', 'src/styles/fonts/*'],
+    resources: ['src/resources/**/*.json', 'src/styles/fonts/*', 'src/styles/flags/**/*'],
     translations: 'src/resources/translations/*.trans.zip',
     translations_txt: 'src/resources/translations.txt'
 };
@@ -84,6 +84,7 @@ gulp.task('html', function() {
                 'scripts/async.js',
                 'scripts/nedb.js',
                 'ionic/js/ionic.bundle.min.js',
+                'scripts/ngStorage.min.js',
                 'ionic/js/angular/angular-sanitize.min.js',
                 'scripts/angular-audio-player.min.js',
                 'scripts/main.js',
@@ -94,6 +95,7 @@ gulp.task('html', function() {
                 'scripts/directives/auto-direction-directive.js',
                 'scripts/controllers/aya-controller.js',
                 'scripts/controllers/preferences-controller.js',
+                'scripts/controllers/explanations-controller.js',
                 'scripts/controllers/navigation-controller.js',
                 'scripts/controllers/search-controller.js',
                 'scripts/controllers/reading-controller.js',
@@ -142,7 +144,8 @@ gulp.task('download_translations', function() {
 gulp.task('translations', function(callback) {
     var files = glob.sync(paths.translations);
     console.log('Translations files:', files);
-    var processFile = function(file) {
+    var processFile = function(memo, file, callback) {
+        // console.info('memo is:', memo);
         console.log('Processing file', file);
         var zip = new admZip(file);
         var entries = zip.getEntries();
@@ -155,18 +158,25 @@ gulp.task('translations', function(callback) {
                 });
             } else if (entry.name.match(/.txt$/gi)) {
                 zip.extractEntryTo(entry.name, 'dist/chrome/resources/translations', false, true);
+                callback();
             }
         }, function(err) {
-            callback(err, props)
+            memo.push(props)
+            callback(err, memo);
         });
     };
-    async.map(files, processFile, function(err, translations) {
+    async.reduce(files, [], processFile, function(err, translations) {
+        if (err) return console.log('Error:', err.message);
         translations = JSON.stringify(translations);
-        fs.writeFile('dist/chrome/resources/translations.json', translations, {flags: 'w+'}, callback);
+        console.log('Writing "translations.json"...');
+        fs.writeFile('dist/chrome/resources/translations.json', translations, function(err) {
+            if (err) console.log('Error writing translations.json:', err.message);
+            callback(err);
+        });
     });
 });
 
-gulp.task('build', ['manifest', 'res', 'locales', 'scripts', 'html', 'styles', 'images']);
+gulp.task('build', ['manifest', 'res', 'locales', 'ionic', 'scripts', 'html', 'styles', 'images']);
 
 gulp.task('watch', function() {
     // var server = livereload();

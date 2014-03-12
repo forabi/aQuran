@@ -19,3 +19,9 @@ ion-view(title='"Preferences"')
                     label.toggle
                         input(type='checkbox', ng-model='options.reader.colorized')
                         .track: .handle
+            .item.item-divider Translations
+            .item.item-toggle Enable translations
+                label.toggle
+                    input(type='checkbox', ng-model='options.explanations.enabled')
+                    .track: .handle
+            a.item.item-text-wrap(ui-sref='explanations') Manage translations

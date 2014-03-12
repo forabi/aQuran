@@ -1,0 +1,20 @@
+ion-view(title='"Translations"')
+    ion-content(has-header='true', overflow-scroll='true', padding='false')
+        ion-list.list(show-delete='true', show-reorder='true', can-swipe='true')
+            .item.item-divider Enabled
+            .item.item-text-wrap.item-icon-left(
+                ng-repeat='explanation in explanations.enabled',
+                item='explanation',
+                can-delete='true', can-swipe='true', can-reorder='true'
+                )
+                i.icon.flag-icon.flag-icon-squared(ng-class='"flag-icon-" + explanation.country.toLowerCase()')
+                | {{ explanation.name }}
+            .item.item-divider Available
+            .item.item-toggle.item-text-wrap.item-icon-left(
+                ng-repeat='explanation in explanations.available',
+                ng-click='enable(explanation)')
+                i.icon.flag-icon.flag-icon-squared(ng-class='"flag-icon-" + explanation.country.toLowerCase()')
+                | {{ explanation.name }}
+                label.toggle
+                    input(type='checkbox', ng-checked='explanation.enabled')
+                    .track: .handle

@@ -42,6 +42,11 @@ app.config ['$stateProvider', '$urlRouterProvider', '$locationProvider' , ($stat
       url: '/preferences'
       templateUrl: 'views/preferences.html'
       controller: 'PreferencesController'
+
+    .state 'explanations', 
+      url: '/explanations'
+      templateUrl: 'views/explanations.html'
+      controller: 'ExplanationsController'
     
 
     $urlRouterProvider.otherwise '/reader/1'
