@@ -1,4 +1,4 @@
-app.service 'ExplanationService', ['$q', '$http', 'CacheService', '$log', ($q, $http, CacheService, $log) ->
+app.service 'ExplanationService', ['$q', '$http', 'CacheService', '$log', 'Preferences', ($q, $http, CacheService, $log, Preferences) ->
 
     database = $http.get 'resources/translations.json'
     .then (response) ->
@@ -26,26 +26,28 @@ app.service 'ExplanationService', ['$q', '$http', 'CacheService', '$log', ($q, $
 
     properties: database
     getExplanation: (id) ->
-        cached = CacheService.get "trans:#{id}"
-        if cached
-            $log.debug "Translation #{id} retrieved from cache:", cached
-            $q.when cached
-        else 
-            database.then (db) ->
-                deferred = $q.defer()
-                db.findOne id: id, (err, properties) ->
-                    if err then deferred.reject err
-                    else deferred.resolve properties
-                deferred.promise
-            .then (properties) ->
-                $q.all [properties, ($http.get "resources/translations/#{properties.file}", cache: yes)]
-            .then (results) ->
-                $log.debug "Translation #{id} response:", results
-                properties: results[0]
-                content:
-                    results[1].data.split /\n/g
-            .then (translation) ->
-                # Store in cache
-                CacheService.put "trans:#{id}", translation
-                translation
+        if not Preferences.explanations.enabled then $q.reject 'Explanations disabled' 
+        else
+            cached = CacheService.get "trans:#{id}"
+            if cached
+                $log.debug "Translation #{id} retrieved from cache:", cached
+                $q.when cached
+            else 
+                database.then (db) ->
+                    deferred = $q.defer()
+                    db.findOne id: id, (err, properties) ->
+                        if err then deferred.reject err
+                        else deferred.resolve properties
+                    deferred.promise
+                .then (properties) ->
+                    $q.all [properties, ($http.get "resources/translations/#{properties.file}", cache: yes)]
+                .then (results) ->
+                    $log.debug "Translation #{id} response:", results
+                    properties: results[0]
+                    content:
+                        results[1].data.split /\n/g
+                .then (translation) ->
+                    # Store in cache
+                    CacheService.put "trans:#{id}", translation
+                    translation
 ]

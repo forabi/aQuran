@@ -12,9 +12,9 @@ ion-view(title='"Translations"')
             .item.item-divider Available
             .item.item-toggle.item-text-wrap.item-icon-left(
                 ng-repeat='explanation in explanations.available',
-                ng-click='enable(explanation)')
+                ng-click='toggle(explanation)')
                 i.icon.flag-icon.flag-icon-squared(ng-class='"flag-icon-" + explanation.country.toLowerCase()')
                 | {{ explanation.name }}
                 label.toggle
-                    input(type='checkbox', ng-checked='explanation.enabled')
+                    input(type='checkbox', ng-checked='isEnabled(explanation)')
                     .track: .handle

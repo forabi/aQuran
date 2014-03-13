@@ -1,7 +1,7 @@
 # _ = require 'lodash'
 # module.exports = (app) ->
-app.service 'SearchService', ['APIService', 'ContentService', 'ArabicService', '$log', '$http', '$q', (APIService, ContentService, Arabic, $log, $http, $q) -> 
-    searchOnline: (str) ->
+app.service 'SearchService', ['APIService', 'ContentService', 'ArabicService', 'Preferences', '$log', '$http', '$q', (APIService, ContentService, Arabic, Preferences, $log, $http, $q) -> 
+    online = (str, options) ->
         $log.debug 'Searching online...'
         APIService.query
             action: 'search'
@@ -33,27 +33,9 @@ app.service 'SearchService', ['APIService', 'ContentService', 'ArabicService', '
             $log.debug 'Tranformed online search data:', data
             data
 
-    search: (str, options = { }) -> 
-        
-        options = _.defaults options, (
-                matches: 'autocomplete'
-                srtictDiacritics: no
-                ignoreHamzaCase: yes
-                onlyStartAya: no
-                wholeWord: yes
-                scope: 'all'
-                sort: [
-                    (sura_id: 1)
-                    (aya_id: 1)
-                ]
-                limit: 0,
-                skip: 0,
-                field: 'standard'
-            )
+    offline = (str, options) -> 
        
         deferred = $q.defer()
-
-        deferred.reject 'No query provided' if not str
 
         # str = str.replace(Arabic.Hamzas.RegExp, Arabic.Hamzas.String.split(/./).join('|')) if options.ignoreHamzaCase
         # dicatrics are [\u0650-\u065f]
@@ -115,4 +97,30 @@ app.service 'SearchService', ['APIService', 'ContentService', 'ArabicService', '
         #     if err then deferred.reject err
         #     else deferred.resolve docs, regex
         deferred.promise
+
+    search: (str, options = {}) ->
+        options = _.defaults options, (
+                matches: 'autocomplete'
+                srtictDiacritics: no
+                ignoreHamzaCase: yes
+                onlyStartAya: no
+                wholeWord: yes
+                scope: 'all'
+                sort: [
+                    (sura_id: 1)
+                    (aya_id: 1)
+                ]
+                limit: 0,
+                skip: 0,
+                field: 'standard',
+                online: Preferences.search.online.enabled
+            )
+
+        if not str
+            $q.reject 'NO_QUERY'
+        else if options.online
+            online str, options
+            .catch (reason) ->
+                offline str, options
+        else offline str, options
 ]

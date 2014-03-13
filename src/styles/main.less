@@ -59,9 +59,19 @@
 .translation {
     font-family: @translation-font-family;
 }
-.highlighted, .match {
+
+.highlighted {
     background-color: yellow;
 }
+
+[class^='match']:nth-child(odd) {
+    background-color: yellow;
+}
+
+[class^='match']:nth-child(even) {
+    background-color: green;
+}
+
 .layers {
     display: inline-block;
     position: relative;

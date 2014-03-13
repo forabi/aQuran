@@ -34,6 +34,7 @@ app.service 'ContentService', ['RecitationService', 'ExplanationService', 'Prefe
         async.mapSeries Preferences.explanations.ids, (id, callback) ->
             ExplanationService.getExplanation(id).then (explanation) ->
                 callback null, (text: explanation.content[aya.gid - 1], properties: explanation.properties)
+            .catch (reason) -> callback()
         , (err, results) ->
             if err then callback err
             else

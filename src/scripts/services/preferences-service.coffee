@@ -1,8 +1,8 @@
 # _ = require 'lodash'
-app.service 'Preferences', [() ->
+app.service 'Preferences', ['$localStorage', ($localStorage) ->
     defaults =
         search:
-            history: ['قرآن', 'سبحانك']
+            history: []
             online:
                 enabled: no
                 prompt: yes
@@ -32,5 +32,6 @@ app.service 'Preferences', [() ->
 
     # get: (section) -> Storage.get section
     # set: (section) -> Storage.set section
-    defaults
+    # defaults
+    $localStorage.$default defaults
 ]

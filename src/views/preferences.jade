@@ -1,7 +1,7 @@
 ion-view(title='"Preferences"')
     ion-content(has-header='true', overflow-scroll='true', has-footer='true')
         list
-            .item.item-divider Quran display
+            .item.item-divider.item-text-wrap Quran display
             .item.item-toggle.item-text-wrap Show Arabic text
                 label.toggle
                     input(type='checkbox', ng-model='options.reader.arabic_text')
@@ -19,9 +19,15 @@ ion-view(title='"Preferences"')
                     label.toggle
                         input(type='checkbox', ng-model='options.reader.colorized')
                         .track: .handle
-            .item.item-divider Translations
-            .item.item-toggle Enable translations
+            .item.item-divider.item-text-wrap Translations
+            .item.item-toggle.item-text-wrap Enable translations
                 label.toggle
                     input(type='checkbox', ng-model='options.explanations.enabled')
                     .track: .handle
-            a.item.item-text-wrap(ui-sref='explanations') Manage translations
+            a.item.item-text-wrap(ui-sref='explanations', ng-if='options.explanations.enabled') Manage translations
+            .item.item-divider Search
+            .item.item-toggle.item-text-wrap Use online search for better results
+                div: small When online, aQuran will connect to Al-Fanous web service to provide better search results.
+                label.toggle
+                    input(type='checkbox', ng-model='options.search.online.enabled')
+                    .track: .handle

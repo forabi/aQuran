@@ -15,6 +15,6 @@ app.service 'APIService', ['API', '$http', '$log', (API, $http, $log) ->
                     string: term.replace key, word
                     replace: key
                     with: word
-            _.pull suggestions, string: term
+            _.remove suggestions, string: term
             suggestions
 ]

@@ -10,17 +10,21 @@
             total: 0
             current: 0
 
+        # $scope.$on '$destroy', () ->
+            # $log.debug 'Search scope will be destroyed'
+            # Preferences = $scope.options
+
         $scope.search =
             query: $stateParams.query || ''
             suggestions: []
             results: []
             history: Preferences.search.history
             execute: (query = $scope.search.query) -> 
-                $log.debug 'Search executing...'
+                # $log.debug 'Search executing...'
                 if query
                     $scope.progress.status = 'searching'
                     $timeout () ->
-                        SearchService.searchOnline query
+                        SearchService.search query
                         .then (transform)
                         .then (results) ->
                             $scope.search.results = results
