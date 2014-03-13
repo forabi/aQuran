@@ -1,5 +1,5 @@
 ion-view(title='"Search"')
-    ion-content(has-header='true', overflow-scroll='true')
+    ion-content(has-header='true', has-footer='true', overflow-scroll='true')
         
         form.card.list(ng-submit='search.execute(search.query)', auto-direction='{{ search.query }}')
             label.item.item-input
@@ -12,22 +12,22 @@ ion-view(title='"Search"')
                 button.button.button-small.button-positive.button-icon(type='submit') Search
                     i.icon.placeholder-icon.ion-ios7-search-strong
                 
-        div(ng-switch='progress.status')
+        span(ng-switch='progress.status')
             div(ng-switch-when='ready')
-                .card.list.sura(ng-repeat='sura in search.results')
-                    h2.sura-name.search.item.item-divider: b {{ sura[options.reader.sura_name] }}
-                    a.sura-body.item.item-text-wrap(
-                     ui-sref='reader({ current: {{ aya.page_id }}, type: "page", highlight: "{{ search.query }}" })',
-                     ng-repeat='aya in sura.ayas')
-                        span.aya-text.layers.search(
+                .card(ng-repeat='aya in search.results')
+                    small.item.item-divider.item-text-wrap(auto-direction='')
+                        a.subdued Juz {{ aya.juz_id }}
+                        a.subdued {{ aya[options.reader.sura_name] }}
+                        a.subdued Aya {{ aya.aya_id }}
+                    
+                    a.item.item-text-wrap.sura-body(ui-sref='reader({ current: {{ aya.page_id }}, type: "page", highlight: "{{ search.query }}" })')
+                        .aya-text.layers.search(
                             colorize='{{ aya.standard_full }}',
                             search-text='{{ aya.standard }}',
                             highlight='{{ search.query }}'
                             ) {{ aya[options.reader.aya_mode] }}
-                        //- span.aya-text(ng-bind-html='aya.html')
-                        i.aya-number.search {{ aya.aya_id }}
-                    //- a.item.item-divider
-                        | 2 more results
+                    //- span.aya-text(ng-bind-html='aya.html')
+
 
             .card.text-center(ng-switch-when='searching')
                 .item.item-body
@@ -46,7 +46,7 @@ ion-view(title='"Search"')
                         i.icon.ion-close-round
                         | Maybe later
                     .item.item-text-wrap
-                        small You can change this setting later in the Settings section
+                        small You can change this setting later in the Search section of the Preferences view
                 .card.list
                     a.item.item-text-wrap.item-icon-left.positive(
                         ng-repeat='query in search.history',
