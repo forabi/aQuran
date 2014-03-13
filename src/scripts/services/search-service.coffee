@@ -1,7 +1,8 @@
 # _ = require 'lodash'
 # module.exports = (app) ->
 app.service 'SearchService', ['APIService', 'ContentService', 'ArabicService', 'Preferences', '$log', '$http', '$q', (APIService, ContentService, Arabic, Preferences, $log, $http, $q) -> 
-    online = (str, options) ->
+    methods = {}
+    methods.online = (str, options) ->
         $log.debug 'Searching online...'
         APIService.query
             action: 'search'
@@ -21,19 +22,22 @@ app.service 'SearchService', ['APIService', 'ContentService', 'ArabicService', '
         .then (response) ->
             $log.debug 'Online search response:', response
             # Remap response to match assumed schema
-            data = _(response.data.search.ayas).toArray().map (aya) -> 
+            data = _(response.data.search.ayas).map (aya, index) -> 
                 $log.log 'Processing aya:', aya
-                _.extend aya.identifier,
+                _.extend aya.identifier, 
+                    index: index
                     html: aya.aya.text
                     standard_full: aya.aya.text_no_highlight
                     sura_name: aya.sura.arabic_name
                     sura_name_en: aya.sura.english_name
                     page_id: aya.position.page
+            .toArray()
+            .sortBy 'index'
             .value()
             $log.debug 'Tranformed online search data:', data
             data
 
-    offline = (str, options) -> 
+    methods.offline = (str, options) -> 
        
         deferred = $q.defer()
 
@@ -118,9 +122,18 @@ app.service 'SearchService', ['APIService', 'ContentService', 'ArabicService', '
 
         if not str
             $q.reject 'NO_QUERY'
-        else if options.online
-            online str, options
+        else
+            mode = 'offline'
+            mode = 'online' if options.online
+            methods[mode] str, options
             .catch (reason) ->
-                offline str, options
-        else offline str, options
+                if mode != 'offline' then methods.offline str, options
+                else throw reason
+            .then (results) ->
+                if results.length
+                    _.pull Preferences.search.history, str
+                    Preferences.search.history.unshift str
+                    results
+                else throw 'NO_RESULTS'
+
 ]
