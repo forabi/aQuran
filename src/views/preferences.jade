@@ -6,6 +6,8 @@ ion-view(title='"Preferences"')
                 label.toggle
                     input(type='checkbox', ng-model='options.reader.arabic_text')
                     .track: .handle
+            a.item.item-toggle.item-text-wrap Display sura name in:
+                div: small {{ sura_names[options.reader.sura_name].name }}, e.g. {{ sura_names[options.reader.sura_name].example }}
             div(ng-show='options.reader.arabic_text')
                 .item.item-toggle.item-text-wrap Standard text
                     label.toggle

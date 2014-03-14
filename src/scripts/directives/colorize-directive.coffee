@@ -7,7 +7,7 @@
                 if searchText and highlight
                     if typeof highlight is 'string'
                         highlight = Arabic.getRegExp highlight
-                    $log.debug 'Highligting strings matching',  highlight
+                    # $log.debug 'Highligting strings matching',  highlight
                     searchText = searchText.replace highlight, "<span class='highlighted'>$1</span>"
 
                 html = text.split(/\s+/g).map (word, index) ->

@@ -3,6 +3,7 @@ app.service 'Preferences', ['$localStorage', ($localStorage) ->
     defaults =
         search:
             history: []
+            max_history: 10
             online:
                 enabled: no
                 prompt: yes

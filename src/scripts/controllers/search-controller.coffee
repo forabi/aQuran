@@ -18,10 +18,9 @@
             query: $stateParams.query || ''
             suggestions: []
             results: []
-            history: Preferences.search.history
             execute: (query = $scope.search.query) -> 
-                # $log.debug 'Search executing...'
                 if query
+                    # $log.debug 'Search executing...'
                     $scope.progress.status = 'searching'
                     SearchService.search query
                     .then (results) ->
@@ -46,6 +45,6 @@
         error = (err) ->
             $scope.progress.status = 'error'
             $scope.error = err
-            $log.error 'Error', err
+            $log.error 'Error:', err
             $scope.$apply()
     ]

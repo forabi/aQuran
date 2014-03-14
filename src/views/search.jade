@@ -15,18 +15,24 @@ ion-view(title='"Search"')
         span(ng-switch='progress.status')
             div(ng-switch-when='ready')
                 .card(ng-repeat='aya in search.results')
-                    small.item.item-divider.item-text-wrap(auto-direction='')
+                    small.item.item-divider.item-text-wrap
                         a.subdued Juz {{ aya.juz_id }}
                         a.subdued {{ aya[options.reader.sura_name] }}
                         a.subdued Aya {{ aya.aya_id }}
                     
-                    a.item.item-text-wrap.sura-body(ui-sref='reader({ current: {{ aya.page_id }}, type: "page", highlight: "{{ search.query }}" })')
+                    a.item.item-text-wrap.sura-body(
+                        ui-sref='reader({ current: {{ aya.page_id }}, type: "page", highlight: "{{ search.query }}" })',
+                        ng-switch='aya.html.length > 0'
+                        )
                         .aya-text.layers.search(
+                            ng-switch-default
                             colorize='{{ aya.standard_full }}',
                             search-text='{{ aya.standard }}',
                             highlight='{{ search.query }}'
                             ) {{ aya[options.reader.aya_mode] }}
-                    //- span.aya-text(ng-bind-html='aya.html')
+                        .aya-text(
+                            ng-switch-when='true'
+                            ng-bind-html='aya.html')
 
 
             .card.text-center(ng-switch-when='searching')
@@ -49,7 +55,7 @@ ion-view(title='"Search"')
                         small You can change this setting later in the Search section of the Preferences view
                 .card.list
                     a.item.item-text-wrap.item-icon-left.positive(
-                        ng-repeat='query in search.history',
+                        ng-repeat='query in options.search.history',
                         auto-direction='{{ query }}',
                         ng-click='search.query = query; search.execute()'
                     )

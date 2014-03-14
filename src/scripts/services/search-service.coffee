@@ -133,6 +133,7 @@ app.service 'SearchService', ['APIService', 'ContentService', 'ArabicService', '
                 if results.length
                     _.pull Preferences.search.history, str
                     Preferences.search.history.unshift str
+                    Preferences.search.history = Preferences.search.history.slice 0, Preferences.search.max_history
                     results
                 else throw 'NO_RESULTS'
 
