@@ -11,5 +11,5 @@ _aQuran_ has the following features:
 
 * __Cross-platform__: aQuran is built using HTML, CSS and JavaScript so it is easily portable to any platform.
 * __Advanced search features__: ignore/strict diacritics, ignore/strict Alef hamza, match whole word...
-* __Recitations__: all recitations provided by [EveryAyah](http://everyayah.com) are supported.
-* __Translations__: all translations provided by the [Zekr project](http://zekr.org) are supported.
+* __Recitations__: all recitations provided by [http://everyayah.com](EveryAyah) are supported.
+* __Translations__: all translations provided by the [http://zekr.org](Zekr project) are supported.
