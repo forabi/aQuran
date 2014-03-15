@@ -14,7 +14,8 @@ var gulp = require('gulp'),
     livereload = require('gulp-livereload'),
     ngmin = require('gulp-ngmin'),
     uglify = require('gulp-uglify'),
-    browserify = require('gulp-browserify');
+    browserify = require('gulp-browserify'),
+    connect = require('connect');
 
 
 /* A helper function */
@@ -174,6 +175,11 @@ gulp.task('translations', function(callback) {
             callback(err);
         });
     });
+});
+
+gulp.task('serve', function(callback) {
+    var port = 7000;
+    connect.createServer(connect.static(__dirname + '/dist/chrome')).listen(port);
 });
 
 gulp.task('build', ['manifest', 'res', 'locales', 'ionic', 'scripts', 'html', 'styles', 'images']);
