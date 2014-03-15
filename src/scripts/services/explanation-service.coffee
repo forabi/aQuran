@@ -30,7 +30,7 @@ app.service 'ExplanationService', ['$q', '$http', 'CacheService', '$log', 'Prefe
         else
             cached = CacheService.get "trans:#{id}"
             if cached
-                $log.debug "Translation #{id} retrieved from cache:", cached
+                # $log.debug "Translation #{id} retrieved from cache:", cached
                 $q.when cached
             else 
                 database.then (db) ->

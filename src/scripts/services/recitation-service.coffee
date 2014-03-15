@@ -1,6 +1,11 @@
 app.service 'RecitationService', ['$sce', 'EveryAyah', 'Preferences', '$http', '$log', ($sce, EveryAyah, Preferences, $http, $log) ->
+    repeat = (str, n) ->
+        while n > 0
+            str += str
+            n--
+        str
     number = (n, z='3') ->
-        n = '0'.repeat(z) + n
+        n = repeat('0', z) + n
         n.substr(n.length - 3)
 
     getRecitations: () ->
