@@ -10,7 +10,8 @@ app.controller 'AyaController', ['$scope', 'ContentService' , '$stateParams', 'P
         gid: Number $stateParams.gid || 1
 
     ContentService.then (db) ->
-        db.where 'gid'
+        db.findOne()
+        .where 'gid'
         .is $scope.aya.gid
         .exec()
         .then (aya) ->

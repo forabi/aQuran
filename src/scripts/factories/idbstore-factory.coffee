@@ -1,3 +1,4 @@
+# IDBStore = require 'idb-wrapper'
 app.factory 'IDBStoreFactory', ['$q', '$http', 'QueryBuilder', 'Preferences', ($q, $http, QueryBuilder, Preferences) ->
     (url, options) ->
         deferred = $q.defer()
