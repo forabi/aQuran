@@ -46,7 +46,13 @@ app.factory 'QueryBuilder', ['$q', '$log', ($q, $log) ->
                 onError: error
                 
             $log.debug 'Executing query:', options
-            db.query success, options # IDBWrapper method
+            
+            try
+                db.query success, options
+            catch e
+                error e
+            
+             # IDBWrapper method
             deferred.promise
 
         limit = (limit) ->

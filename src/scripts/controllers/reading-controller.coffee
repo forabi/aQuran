@@ -84,6 +84,7 @@ app.controller 'ReadingController', ['$ionicLoading', '$scope', '$state', '$stat
                 $scope.title = ayas[0].sura_name
                 $scope.progress.status = 'ready'
                 $log.debug 'Content ready', $scope.data
+        .catch(error)
                 # $scope.$apply()
                 # audioPlayer.load($scope.playlist, true)
 
@@ -111,5 +112,5 @@ app.controller 'ReadingController', ['$ionicLoading', '$scope', '$state', '$stat
         $scope.progress.status = 'error'
         $scope.error = err
         $log.error 'Error', err
-        $scope.$apply()
+        # $scope.$apply()
 ]

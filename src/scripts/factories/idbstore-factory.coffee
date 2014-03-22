@@ -23,6 +23,8 @@ app.factory 'IDBStoreFactory', ['$q', '$http', '$log', 'QueryBuilder', 'Preferen
             if Number Preferences["#{options.storeName}-version"] is options.dbVersion
                 deferred.resolve store
             else get().then(insert).then (store) -> deferred.resolve store
+        store.onError = (err) ->
+            deferred.reject err
 
         deferred.promise.then extend
 ]

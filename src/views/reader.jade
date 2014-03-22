@@ -1,16 +1,28 @@
 ion-view(title='title', right-buttons='rightButtons')
     ion-content(has-header='true', overflow-scroll='true', has-footer='true', on-infinite-scroll='loadMore()')
-        .button-bar.bar-subheader
-            audio(audio-player, player-control='audioPlayer', playlist='playlist', player-name='audioPlayer')
-                | Play
-            //- button.button.button.icon.ion-ios7-rewind(ng-click='audioPlayer.prev()')
-            button.button.button.icon.ion-play(ng-show='!audioPlayer.playing', ng-click='audioPlayer.play()')
-            button.button.button.icon.ion-pause(ng-show='audioPlayer.playing', ng-click='audioPlayer.pause()')
-            //- button.button.button.icon.ion-ios7-fastforward(ng-click='audioPlayer.next()')
-        //- TODO: fix index issue
-        .sura(ng-repeat='sura in data.view')
-            h2.sura-name.item.item-divider(ng-if='sura.ayas[0].aya_id == 1'): b {{ sura[options.sura_name] }}
-            .sura-body.item.item-text-wrap
-                span(ng-repeat='aya in sura.ayas', ng-click='audioPlayer.play({{ aya.index }})', index='{{ aya.index }}')
-                    span.aya-text(colorize='{{ aya.uthmani }}', ng-class='{ assertive: audioPlayer.currentTrack - 1 == aya.index }') {{ aya.uthmani }}
-                    i.aya-number {{ aya.aya_id }}
+        div(ng-switch='progress.status')
+            div(ng-switch-default)
+                .button-bar.bar-subheader
+                    audio(audio-player, player-control='audioPlayer', playlist='playlist', player-name='audioPlayer')
+                        | Play
+                    //- button.button.button.icon.ion-ios7-rewind(ng-click='audioPlayer.prev()')
+                    button.button.button.icon.ion-play(ng-show='!audioPlayer.playing', ng-click='audioPlayer.play()')
+                    button.button.button.icon.ion-pause(ng-show='audioPlayer.playing', ng-click='audioPlayer.pause()')
+                    //- button.button.button.icon.ion-ios7-fastforward(ng-click='audioPlayer.next()')
+                //- TODO: fix index issue
+                .sura(ng-if='progress.status == "ready"', ng-repeat='sura in data.view')
+                    h2.sura-name.item.item-divider(ng-if='sura.ayas[0].aya_id == 1'): b {{ sura[options.reader.sura_name] }}
+                    .sura-body.item.item-text-wrap
+                        span(ng-repeat='aya in sura.ayas', ng-click='audioPlayer.play({{ aya.index }})', index='{{ aya.index }}')
+                            span.aya-text(colorize='{{ aya.uthmani }}', ng-class='{ assertive: audioPlayer.currentTrack - 1 == aya.index }') {{ aya.uthmani }}
+                            i.aya-number {{ aya.aya_id }}
+
+            .card.text-center(ng-switch-when='loading')
+                .item.item-body
+                    i.icon.placeholder-icon.ion-loading-c.icon-large
+            
+            .card.text-center(ng-switch-when='error')
+                .item.item-body
+                    i.icon.placeholder-icon.ion-alert-circled.icon-large
+                    h2 Something went wrong
+                    small {{ error.message }}
