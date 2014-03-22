@@ -49,7 +49,7 @@ app.factory 'QueryBuilder', ['$q', ($q) ->
             _limit = limit # Not yet implemented
 
         sort = (sort) ->
-            _order = 'DESC' if Number sort is -1 or sort.match /^des/gi
+            _order = 'DESC' if sort.match /^des/gi or Number(sort) is -1
 
         where = (index) ->
             _index = index
