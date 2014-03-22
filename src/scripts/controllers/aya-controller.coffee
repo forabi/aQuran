@@ -1,6 +1,5 @@
 # async = require 'async'
 app.controller 'AyaController', ['$scope', 'ContentService' , '$stateParams', 'Preferences', '$log', ($scope, ContentService, $stateParams, Preferences, $log) ->
-    # $log.debug 'Here we go'
     $scope.options = Preferences
 
     $scope.progress =
@@ -10,9 +9,7 @@ app.controller 'AyaController', ['$scope', 'ContentService' , '$stateParams', 'P
         gid: Number $stateParams.gid || 1
 
     ContentService.then (db) ->
-        db.findOne()
-        .where 'gid'
-        .is $scope.aya.gid
+        db.findOne $scope.aya
         .exec()
         .then (aya) ->
             $scope.aya = aya

@@ -36,12 +36,6 @@ app.controller 'ReadingController', ['$ionicLoading', '$scope', '$state', '$stat
             highlight: null
         )
 
-    $scope.options = _.defaults Preferences, 
-        aya_mode: 'uthmani'
-        view_mode: 'page_id'
-        sura_name: 'sura_name'
-        preferred: 'ayas'
-
     $scope.static =
         views: [
             (id: 'page_id' , name: 'Page')
@@ -78,11 +72,6 @@ app.controller 'ReadingController', ['$ionicLoading', '$scope', '$state', '$stat
 
         ContentService.then (db) ->
             db.find query
-            # db.find()
-            # .where 'gid'
-            # .is()
-            # .from 1
-            # .to 7
             .exec()
             .then (ayas) ->
                 $log.debug 'Got content:', ayas
