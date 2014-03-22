@@ -33,7 +33,7 @@ var paths = {
     styles: ['src/styles/main.less', 'src/styles/*.css'],
     jade: ['src/index.jade', 'src/views/*.jade'],
     images: 'src/images/*',
-    manifest: 'src/manifest.json',
+    manifest: 'src/manifest.webapp',
     locales: ['src/_locales/**/*.*'],
     resources: ['src/resources/**/*.json', 'src/resources/amiri/**.ttf', 'src/styles/fonts/*', 'src/styles/flags/**/*'],
     translations: 'src/resources/translations/*.trans.zip',
@@ -140,6 +140,10 @@ gulp.task('images', function() {
 
 gulp.task('manifest', function() {
     return copy(paths.manifest, 'dist/chrome');
+});
+
+gulp.task('cache_manifest', function() {
+
 });
 
 gulp.task('locales', function() {
