@@ -3,7 +3,7 @@ app.controller 'ExplanationsController', ['$scope', 'Preferences', '$log', 'Expl
     $scope.options = Preferences
     $scope.explanations = { }
     
-    ExplanationService.properties.then (db) ->
+    ExplanationService.then (db) ->
         transform = (obj) ->
             _.chain obj
             .sortBy ['language', 'name']
@@ -23,15 +23,17 @@ app.controller 'ExplanationsController', ['$scope', 'Preferences', '$log', 'Expl
             # $log.debug 'Preferences.explanations.ids:', Preferences.explanations.ids
             _.contains Preferences.explanations.ids, item.id
         
-        db.find { }
+        db.find()
         # .sort language: 1
-        .exec (err, properties) ->
+        .exec()
+        .then (properties) ->
+            $log.debug properties
             $scope.explanations.available = transform properties
             $scope.$apply()
         
-        db.find id: $in: Preferences.explanations.ids
-        # .sort language: 1
-        .exec (err, properties) ->
-            $scope.explanations.enabled = transform properties
-            $scope.$apply()
+        # db.find id: $in: Preferences.explanations.ids
+        # # .sort language: 1
+        # .exec (err, properties) ->
+        #     $scope.explanations.enabled = transform properties
+        #     $scope.$apply()
 ]

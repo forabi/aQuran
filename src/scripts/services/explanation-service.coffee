@@ -1,39 +1,16 @@
 app.service 'ExplanationService', ['IDBStoreFactory', '$q', '$http', 'CacheService', '$log', 'Preferences', (IDBStoreFactory, $q, $http, CacheService, $log, Preferences) ->
 
-    IDBStoreFactory 'resources/recitations.json',
+    IDBStoreFactory 'resources/translations.json',
         dbVersion: 1
         storeName: 'explanations'
         storePrefix: ''
         keyPath: 'id'
         autoIncrement: no
         indexes: [
-            (name: 'gid', unique: yes)
+            (name: 'id', unique: yes)
             (name: 'country')
             (name: 'language')
         ]
-    # database = $http.get 'resources/translations.json'
-    # .then (response) ->
-    #     db = new Nedb()
-    #     indexes = [
-    #         (fieldName: 'id', unique: yes)
-    #         (fieldName: 'language')
-    #         (fieldName: 'country')
-    #     ]
-
-    #     async.each indexes,
-    #     ((index, callback) -> db.ensureIndex index, callback),
-    #     (err) -> if err then $log.debug 'Error indexing translations', err
-    #     else $log.info 'Indexes created for translations'
-
-    #     deferred = $q.defer()
-    #     db.insert response.data, (err, docs) ->
-    #         if err
-    #             $log.error err
-    #             deferred.reject err
-    #         else
-    #             $log.info "#{docs.length} translations inserted"
-    #             deferred.resolve db
-    #     deferred.promise
 
     # properties: database
     # getExplanation: (id) ->
