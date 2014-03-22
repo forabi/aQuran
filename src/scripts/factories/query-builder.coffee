@@ -80,12 +80,10 @@ app.factory 'QueryBuilder', ['$q', ($q) ->
                     _parse_bound range
                     exec: exec, where: where, limit: limit, sort: sort
 
-                ###
-                 db.find({ page_id: 4 }) or db.find({ page_id: [1, 3] })
-                  or
-                 db.find({page_id: [1, 3], limit: 1, sort: 'ASC'})
-                 ... etc.
-                ###
+                # db.find({ page_id: 4 }) or db.find({ page_id: [1, 3] })
+                # or
+                # db.find({page_id: [1, 3], limit: 1, sort: 'ASC'})
+
                 when typeof query is 'object'
                     keys = _.keys query
                     if _.include keys, 'limit' then limit query.limit and _.pull keys, 'limit'
