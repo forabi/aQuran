@@ -1,7 +1,7 @@
 # _ = require('lodash')
-app.factory 'QueryBuilder', ['$q', ($q) -> 
+app.factory 'QueryBuilder', ['$q', '$log', ($q, $log) -> 
     (db) ->
-        _index = 'id'
+        _index = undefined
         _limit = undefined
         _lower = undefined
         _upper = undefined
@@ -19,11 +19,13 @@ app.factory 'QueryBuilder', ['$q', ($q) ->
                 _upper = _lower
 
         _make_range = () ->
-            db.makeKeyRange
-                lower: Math.min _lower, _upper # Fix order of range if wrong
-                excludeLower: _exclude_lower
-                upper: Math.max _lower, _upper
-                excludeUpper: _exclude_upper
+            if not _lower and not _upper then undefined
+            else
+                db.makeKeyRange
+                    lower: Math.min _lower, _upper # Fix order of range if wrong
+                    excludeLower: _exclude_lower
+                    upper: Math.max _lower, _upper
+                    excludeUpper: _exclude_upper
 
         exec = () ->
             deferred = $q.defer() # A deferred promise
@@ -33,13 +35,20 @@ app.factory 'QueryBuilder', ['$q', ($q) ->
                 deferred.resolve result
             
             error = (err) ->
+                $log.error err
                 deferred.reject err
 
-            options = # Options for IDBWrapper
+            # Options for IDBWrapper
+            options = _.omit
                 index: _index
                 keyRange: _make_range()
                 order: _order
                 onError: error
+            , (item) -> not item # Remove all falsy values
+                
+
+
+            $log.debug 'Executing query:', options
 
             db.query success, options # IDBWrapper method
 
