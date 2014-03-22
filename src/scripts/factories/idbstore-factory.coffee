@@ -4,15 +4,18 @@ app.factory 'IDBStoreFactory', ['$q', '$http', '$log', 'QueryBuilder', 'Preferen
         options = _.defaults options,
             dbVersion: 1
             transforms: []
+            transformResponse: (response) -> response.data
 
         deferred = $q.defer()
         
-        get = () -> $http.get url, cache: yes
+        get = () -> 
+            $http.get url, cache: yes
+            .then(options.transformResponse)
         
-        insert = (response) ->
+        insert = (data) ->
             # TODO: clear database
             d = $q.defer()
-            store.putBatch response.data, () ->
+            store.putBatch data, () ->
                 d.resolve store
             , (err) ->
                 d.reject err

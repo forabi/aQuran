@@ -35,8 +35,8 @@ ion-view(title='"Aya"')
                         | Pause
 
             .card.list(ng-repeat='explanation in aya.explanations')
-                .item.item-text-wrap.item-divider(auto-direction='') {{ explanation.properties.localizedName }}
-                .item.item-text-wrap.translation(dir='{{ explanation.properties.direction }}') {{ explanation.text }}
+                .item.item-text-wrap.item-divider(auto-direction='') {{ explanation.localizedName }}
+                .item.item-text-wrap.translation(dir='{{ explanation.direction }}') {{ explanation.text }}
                 .item.tabs.tabs-secondary.tabs-icon-left
                     a.tab-item
                         i.icon.ion-share
