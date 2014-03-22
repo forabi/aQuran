@@ -24,7 +24,7 @@ app.config ['$stateProvider', '$urlRouterProvider', '$locationProvider' , ($stat
       controller: 'ReadingController'
 
     .state 'aya', 
-      url: '/:gid?highlight'
+      url: '/aya/:gid?highlight'
       templateUrl: 'views/aya.html'
       controller: 'AyaController'
     
