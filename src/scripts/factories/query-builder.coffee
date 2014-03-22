@@ -21,7 +21,7 @@ app.factory 'QueryBuilder', ['$q', ($q) ->
         _make_range = () ->
             db.makeKeyRange
                 lower: Math.min _lower, _upper # Fix order of range if wrong
-                exculdeLower: _exclude_lower
+                excludeLower: _exclude_lower
                 upper: Math.max _lower, _upper
                 excludeUpper: _exclude_upper
 
@@ -53,31 +53,36 @@ app.factory 'QueryBuilder', ['$q', ($q) ->
 
         where = (index) ->
             _index = index
-            exec: exec
-            limit: limit
-            between: (lower, upper) ->
+            
+            between = (lower, upper) ->
                 _lower = lower
                 _upper = upper
                 _exclude_lower = yes
-                _exclude_uower = yes
+                _exclude_upper = yes
                 limit: limit, sort: sort, exec: exec
-            from: (lower) ->
+            
+            from = (lower) ->
                 _lower = lower
                 limit: limit, sort: sort, exec: exec,
                 to: (upper) ->
                     _upper = upper
                     limit: limit, sort: sort, exec: exec
-            is: (value) -> # Do not confuse with findOne(), this may match multiple objects
-                _lower = value
-                _upper = value
-                exec: exec
+
+            is_ = (value) -> # Do not confuse with findOne(), this may match multiple objects
+                if value
+                    _lower = value
+                    _upper = value
+                    exec: exec
+                else exec: exec, from: from, between: between # Syntactic sugar
+            
+            between: between, 'is': is_, from: from, limit: limit, exec: exec
 
         find = (query, range) ->
             switch 
                 # db.find('page_id') or db.find()
                 when not query or typeof query is 'string'
                     _index = query
-                    _parse_bound range
+                    _parse_bounds range
                     exec: exec, where: where, limit: limit, sort: sort
 
                 # db.find({ page_id: 4 }) or db.find({ page_id: [1, 3] })
