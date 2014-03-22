@@ -9,12 +9,12 @@ app.service 'ContentService', ['IDBStoreFactory', 'RecitationService', 'Explanat
         keyPath: 'gid'
         autoIncrement: no
         indexes: [
-            (name: 'gid', unique: yes)
-            (name: 'page_id')
-            (name: 'sura_id')
-            (name: 'aya_id')
-            (name: 'standard')
-        ]
+                (name: 'gid', unique: yes)
+                (name: 'page_id')
+                (name: 'sura_id')
+                (name: 'aya_id')
+                (name: 'standard')
+            ]
     .catch (err) ->
         $log.error err
 

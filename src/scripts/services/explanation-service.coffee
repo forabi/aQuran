@@ -11,8 +11,6 @@ app.service 'ExplanationService', ['IDBStoreFactory', '$q', '$http', 'CacheServi
             (name: 'country')
             (name: 'language')
         ]
-    .then (store) ->
-        $log.debug 'All explanations inserted:', store
     # database = $http.get 'resources/translations.json'
     # .then (response) ->
     #     db = new Nedb()

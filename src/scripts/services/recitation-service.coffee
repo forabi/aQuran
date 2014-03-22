@@ -21,8 +21,6 @@ app.service 'RecitationService', ['IDBStoreFactory', '$sce', 'EveryAyah', 'Prefe
             # (name: 'aya_id')
             # (name: 'standard')
         ]
-    .then (store) ->
-        $log.debug 'All recitations inserted:', store
 
     # getRecitations: () ->
     #     $http.get 'resources/recitations.json'
