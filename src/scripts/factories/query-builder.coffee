@@ -129,8 +129,14 @@ app.factory 'QueryBuilder', ['$q', '$log', ($q, $log) ->
 
                 when typeof query is 'object'
                     keys = _.keys query
-                    if _.include keys, 'limit' then limit query.limit and _.pull keys, 'limit'
-                    if _.include keys, 'sort' then sort query.sort and _.pull keys, 'sort'
+                    if _.include keys, 'limit'
+                        limit query.limit
+                        _.pull keys, 'limit'
+
+                    if _.include keys, 'sort'
+                        sort query.sort
+                        _.pull keys, 'sort'
+                        
                     throw 'QueryBuilder is limited to one key per query' if keys.length > 1
                     _index = keys[0]
                     range = query[_index]
