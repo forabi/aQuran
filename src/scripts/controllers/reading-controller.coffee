@@ -76,9 +76,11 @@ app.controller 'ReadingController', ['$ionicLoading', '$scope', '$state', '$stat
             when 'juz'  then juz:     current
 
 
-        ContentService.find query, (err, ayas) ->
-            if err then error err
-            else
+        ContentService.then (db) ->
+            $log.debug 'Database:', db
+            db.find query
+            .exec()
+            .then (ayas) ->
                 $log.debug 'Got content:', ayas
                 $scope.data.view = transform ayas
                 $log.debug 'Transformed content:', $scope.data.view

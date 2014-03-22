@@ -2,7 +2,6 @@
 # async = require 'async'
 # module.exports = (app) -> 
 app.service 'ContentService', ['IDBStoreFactory', 'RecitationService', 'ExplanationService', 'Preferences', '$http', '$q', '$log', (IDBStoreFactory, RecitationService, ExplanationService, Preferences, $http, $q, $log) -> 
-    deferred = $q.defer()
     IDBStoreFactory 'resources/ayas.json',
         dbVersion: 1
         storeName: 'ayas'
@@ -16,8 +15,8 @@ app.service 'ContentService', ['IDBStoreFactory', 'RecitationService', 'Explanat
             (name: 'aya_id')
             (name: 'standard')
         ]
-    .then (store) ->
-        $log.debug 'All ayas inserted:', store
+    .catch (err) ->
+        $log.error err
 
     # database =
     #     $http.get 'resources/ayas.json'

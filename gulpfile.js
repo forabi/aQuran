@@ -1,6 +1,7 @@
 var gulp = require('gulp'),
     gutil = require('gulp-util'),
     fs = require('fs'),
+    sqlite3 = require('sqlite3'),
     async = require('async'),
     admZip = require('adm-zip'),
     properties = require('properties'),
@@ -35,8 +36,17 @@ var paths = {
     locales: ['src/_locales/**/*.*'],
     resources: ['src/resources/**/*.json', 'src/styles/fonts/*', 'src/styles/flags/**/*'],
     translations: 'src/resources/translations/*.trans.zip',
-    translations_txt: 'src/resources/translations.txt'
+    translations_txt: 'src/resources/translations.txt',
+    db: 'src/database/main.db'
 };
+
+gulp.task('ayas', function(callback) {
+    var db = new sqlite3.Database(paths.db, sqlite3.OPEN_READONLY);
+    db.all('SELECT * FROM aya ORDER BY `gid`;', function(err, rows) {
+        console.log('Found', rows.length, 'rows');
+        fs.writeFile('dist/chrome/resources/ayas.json', JSON.stringify(rows), callback);
+    });
+});
 
 gulp.task('ionic', function() {
     return gulp.src(paths.ionic, { base: 'src' })
@@ -93,6 +103,7 @@ gulp.task('html', function() {
                 'scripts/services/cache-service.js',
                 'scripts/services/preferences-service.js',
                 'scripts/services/localization-service.js',
+                'scripts/factories/query-builder.js',
                 'scripts/factories/idbstore-factory.js',
                 'scripts/services/explanation-service.js',
                 'scripts/directives/auto-direction-directive.js',
