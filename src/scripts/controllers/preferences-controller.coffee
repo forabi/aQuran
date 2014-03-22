@@ -1,6 +1,5 @@
-app.controller 'PreferencesController', ['$scope', 'Preferences', '$log', 'ExplanationService', ($scope, Preferences, $log, ExplanationService) ->
+app.controller 'PreferencesController', ['$scope', '$log', 'ExplanationService', ($scope, $log, ExplanationService) ->
     # $log.debug 'Here we go'
-    $scope.options = Preferences
     $scope.sura_names =
     	sura_name: (name: 'Arabic', example: 'الفاتحة')
     	sura_name_en: (name: 'English', example: 'The Opening')

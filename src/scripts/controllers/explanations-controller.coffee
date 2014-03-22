@@ -1,6 +1,5 @@
-app.controller 'ExplanationsController', ['$scope', 'Preferences', '$log', 'ExplanationService', ($scope, Preferences, $log, ExplanationService) ->
+app.controller 'ExplanationsController', ['$scope', '$log', 'ExplanationService', ($scope, $log, ExplanationService) ->
     # $log.debug 'Here we go'
-    $scope.options = Preferences
     $scope.explanations = { }
     
     ExplanationService.then (db) ->

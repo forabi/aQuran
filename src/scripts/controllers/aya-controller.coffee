@@ -1,7 +1,5 @@
 # async = require 'async'
-app.controller 'AyaController', ['$scope', 'ContentService' , '$stateParams', 'Preferences', '$log', ($scope, ContentService, $stateParams, Preferences, $log) ->
-    $scope.options = Preferences
-
+app.controller 'AyaController', ['$scope', 'ContentService' , '$stateParams', '$log', ($scope, ContentService, $stateParams, $log) ->
     $scope.progress =
         status: 'init'
 

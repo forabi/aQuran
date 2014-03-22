@@ -1,9 +1,7 @@
 # _ = require 'lodash'
 # q = require 'q'
 # module.exports = (app) ->
-    app.controller 'SearchController', ['$scope', '$rootScope', '$state', '$timeout', '$log', '$stateParams', 'SearchService', 'APIService', 'Preferences', ($scope, $rootScope, $state, $timeout, $log, $stateParams, SearchService, APIService, Preferences) ->
-
-        $scope.options = Preferences
+    app.controller 'SearchController', ['$scope', '$rootScope', '$state', '$timeout', '$log', '$stateParams', 'SearchService', 'APIService', ($scope, $rootScope, $state, $timeout, $log, $stateParams, SearchService, APIService) ->
 
         $scope.progress =
             status: 'init'

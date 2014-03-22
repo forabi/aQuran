@@ -59,6 +59,10 @@ app.controller 'ReadingController', ['$ionicLoading', '$scope', '$state', '$stat
         total: 0
         current: 0
 
+    $scope.loadMore = (done) ->
+        $log.debug 'Loading more...'
+        # done()
+
     loadContent = () ->
         $scope.progress.status = 'loading'
 
