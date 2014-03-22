@@ -1,6 +1,6 @@
 {
-  	"name": "__MSG_appName__",
-  	"description": "__MSG_appDescription__",
+  	"name": "aQuran",
+  	"description": "A full-featured Quran app with multiple translations and recitations",
   	"version": "1",
   	"manifest_version": 2,
   	"default_locale": "en",
@@ -14,6 +14,7 @@
   		"96": "images/icon-96.png",
   		"128": "images/icon-128.png"
   	},
+    "launch_path": "/index.html",
   	"app": {
   		"background": {
   			"scripts": [
