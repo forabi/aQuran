@@ -8,7 +8,7 @@ ion-view(title='title', right-buttons='rightButtons')
             button.button.button.icon.ion-pause(ng-show='audioPlayer.playing', ng-click='audioPlayer.pause()')
             //- button.button.button.icon.ion-ios7-fastforward(ng-click='audioPlayer.next()')
         //- TODO: fix index issue
-        .sura.list(ng-repeat='sura in data.view')
+        .sura(ng-repeat='sura in data.view')
             h2.sura-name.item.item-divider(ng-if='sura.ayas[0].aya_id == 1'): b {{ sura[options.sura_name] }}
             .sura-body.item.item-text-wrap
                 span(ng-repeat='aya in sura.ayas', ng-click='audioPlayer.play({{ aya.index }})', index='{{ aya.index }}')
