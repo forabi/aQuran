@@ -1,4 +1,5 @@
 var gulp = require('gulp'),
+    clean = require('gulp-clean'),
     gutil = require('gulp-util'),
     fs = require('fs'),
     sqlite3 = require('sqlite3'),
@@ -34,11 +35,16 @@ var paths = {
     images: 'src/images/*',
     manifest: 'src/manifest.json',
     locales: ['src/_locales/**/*.*'],
-    resources: ['src/resources/**/*.json', 'src/styles/fonts/*', 'src/styles/flags/**/*'],
+    resources: ['src/resources/**/*.json', 'src/resources/amiri/**.ttf', 'src/styles/fonts/*', 'src/styles/flags/**/*'],
     translations: 'src/resources/translations/*.trans.zip',
     translations_txt: 'src/resources/translations.txt',
     db: 'src/database/main.db'
 };
+
+gulp.task('clean', function() {
+    return gulp.src('dist/chrome')
+    .pipe(clean());
+});
 
 gulp.task('ayas', function(callback) {
     var db = new sqlite3.Database(paths.db, sqlite3.OPEN_READONLY);

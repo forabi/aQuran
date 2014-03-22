@@ -32,7 +32,8 @@
     "glob": "^3.2.9",
     "properties": "^1.2.1",
     "gulp-download": "0.0.1",
-    "connect": "^2.14.2"
+    "connect": "^2.14.2",
+    "gulp-clean": "^0.2.4"
   },
   "engines": {
     "node": ">=0.8.0"

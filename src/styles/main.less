@@ -2,6 +2,21 @@
 @import (reference) "mixins";
 @import "flag-icon-css/less/flag-icon";
 
+@font-face {
+    font-family: "Amiri Quran Letters";
+    src: url("../resources/amiri/amiri-quran-letters.ttf");
+}
+
+@font-face {
+    font-family: "Amiri Quran Diacritics";
+    src: url("../resources/amiri/amiri-quran-diacritics.ttf");
+}
+
+@font-face {
+    font-family: "Amiri Quran Quanic Signs";
+    src: url("../resources/amiri/amiri-quran-quranic-signs.ttf");
+}
+
 .icon.icon-large {
     font-size: 250%;
 }
@@ -45,16 +60,15 @@
 }
 .aya-number {
     line-height: @aya-line-height;
-    // font-family: @aya-font-family;
+    font-family: @aya-number-font-family;
     // font-size: @aya-font-size;
     // "\06DD"
+    color: @aya-number-color;
+    // font-weight: bold;
     margin-right: 5px;
     margin-left: 5px;
     &::before {
-        content: '('
-    }
-    &::after {
-        content: ')'
+        content: '\06DD';
     }
 }
 .translation {
@@ -95,14 +109,17 @@
         right: 0;
     }
     .diacritics {
+        font-family: "Amiri Quran Diacritics";
         color: @diacritic-color;
         opacity: 0.9
     }
     .quranic-signs {
+        font-family: "Amiri Quran Quanic Signs";
         color: @annotation-sings-color;
         opacity: 0.9
     }
     .letters {
+        font-family: "Amiri Quran Letters";
         color: initial;
     }
 }
