@@ -46,7 +46,7 @@ app.factory 'QueryBuilder', ['$q', ($q) ->
             deferred.promise
 
         limit = (limit) ->
-            _limit = limit # Not yet implemented
+            _limit = limit # Not implemented yet
 
         sort = (sort) ->
             _order = 'DESC' if sort.match /^des/gi or Number(sort) is -1
