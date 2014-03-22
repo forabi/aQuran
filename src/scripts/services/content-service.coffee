@@ -1,7 +1,7 @@
 # nedb = require 'nedb'
 # async = require 'async'
 # module.exports = (app) -> 
-app.service 'ContentService', ['IDBStoreFactory', 'RecitationService', 'ExplanationService', 'Preferences', '$http', '$q', '$log', (IDBStoreFactory, RecitationService, ExplanationService, Preferences, $http, $q, $log) -> 
+app.service 'ContentService', ['IDBStoreFactory', 'RecitationService', 'ExplanationService', 'AudioSrcFactory', 'Preferences', '$http', '$q', '$log', (IDBStoreFactory, RecitationService, ExplanationService, AudioSrcFactory, Preferences, $http, $q, $log) -> 
     IDBStoreFactory 'resources/ayas.json',
         dbVersion: 1
         storeName: 'ayas'
@@ -15,6 +15,20 @@ app.service 'ContentService', ['IDBStoreFactory', 'RecitationService', 'Explanat
                 (name: 'aya_id')
                 (name: 'standard')
             ]
+        transforms: [
+            # (aya) ->
+            #     if Preferences.explanations.enabled
+            #         ExplanationService.find()
+            #         .where 'id', aya.id
+            #         .exec()
+            #         .then (explanations) ->
+            #             aya.explanations = explanations
+            #             aya
+            #     else aya
+            (aya) ->
+                if Preferences.audio.enabled then aya.recitation = AudioSrcFactory aya.sura_id, aya.aya_id
+                aya
+        ]
     .catch (err) ->
         $log.error err
 

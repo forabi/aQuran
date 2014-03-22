@@ -109,6 +109,7 @@ gulp.task('html', function() {
                 'scripts/services/cache-service.js',
                 'scripts/services/preferences-service.js',
                 'scripts/services/localization-service.js',
+                'scripts/factories/audio-src-factory.js',
                 'scripts/factories/query-builder.js',
                 'scripts/factories/idbstore-factory.js',
                 'scripts/services/explanation-service.js',

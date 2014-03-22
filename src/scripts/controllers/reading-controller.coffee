@@ -1,7 +1,7 @@
 # _ = require 'lodash'
 # q = require 'q'
 # module.exports = (app) ->
-app.controller 'ReadingController', ['$ionicLoading', '$scope', '$state', '$stateParams', '$timeout', '$log', 'ContentService', 'SearchService', 'Preferences', ($ionicLoading, $scope, $state, $stateParams, $timeout, $log, ContentService, SearchService, Preferences) ->
+app.controller 'ReadingController', ['$ionicLoading', '$rootScope', '$scope', '$state', '$stateParams', '$timeout', '$log', 'ContentService', 'SearchService', 'Preferences', ($ionicLoading, $rootScope, $scope, $state, $stateParams, $timeout, $log, ContentService, SearchService, Preferences) ->
     # database = undefined
 
     $scope.loading = $ionicLoading.show 
@@ -81,7 +81,7 @@ app.controller 'ReadingController', ['$ionicLoading', '$scope', '$state', '$stat
                 $log.debug 'Got content:', ayas
                 $scope.data.view = transform ayas
                 $log.debug 'Transformed content:', $scope.data.view
-                $scope.title = ayas[0].sura_name
+                $rootScope.title = ayas[0].sura_name
                 $scope.progress.status = 'ready'
                 $log.debug 'Content ready', $scope.data
         .catch(error)

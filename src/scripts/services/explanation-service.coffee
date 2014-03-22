@@ -12,6 +12,8 @@ app.service 'ExplanationService', ['IDBStoreFactory', '$q', '$http', 'CacheServi
             (name: 'language')
         ]
 
+    # Preferences.explanations.ids.map 
+
     # properties: database
     # getExplanation: (id) ->
     #     if not Preferences.explanations.enabled then $q.reject 'Explanations disabled' 

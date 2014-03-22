@@ -1,4 +1,4 @@
-# angular = require 'angular/'
+# angular = require 'angular'
 app   =   angular.module 'quran', ['ngSanitize', 'ngStorage', 'ionic', 'audioPlayer']
 
 app.constant 'API', 'http://www.alfanous.org/jos2'
@@ -53,9 +53,3 @@ app.config ['$stateProvider', '$urlRouterProvider', '$locationProvider' , ($stat
     $urlRouterProvider.otherwise '/reader/1'
     # $locationProvider.html5Mode on
 ]
-
-# (require './services/arabic-service') Quran
-# (require './services/content-service') Quran
-# (require './services/search-service') Quran
-# (require './directives/colorized-directive') Quran
-# (require './controllers/reading-controller') Quran

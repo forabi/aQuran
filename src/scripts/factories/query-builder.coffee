@@ -1,14 +1,26 @@
 # _ = require('lodash')
 app.factory 'QueryBuilder', ['$q', '$log', ($q, $log) -> 
-    (db) ->
+    (db, tranfsorms) ->
         _index = undefined
         _limit = undefined
         _lower = undefined
         _upper = undefined
-        _exclude_lower = no
-        _exclude_upper = no
-        _order = 'ASC'
-        _one = no
+        _exclude_lower = undefined
+        _exclude_upper = undefined
+        _order = undefined
+        _one = undefined
+        _transforms = undefined
+
+        _reset = () ->
+            _index = undefined
+            _limit = undefined
+            _lower = undefined
+            _upper = undefined
+            _exclude_lower = no
+            _exclude_upper = no
+            _order = 'ASC'
+            _one = no
+            _transforms = tranfsorms || []
 
         _parse_bounds = (range) ->
             if range instanceof Array # Something like [1, 34]
@@ -27,11 +39,11 @@ app.factory 'QueryBuilder', ['$q', '$log', ($q, $log) ->
                     upper: Math.max _lower, _upper
                     excludeUpper: _exclude_upper
 
+
         exec = () ->
             deferred = $q.defer() # A deferred promise
             
             success = (result) ->
-                result = result[0] || null if _one # Returns only one object for findOne()
                 deferred.resolve result
             
             error = (err) ->
@@ -46,14 +58,30 @@ app.factory 'QueryBuilder', ['$q', '$log', ($q, $log) ->
                 onError: error
                 
             $log.debug 'Executing query:', options
+            # IDBWrapper method
+            db.query success, options
             
-            try
-                db.query success, options
-            catch e
-                error e
-            
-             # IDBWrapper method
-            deferred.promise
+
+            promise = deferred.promise
+            .then (results) ->
+                if _transforms.length # Check if any transforms were registered
+                    $q.all results.map (result) ->
+                        result = fn result for fn in _transforms # Tranfsorm result in sepcified order
+                        result
+                else results
+            .then (results) ->
+                results = results[0] || null if _one # Returns only one object for findOne()
+                results
+
+            _reset()
+            promise
+
+
+        transform = (fn) ->
+            # Tranfsorms are functions that are iterated over with each result
+            # we get from the query.
+            # A transform returns a modified result that is passed to the next transform
+            _transforms.push fn
 
         limit = (limit) ->
             _limit = limit # Not implemented yet
@@ -69,23 +97,23 @@ app.factory 'QueryBuilder', ['$q', '$log', ($q, $log) ->
                 _upper = upper
                 _exclude_lower = yes
                 _exclude_upper = yes
-                limit: limit, sort: sort, exec: exec
+                limit: limit, sort: sort, transform: transform, exec: exec
             
             from = (lower) ->
                 _lower = lower
-                limit: limit, sort: sort, exec: exec,
+                limit: limit, sort: sort, transform: transform, exec: exec,
                 to: (upper) ->
                     _upper = upper
-                    limit: limit, sort: sort, exec: exec
+                    limit: limit, sort: sort, transform: transform, exec: exec
 
             is_ = (value) -> # Do not confuse with findOne(), this may match multiple objects
                 if value
                     _lower = value
                     _upper = value
                     exec: exec
-                else exec: exec, from: from, between: between # Syntactic sugar
+                else exec: exec, from: from, between: between, transform: transform # Syntactic sugar
             
-            between: between, 'is': is_, from: from, limit: limit, exec: exec
+            between: between, 'is': is_, from: from, limit: limit, exec: exec, transform: transform
 
         find = (query, range) ->
             switch 
@@ -93,7 +121,7 @@ app.factory 'QueryBuilder', ['$q', '$log', ($q, $log) ->
                 when not query or typeof query is 'string'
                     _index = query
                     _parse_bounds range
-                    exec: exec, where: where, limit: limit, sort: sort
+                    exec: exec, where: where, limit: limit, sort: sort, transform: transform
 
                 # db.find({ page_id: 4 }) or db.find({ page_id: [1, 3] })
                 # or
@@ -107,7 +135,7 @@ app.factory 'QueryBuilder', ['$q', '$log', ($q, $log) ->
                     _index = keys[0]
                     range = query[_index]
                     _parse_bounds range
-                    exec: exec, limit: limit, sort: sort
+                    exec: exec, limit: limit, sort: sort, transform: transform
 
         findOne = (query) ->
             _one = yes # Set query option to individual object instead of array
@@ -123,6 +151,8 @@ app.factory 'QueryBuilder', ['$q', '$log', ($q, $log) ->
             _index = 'id'
             find query
 
+        _reset()
+        transform: transform
         find: find
         findOne: findOne
         findById: findById

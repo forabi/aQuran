@@ -1,6 +1,10 @@
 # IDBStore = require 'idb-wrapper'
 app.factory 'IDBStoreFactory', ['$q', '$http', '$log', 'QueryBuilder', 'Preferences', ($q, $http, $log, QueryBuilder, Preferences) ->
     (url, options) ->
+        options = _.defaults options,
+            dbVersion: 1
+            transforms: []
+
         deferred = $q.defer()
         
         get = () -> $http.get url, cache: yes
@@ -16,9 +20,9 @@ app.factory 'IDBStoreFactory', ['$q', '$http', '$log', 'QueryBuilder', 'Preferen
             d.promise
 
         extend = (store) ->
-            QueryBuilder store
+            QueryBuilder store, options.transforms
 
-        store = new IDBStore _.extend options
+        store = new IDBStore options
         store.onStoreReady = () ->
             if Number Preferences["#{options.storeName}-version"] is options.dbVersion
                 deferred.resolve store
