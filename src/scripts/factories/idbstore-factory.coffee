@@ -1,16 +1,22 @@
-app.factory 'IDBStoreFactory', ['$q', '$http', 'QueryBuilder', ($q, $http, QueryBuilder) ->
+app.factory 'IDBStoreFactory', ['$q', '$http', 'QueryBuilder', 'Preferences', ($q, $http, QueryBuilder, Preferences) ->
     (url, options) ->
         deferred = $q.defer()
         
         get = () -> $http.get url, cahce: yes
         
         insert = (response) ->
-            d = $q.defer()
-            store.putBatch response.data, () ->
-                d.resolve store
-            , (err) ->
-                d.reject err
-            d.promise
+            if Preferences["#{options.storeName}-OK"] then store
+            else
+                d = $q.defer()
+
+                store.putBatch response.data, () ->
+                    d.resolve store
+                , (err) ->
+                    d.reject err
+
+                Preferences["#{options.storeName}-OK"] = yes
+
+                d.promise
 
         extend = (store) ->
             QueryBuilder store

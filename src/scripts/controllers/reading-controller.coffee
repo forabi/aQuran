@@ -77,7 +77,6 @@ app.controller 'ReadingController', ['$ionicLoading', '$scope', '$state', '$stat
 
 
         ContentService.then (db) ->
-            $log.debug 'Database:', db
             db.find query
             .exec()
             .then (ayas) ->
