@@ -3,7 +3,7 @@ app.factory 'IDBStoreFactory', ['$q', '$http', 'QueryBuilder', 'Preferences', ($
     (url, options) ->
         deferred = $q.defer()
         
-        get = () -> $http.get url, cahce: yes
+        get = () -> $http.get url, cache: yes
         
         insert = (response) ->
             if Preferences["#{options.storeName}-OK"] then store
