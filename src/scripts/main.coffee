@@ -4,14 +4,11 @@ app   =   angular.module 'quran', ['ngSanitize', 'ngStorage', 'ionic', 'audioPla
 app.constant 'API', 'http://www.alfanous.org/jos2'
 app.constant 'EveryAyah', 'http://www.everyayah.com/data/'
 
-app.run ['$rootScope', ($rootScope) ->
+app.run ['$rootScope', 'Preferences', '$window', ($rootScope, Preferences, $window) ->
     $rootScope.online = navigator.onLine
-    window.addEventListener 'online',  () -> 
-      $rootScope.online = yes
-      $rootScope.$apply()
-    window.addEventListener 'offline', () -> 
-      $rootScope.online = no
-      $rootScope.$apply()
+    $rootScope.options = Preferences
+    $window.addEventListener 'online',  () -> $rootScope.online = yes
+    $window.addEventListener 'offline', () -> $rootScope.online = no
   ]
 
 

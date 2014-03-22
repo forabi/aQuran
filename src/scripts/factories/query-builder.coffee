@@ -39,19 +39,14 @@ app.factory 'QueryBuilder', ['$q', '$log', ($q, $log) ->
                 deferred.reject err
 
             # Options for IDBWrapper
-            options = _.omit
+            options = 
                 index: _index
                 keyRange: _make_range()
                 order: _order
                 onError: error
-            , (item) -> not item # Remove all falsy values
                 
-
-
             $log.debug 'Executing query:', options
-
             db.query success, options # IDBWrapper method
-
             deferred.promise
 
         limit = (limit) ->
