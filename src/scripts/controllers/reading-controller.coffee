@@ -78,6 +78,11 @@ app.controller 'ReadingController', ['$ionicLoading', '$scope', '$state', '$stat
 
         ContentService.then (db) ->
             db.find query
+            # db.find()
+            # .where 'gid'
+            # .is()
+            # .from 1
+            # .to 7
             .exec()
             .then (ayas) ->
                 $log.debug 'Got content:', ayas
