@@ -11,42 +11,42 @@ app.factory 'QueryBuilder', ['$q', ($q) ->
         _one = no
 
         _parse_bounds = (range) ->
-            if range instanceof Array
+            if range instanceof Array # Something like [1, 34]
                 _lower = range[0]
                 _upper = range[1] || null
-            else
+            else # Number, String...
                 _lower = range
                 _upper = _lower
 
         _make_range = () ->
             db.makeKeyRange
-                lower: Math.min _lower, _upper
+                lower: Math.min _lower, _upper # Fix order of range if wrong
                 exculdeLower: _exclude_lower
                 upper: Math.max _lower, _upper
                 excludeUpper: _exclude_upper
 
         exec = () ->
-            deferred = $q.defer()
+            deferred = $q.defer() # A deferred promise
             
             success = (result) ->
-                result = result[0] || null if _one
+                result = result[0] || null if _one # Returns only one object for findOne()
                 deferred.resolve result
             
             error = (err) ->
                 deferred.reject err
 
-            options =
+            options = # Options for IDBWrapper
                 index: _index
                 keyRange: _make_range()
                 order: _order
                 onError: error
 
-            db.query success, options
+            db.query success, options # IDBWrapper method
 
             deferred.promise
 
         limit = (limit) ->
-            _limit = limit
+            _limit = limit # Not yet implemented
 
         sort = (sort) ->
             _order = 'DESC' if Number sort is -1 or sort.match /^des/gi
@@ -67,18 +67,25 @@ app.factory 'QueryBuilder', ['$q', ($q) ->
                 to: (upper) ->
                     _upper = upper
                     limit: limit, sort: sort, exec: exec
-            is: (value) ->
+            is: (value) -> # Do not confuse with findOne(), this may match multiple objects
                 _lower = value
                 _upper = value
                 exec: exec
 
         find = (query, range) ->
             switch 
+                # db.find('page_id') or db.find()
                 when not query or typeof query is 'string'
                     _index = query
                     _parse_bound range
                     exec: exec, where: where, limit: limit, sort: sort
 
+                ###
+                 db.find({ page_id: 4 }) or db.find({ page_id: [1, 3] })
+                  or
+                 db.find({page_id: [1, 3], limit: 1, sort: 'ASC'})
+                 ... etc.
+                ###
                 when typeof query is 'object'
                     keys = _.keys query
                     if _.include keys, 'limit' then limit query.limit and _.pull keys, 'limit'
@@ -90,10 +97,10 @@ app.factory 'QueryBuilder', ['$q', ($q) ->
                     exec: exec, limit: limit, sort: sort
 
         findOne = (query) ->
-            _one = yes
-            delete query.limit if query
-            limit 1
-            find query
+            _one = yes # Set query option to individual object instead of array
+            delete query.limit if query # Delete limit if exists
+            limit 1 # Force set limit to 1
+            find query # Perform a normal query, the result is transformed in the promise
 
         find: find
         findOne: findOne
