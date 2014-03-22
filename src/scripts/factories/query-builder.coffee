@@ -93,7 +93,7 @@ app.factory 'QueryBuilder', ['$q', ($q) ->
                     keys = _.keys query
                     if _.include keys, 'limit' then limit query.limit and _.pull keys, 'limit'
                     if _.include keys, 'sort' then sort query.sort and _.pull keys, 'sort'
-                    throw 'QueryBuilder is limited to one key per query.' if keys.length > 1
+                    throw 'QueryBuilder is limited to one key per query' if keys.length > 1
                     _index = keys[0]
                     range = query[_index]
                     _parse_bounds range
@@ -105,7 +105,17 @@ app.factory 'QueryBuilder', ['$q', ($q) ->
             limit 1 # Force set limit to 1
             find query # Perform a normal query, the result is transformed in the promise
 
+        findById = (id, query, range) ->
+            _index = 'id'
+            find query, range
+
+        findOneById = (id, query) ->
+            _index = 'id'
+            find query
+
         find: find
         findOne: findOne
+        findById: findById
+        findOneById: findOneById
         where: where
 ]
