@@ -2,7 +2,7 @@ app.controller 'ExplanationsController', ['$scope', '$log', 'ExplanationService'
     # $log.debug 'Here we go'
     $scope.explanations = { }
     
-    ExplanationService.then (db) ->
+    ExplanationService.properties.then (db) ->
         transform = (obj) ->
             _.chain obj
             .sortBy ['language', 'name']
@@ -15,12 +15,12 @@ app.controller 'ExplanationsController', ['$scope', '$log', 'ExplanationService'
             else
                 $log.debug "Item #{item.id} will be disabled now"
                 _.remove $scope.explanations.enabled, id: item.id
-            Preferences.explanations.ids = _.pluck $scope.explanations.enabled, 'id'
+            $scope.options.explanations.ids = _.pluck $scope.explanations.enabled, 'id'
 
         $scope.isEnabled = (item) ->
             # $log.debug 'item.id:', item.id
-            # $log.debug 'Preferences.explanations.ids:', Preferences.explanations.ids
-            _.contains Preferences.explanations.ids, item.id
+            # $log.debug '$scope.options.explanations.ids:', $scope.options.explanations.ids
+            _.contains $scope.options.explanations.ids, item.id
         
         db.find()
         # .sort language: 1
@@ -30,7 +30,7 @@ app.controller 'ExplanationsController', ['$scope', '$log', 'ExplanationService'
             $scope.explanations.available = transform properties
             $scope.$apply()
         
-        # db.find id: $in: Preferences.explanations.ids
+        # db.find id: $in: $scope.options.explanations.ids
         # # .sort language: 1
         # .exec (err, properties) ->
         #     $scope.explanations.enabled = transform properties
