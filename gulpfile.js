@@ -43,7 +43,7 @@ var paths = {
     translations: 'src/resources/translations/*.trans.zip',
     translations_txt: 'src/resources/translations.txt',
     db: 'src/database/main.db',
-    recitations: 'src/resources/recitations.json'
+    recitations: 'src/resources/recitations.js'
 };
 
 gulp.task('clean', function() {
@@ -183,9 +183,7 @@ gulp.task('download_translations', function() {
 gulp.task('download_recitations', function() {
     var url = 'http://www.everyayah.com/data/recitations.js';
     return download(url)
-    .pipe(rename(function(file) {
-        file.extname = '.json';
-    }))
+    .pipe('src/resources');
 });
 
 gulp.task('recitations', function() {
@@ -250,6 +248,8 @@ gulp.task('serve', function(callback) {
     var port = 7000;
     connect.createServer(connect.static(__dirname + '/dist/chrome')).listen(port);
 });
+
+gulp.task('init', ['ayas', 'download_translations', 'download_recitations']);
 
 gulp.task('build', ['manifest', 'res', 'locales', 'ionic', 'scripts', 'html', 'styles', 'images']);
 
