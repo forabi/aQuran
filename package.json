@@ -35,7 +35,8 @@
     "connect": "^2.14.2",
     "gulp-clean": "^0.2.4",
     "gulp-manifest": "0.0.3",
-    "gulp-json-editor": "^2.0.2"
+    "gulp-json-editor": "^2.0.2",
+    "gulp-cson": "0.0.1"
   },
   "engines": {
     "node": ">=0.8.0"

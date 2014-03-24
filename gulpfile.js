@@ -11,6 +11,7 @@ var gulp = require('gulp'),
     jade = require('gulp-jade'),
     less = require('gulp-less'),
     coffee = require('gulp-coffee'),
+    cson = require('gulp-cson'),
     download = require('gulp-download'),
     // coffeelint = require('gulp-coffeelint'),
     livereload = require('gulp-livereload'),
@@ -142,7 +143,13 @@ gulp.task('images', function() {
 });
 
 gulp.task('manifest', function() {
-    return copy(paths.manifest, 'dist/chrome');
+    // return copy(paths.manifest, 'dist/chrome');
+    gulp.src(paths.manifest)
+    .pipe(cson())
+    .pipe(rename(function(file) {
+        file.extname = '.webapp';
+    }))
+    .pipe(gulp.dest('dist/chrome'))
 });
 
 gulp.task('cache_manifest', function() {
