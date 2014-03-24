@@ -12,7 +12,7 @@ app.factory 'AudioSrcFactory', ['$sce', 'EveryAyah', 'Preferences', ($sce, Every
     (sura, aya) ->
         sura = number sura
         aya  = number aya
-        src = EveryAyah + Preferences.audio.id + "/#{sura}#{aya}.mp3"
+        src = "#{EveryAyah}/#{Preferences.audio.id}/#{sura}#{aya}.mp3"
         src: $sce.trustAsResourceUrl src
         type: 'audio/mp3'
 ]

@@ -26,7 +26,7 @@ app.service 'ContentService', ['IDBStoreFactory', 'ExplanationFactory', 'AudioSr
                         aya
                 else aya
             (aya) ->
-                if Preferences.audio.enabled then aya.recitation = AudioSrcFactory aya.sura_id, aya.aya_id
+                aya.recitation = AudioSrcFactory aya.sura_id, aya.aya_id if Preferences.audio.enabled
                 aya
         ]
     .catch (err) ->

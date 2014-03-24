@@ -1,7 +1,9 @@
 app.controller 'ExplanationsController', ['$scope', '$log', 'ExplanationService', ($scope, $log, ExplanationService) ->
     # $log.debug 'Here we go'
-    $scope.explanations = { }
-    
+    $scope.explanations =
+        enabled: []
+        available: []
+
     ExplanationService.properties.then (db) ->
         transform = (obj) ->
             _.chain obj
@@ -28,7 +30,8 @@ app.controller 'ExplanationsController', ['$scope', '$log', 'ExplanationService'
         .then (properties) ->
             $log.debug properties
             $scope.explanations.available = transform properties
-            $scope.$apply()
+    .catch (err) ->
+        $log.error err
         
         # db.find id: $in: $scope.options.explanations.ids
         # # .sort language: 1

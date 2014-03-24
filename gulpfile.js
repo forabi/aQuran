@@ -102,6 +102,7 @@ gulp.task('html', function() {
                 'scripts/async.js',
                 'scripts/nedb.js',
                 'ionic/js/ionic.bundle.min.js',
+                // 'http://code.ionicframework.com/nightly/js/ionic.bundle.min.js',
                 'scripts/ngStorage.min.js',
                 'ionic/js/angular/angular-sanitize.min.js',
                 'scripts/angular-audio-player.min.js',

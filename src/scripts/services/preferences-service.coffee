@@ -16,8 +16,9 @@ app.service 'Preferences', ['$localStorage', ($localStorage) ->
             arabic_text: on
             standard_text: no
             diacritics: on
-            type: 'page'
-            current: 1
+            view:
+                type: 'page_id'
+                current: 1
             colorized: yes
             aya_mode: 'uthmani'
             sura_name: 'sura_name'

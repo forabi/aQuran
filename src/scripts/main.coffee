@@ -2,7 +2,7 @@
 app   =   angular.module 'quran', ['ngSanitize', 'ngStorage', 'ionic', 'audioPlayer']
 
 app.constant 'API', 'http://www.alfanous.org/jos2'
-app.constant 'EveryAyah', 'http://www.everyayah.com/data/'
+app.constant 'EveryAyah', 'http://www.everyayah.com/data'
 
 app.run ['$rootScope', 'Preferences', '$window', ($rootScope, Preferences, $window) ->
     $rootScope.online = navigator.onLine

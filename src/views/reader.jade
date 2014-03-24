@@ -1,5 +1,5 @@
 ion-view(title='title', right-buttons='rightButtons')
-    ion-content(has-header='true', overflow-scroll='true', has-footer='true', on-infinite-scroll='loadMore()')
+    ion-content(has-header='true', overflow-scroll='true', has-footer='true')
         div(ng-switch='progress.status')
             div(ng-switch-default)
                 .button-bar.bar-subheader
@@ -10,12 +10,14 @@ ion-view(title='title', right-buttons='rightButtons')
                     button.button.button.icon.ion-pause(ng-show='audioPlayer.playing', ng-click='audioPlayer.pause()')
                     //- button.button.button.icon.ion-ios7-fastforward(ng-click='audioPlayer.next()')
                 //- TODO: fix index issue
-                .sura(ng-if='progress.status == "ready"', ng-repeat='sura in data.view')
+                .sura(ng-if='progress.status == "ready"', ng-repeat='sura in view.content')
                     h2.sura-name.item.item-divider(ng-if='sura.ayas[0].aya_id == 1'): b {{ sura[options.reader.sura_name] }}
                     .sura-body.item.item-text-wrap
                         span(ng-repeat='aya in sura.ayas', ng-click='audioPlayer.play({{ aya.index }})', index='{{ aya.index }}')
                             span.aya-text(colorize='{{ aya.uthmani }}', ng-class='{ assertive: audioPlayer.currentTrack - 1 == aya.index }') {{ aya.uthmani }}
                             i.aya-number {{ aya.aya_id }}
+
+                ion-infinite-scroll(on-infinite='loadMore()', distance='10%')
 
             .card.text-center(ng-switch-when='loading')
                 .item.item-body
