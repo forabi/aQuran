@@ -1,6 +1,7 @@
 var gulp = require('gulp'),
     clean = require('gulp-clean'),
     gutil = require('gulp-util'),
+    _ = require('lodash'),
     fs = require('fs'),
     sqlite3 = require('sqlite3'),
     async = require('async'),
@@ -13,6 +14,8 @@ var gulp = require('gulp'),
     coffee = require('gulp-coffee'),
     cson = require('gulp-cson'),
     download = require('gulp-download'),
+    manifest = require('gulp-manifest'),
+    jsonEditor = require('gulp-json-editor'),
     // coffeelint = require('gulp-coffeelint'),
     livereload = require('gulp-livereload'),
     ngmin = require('gulp-ngmin'),
@@ -39,7 +42,8 @@ var paths = {
     resources: ['src/resources/**/*.json', 'src/resources/amiri/**.ttf', 'src/styles/fonts/*', 'src/styles/flags/**/*'],
     translations: 'src/resources/translations/*.trans.zip',
     translations_txt: 'src/resources/translations.txt',
-    db: 'src/database/main.db'
+    db: 'src/database/main.db',
+    recitations: 'src/resources/recitations.json'
 };
 
 gulp.task('clean', function() {
@@ -173,6 +177,37 @@ gulp.task('download_translations', function() {
     return download(urls)
     .pipe(gulp.dest(destination));
 
+});
+
+gulp.task('download_recitations', function() {
+    var url = 'http://www.everyayah.com/data/recitations.js';
+    return download(url)
+    .pipe(rename(function(file) {
+        file.extname = '.json';
+    }))
+});
+
+gulp.task('recitations', function() {
+    gulp.src(paths.recitations)
+    .pipe(jsonEditor(function(json) {
+        // console.log(json);
+        delete json.ayahCount;
+        json = _.chain(json)
+        .each(function(item, key) {
+            item.index = key - 1;
+            return item;
+        })
+        .toArray()
+        .sortBy('index')
+        .each(function(item) {
+            delete item.index
+            return item;
+        })
+        .value();
+        console.log(json);
+        return json;
+    })) 
+    .pipe(gulp.dest('dist/chrome/resources'));
 });
 
 gulp.task('translations', function(callback) {
