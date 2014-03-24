@@ -26,8 +26,6 @@ app.service 'Preferences', ['$localStorage', ($localStorage) ->
         
         audio:
             id: 'Abdullah_Basfar_32kbps'
-            recitor: 'عبد الباسط عبد الصمد'
-            tags: ['مرتَّل']
             auto_quality: yes
             enabled: yes
 

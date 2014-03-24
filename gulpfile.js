@@ -93,7 +93,7 @@ gulp.task('scripts', function() {
 gulp.task('html', function() {
     return gulp.src(paths.jade, { base: 'src' })
     .pipe(jade({
-        pretty: true,
+        pretty: false,
         locals: {
             scripts:  [
                 // 'ionic/js/angular/angular.js',
@@ -123,6 +123,7 @@ gulp.task('html', function() {
                 'scripts/directives/auto-direction-directive.js',
                 'scripts/controllers/aya-controller.js',
                 'scripts/controllers/preferences-controller.js',
+                'scripts/controllers/recitations-controller.js',
                 'scripts/controllers/explanations-controller.js',
                 'scripts/controllers/navigation-controller.js',
                 'scripts/controllers/search-controller.js',

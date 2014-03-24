@@ -48,6 +48,11 @@ app.config ['$stateProvider', '$urlRouterProvider', '$locationProvider' , ($stat
       url: '/explanations'
       templateUrl: 'views/explanations.html'
       controller: 'ExplanationsController'
+
+    .state 'recitations', 
+      url: '/recitations'
+      templateUrl: 'views/recitations.html'
+      controller: 'RecitationsController'
     
 
     $urlRouterProvider.otherwise '/reader/1'

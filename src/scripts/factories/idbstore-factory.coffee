@@ -14,6 +14,7 @@ app.factory 'IDBStoreFactory', ['$q', '$http', '$log', 'QueryBuilder', 'Preferen
         
         insert = (data) ->
             # TODO: clear database
+            console.log 'DATA:', data
             d = $q.defer()
             store.putBatch data, () ->
                 d.resolve store
