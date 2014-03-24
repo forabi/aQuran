@@ -188,6 +188,9 @@ gulp.task('download_recitations', function() {
 
 gulp.task('recitations', function() {
     gulp.src(paths.recitations)
+    .pipe(rename(function(file) {
+        file.extname = '.json'
+    }))
     .pipe(jsonEditor(function(json) {
         // console.log(json);
         delete json.ayahCount;
