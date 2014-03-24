@@ -59,6 +59,15 @@ gulp.task('ayas', function(callback) {
     });
 });
 
+gulp.task('ayas_search', function(callback) {
+    var db = new sqlite3.Database(paths.db, sqlite3.OPEN_READONLY);
+    db.all('SELECT gid, standard, standard_full FROM aya ORDER BY `gid`;', function(err, rows) {
+        console.log('Found', rows.length, 'rows');
+        fs.writeFile('dist/chrome/resources/ayas_search.json', JSON.stringify(rows), callback);
+    });
+});
+
+
 gulp.task('ionic', function() {
     return gulp.src(paths.ionic, { base: 'src' })
     .pipe(gulp.dest('dist/chrome'));
