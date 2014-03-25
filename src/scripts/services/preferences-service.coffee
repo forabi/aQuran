@@ -1,6 +1,9 @@
 # _ = require 'lodash'
 app.service 'Preferences', ['$localStorage', ($localStorage) ->
     defaults =
+
+        first_time: yes
+
         search:
             history: []
             max_history: 10

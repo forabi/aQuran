@@ -15,6 +15,9 @@
         storage:
             description: 'Required to store application databases,
             including translations'
+        systemXHR:
+            description: 'Required to communicate with Al-Fanous web service 
+            when performing an online search'
 
     icons:
         '16' : 'images/icon-16.png'
@@ -42,5 +45,6 @@
             permissions:
                 storage: description: 'مطلوب لتخزين قواعد بيانات التطبيق،
                 متضمنةً التفاسير والترجمات'
+                systemXHR: description: 'مطلوب للاتصال بخدمة الفانوس عند البحث عبر الإنترنت'
 
 }

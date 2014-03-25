@@ -28,7 +28,7 @@ app.factory 'AudioSrcFactory', ['$sce', 'EveryAyah', 'Preferences', 'RecitationS
                 else
                     choose = (available) ->
                         # We need to find the highest available bitrate that is
-                        # not higher than connection bandwidth so we can ensure a
+                        # not higher than our connection bandwidth so we can ensure a
                         # continuous stream
 
                         # The current working draft of the Network Information API

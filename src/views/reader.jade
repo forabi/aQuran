@@ -22,6 +22,9 @@ ion-view(title='title', right-buttons='rightButtons')
             .card.text-center(ng-switch-when='loading')
                 .item.item-body
                     i.icon.placeholder-icon.ion-loading-c.icon-large
+                    div(ng-if='options.first_time')
+                        h2 Indexing databases for the first time...
+                        small This may take a few minutes
             
             .card.text-center(ng-switch-when='error')
                 .item.item-body

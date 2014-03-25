@@ -97,6 +97,7 @@ app.controller 'ReadingController', ['$ionicLoading', '$rootScope', '$scope', '$
 
     loadContent().then (content) ->
         $scope.view.content = content
+        $scope.options.first_time = no
 
     error = (err) ->
         $scope.progress.status = 'error'
