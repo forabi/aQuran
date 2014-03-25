@@ -25,9 +25,15 @@ app.service 'ContentService', ['IDBStoreFactory', 'ExplanationFactory', 'AudioSr
                         aya.explanations = explanations
                         aya
                 else aya
-            (aya) ->
-                aya.recitation = AudioSrcFactory aya.sura_id, aya.aya_id if Preferences.audio.enabled
-                aya
+            (promise) ->
+                # We expect a promise because the previous transform is async
+                promise.then (aya) ->
+                    if Preferences.audio.enabled
+                        AudioSrcFactory aya.sura_id, aya.aya_id 
+                        .then (audioSrc) ->
+                            aya.recitation = audioSrc
+                            aya
+                    else aya
         ]
     .catch (err) ->
         $log.error err

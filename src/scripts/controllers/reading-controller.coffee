@@ -31,23 +31,23 @@ app.controller 'ReadingController', ['$ionicLoading', '$rootScope', '$scope', '$
 
     $scope.view = _.defaults $stateParams, $scope.options.reader.view
 
-    $scope.static =
-        views: [
-            (id: 'page_id' , name: 'Page')
-            (id: 'sura_id' , name: 'Sura')
-            (id: 'hizb_gid', name: 'Hizb')
-        ]
-        modes: [
-            (id: 'standard'     , name: 'Standard')
-            (id: 'standard_full', name: 'Standard (Full)')
-            (id: 'uthmani'      , name: 'Uthmani (Full)')
-            (id: 'uthmani_min'  , name: 'Uthmani (Minimum)')
-        ]
-        sura_name: [
-            (id: 'sura_name'             , name: 'Arabic')
-            (id: 'sura_name_en'          , name: 'English')
-            (id: 'sura_name_romanization', name: 'Arabic (transliterated)')
-        ]
+    # $scope.static =
+    #     views: [
+    #         (id: 'page_id' , name: 'Page')
+    #         (id: 'sura_id' , name: 'Sura')
+    #         (id: 'hizb_gid', name: 'Hizb')
+    #     ]
+    #     modes: [
+    #         (id: 'standard'     , name: 'Standard')
+    #         (id: 'standard_full', name: 'Standard (Full)')
+    #         (id: 'uthmani'      , name: 'Uthmani (Full)')
+    #         (id: 'uthmani_min'  , name: 'Uthmani (Minimum)')
+    #     ]
+    #     sura_name: [
+    #         (id: 'sura_name'             , name: 'Arabic')
+    #         (id: 'sura_name_en'          , name: 'English')
+    #         (id: 'sura_name_romanization', name: 'Arabic (transliterated)')
+    #     ]
 
     $scope.progress =
         status: 'init'
@@ -57,9 +57,10 @@ app.controller 'ReadingController', ['$ionicLoading', '$rootScope', '$scope', '$
     transform = (docs) ->
         # default sorting
         _.chain docs
-        .each (aya, index) -> _.extend aya, index: index
-        .forEach (aya) ->
+        .map (aya, index) -> 
             $scope.playlist.push aya.recitation
+            aya.index = index
+            aya
         .sortBy 'gid'
         .groupBy 'sura_id'
         .map (ayas, key) -> 
@@ -91,7 +92,7 @@ app.controller 'ReadingController', ['$ionicLoading', '$rootScope', '$scope', '$
         loadContent()
         .then (content) ->
             $log.debug 'New content ready', content
-            $scope.view.content.push content  
+            $scope.view.content.concat content  
             $scope.$broadcast 'scroll.infiniteScrollComplete'
 
     loadContent().then (content) ->

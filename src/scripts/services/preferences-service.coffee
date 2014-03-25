@@ -25,7 +25,10 @@ app.service 'Preferences', ['$localStorage', ($localStorage) ->
             sura_name_transliteration: on
         
         audio:
-            id: 'Abdullah_Basfar_32kbps'
+            recitation:
+                subfolder: 'Abdul_Basit_Murattal_64kbps'
+                name: 'Abdul Basit Murattal'
+                bitrate: '64kbps'
             auto_quality: yes
             enabled: yes
 

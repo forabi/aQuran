@@ -7,6 +7,7 @@ app.service 'RecitationService', ['IDBStoreFactory', (IDBStoreFactory) ->
         autoIncrement: no
         indexes: [
             (name: 'subfolder', unique: yes)
+            (name: 'name')
             (name: 'bitrate')
         ]
 

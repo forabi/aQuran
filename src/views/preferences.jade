@@ -34,14 +34,14 @@ ion-view(title='"Preferences"')
                 label.toggle
                     input(type='checkbox', ng-model='options.audio.enabled')
                     .track: .handle
-            .item.item-toggle.item-text-wrap(ui-sref='recitations', ng-if='options.audio.enabled')
+            .item.item-toggle.item-text-wrap(ng-if='options.audio.enabled')
                 | Adapt streaming quality to network conditions
                 div: small Depending on the quality of your Internet connection, the quality of audio may change during playback
                 label.toggle
                     input(type='checkbox', ng-model='options.audio.auto_quality')
                     .track: .handle
             a.item.item-text-wrap(ui-sref='recitations', ng-if='options.audio.enabled')
-                | Manage recitations
+                | Choose recitation
             
             .item.item-divider Search
             .item.item-toggle.item-text-wrap Use online search for better results

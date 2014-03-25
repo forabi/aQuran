@@ -1,6 +1,11 @@
 # _ = require 'lodash'
 # module.exports = (app) ->
 app.service 'SearchService', ['APIService', 'ContentService', 'ArabicService', 'Preferences', '$log', '$http', '$q', (APIService, ContentService, Arabic, Preferences, $log, $http, $q) -> 
+    # We cannot perform a regex search on an indexedDB
+    # so we load a subset of aya data into memory with
+    # the excellent louischatriot/nedb which allows
+    # queries with MongoDb-like syntax
+
     database = undefined
     loadDatabase = () ->
         database = $http.get 'resources/ayas_search.json', cache: yes
@@ -51,6 +56,8 @@ app.service 'SearchService', ['APIService', 'ContentService', 'ArabicService', '
             data
 
     methods.offline = (str, options) -> 
+        # Make sure our database is only loaded once,
+        # and only when performing an offline search
         (database || loadDatabase()).then (db) ->
         
             deferred = $q.defer()
