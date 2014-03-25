@@ -33,7 +33,7 @@ app.factory 'AudioSrcFactory', ['$sce', 'EveryAyah', 'Preferences', 'RecitationS
 
                         # The current working draft of the Network Information API
                         # provides an estimation of the bandwidth in MB/s
-                        # When connected to a Wi-Fi or non-metered network, we get Infinity
+                        # When bandwidth is unknown, we get Infinity
                         bandwidth = navigator.mozConnection.bandwidth # TODO: polyfill navigator.connection
                         # $log.debug 'Bandwidth:', bandwidth
                         # $log.debug 'Available:', available
