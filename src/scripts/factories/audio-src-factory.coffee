@@ -30,14 +30,17 @@ app.factory 'AudioSrcFactory', ['$sce', 'EveryAyah', 'Preferences', 'RecitationS
                         # We need to find the highest available bitrate that is
                         # not higher than connection bandwidth so we can ensure a
                         # continuous stream
-                        bandwidth = navigator.mozConnection.bandwidth
+
+                        # The current working draft of the Network Information API
+                        # provides an estimation of the bandwidth in MB/s
+                        # When connected to a Wi-Fi or non-metered network, we get Infinity
+                        bandwidth = navigator.mozConnection.bandwidth # TODO: polyfill navigator.connection
                         # $log.debug 'Bandwidth:', bandwidth
                         # $log.debug 'Available:', available
                         best = switch bandwidth
                             when Infinity then max available
-                            else
-                                _.remove available, (item) -> bandwidth < item * 8 / 1024
-                                # $log.debug "After removal", available
+                            else # Remove everything larger than connection bandwidth
+                                _.remove available, (item) -> bandwidth < item * 8 / 1024 # convert kbit/s to MB/s
                                 max available
                         # $log.debug "Best quality:", best
                         best || available[0] # minimum available bitrate if bandwidth is too low
