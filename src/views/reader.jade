@@ -15,7 +15,7 @@ ion-view(title='title', right-buttons='rightButtons')
                     .sura-body.item.item-text-wrap
                         span(ng-repeat='aya in sura.ayas', ng-click='audioPlayer.play({{ aya.index }})', index='{{ aya.index }}')
                             span.aya-text(colorize='{{ aya.uthmani }}', ng-class='{ assertive: audioPlayer.currentTrack - 1 == aya.index }') {{ aya.uthmani }}
-                            i.aya-number {{ aya.aya_id }}
+                            i.aya-number {{ aya.aya_id_display }}
 
                 ion-infinite-scroll(on-infinite='loadMore()', distance='10%')
 

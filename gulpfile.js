@@ -43,7 +43,8 @@ var paths = {
     translations: 'src/resources/translations/*.trans.zip',
     translations_txt: 'src/resources/translations.txt',
     db: 'src/database/main.db',
-    recitations: 'src/resources/recitations.js'
+    recitations: 'src/resources/recitations.js',
+    khaledHosnyTexts: 'src/khaledhosny-quran/quran/*.txt'
 };
 
 gulp.task('clean', function() {
@@ -55,11 +56,41 @@ gulp.task('ayas', function(callback) {
     var db = new sqlite3.Database(paths.db, sqlite3.OPEN_READONLY);
     db.all('SELECT * FROM aya ORDER BY `gid`;', function(err, rows) {
         console.log('Found', rows.length, 'rows');
+        var current = 0;
+        var sura_id = 1;
+        var processFile = function(file) {
+            console.log('Processing file', file);
+            var text = fs.readFileSync(file).toString();
+            var numbers_regex = /[٠١٢٣٤٥٦٧٨٩]+/g
+            var numbers = text.match(numbers_regex);
+            sura_id = Number(file.match(/\d+/g));
+            // console.log('Numbers', numbers);
+            var regex = /\u06DD|[٠١٢٣٤٥٦٧٨٩]/g;
+            text.replace(regex, '').trim().split('\n').forEach(function(line, index) {
+                console.log(current, sura_id, line, index);
+                try {
+
+                    rows[current].sura_id = sura_id;
+                    rows[current].aya_id_display = numbers[index];
+                    rows[current].uthmani = line.trim();
+                    
+                } catch(e) {
+                    console.log(e);
+                }
+                current += 1;
+            });
+            // console.log(text);
+        };
+        var files = glob.sync(paths.khaledHosnyTexts);
+        // console.log(files);
+        files.forEach(processFile);
+        // console.log(_.sample(rows));
         fs.writeFile('dist/chrome/resources/ayas.json', JSON.stringify(rows), callback);
     });
 });
 
 gulp.task('ayas_search', function(callback) {
+    // TODO: read from json file instead
     var db = new sqlite3.Database(paths.db, sqlite3.OPEN_READONLY);
     db.all('SELECT gid, standard, standard_full FROM aya ORDER BY `gid`;', function(err, rows) {
         console.log('Found', rows.length, 'rows');

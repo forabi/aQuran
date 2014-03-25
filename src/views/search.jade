@@ -53,7 +53,7 @@ ion-view(title='"Search"')
                         | Maybe later
                     .item.item-text-wrap
                         small You can change this setting later in the Search section of the Preferences view
-                .card.list
+                .card.list(ng-if='options.search.history.length')
                     a.item.item-text-wrap.item-icon-left.positive(
                         ng-repeat='query in options.search.history',
                         auto-direction='{{ query }}',
