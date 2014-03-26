@@ -38,14 +38,14 @@
 ##كيف يمكنني المساعدة؟
 * إن كنت تجيد التعامل مع مشاريع الويب فانسخ المشروع إلى جهازك وابنه باستخدام الأوامر التالية:
 
-
-    gulp build
-    gulp ayas ayas_search
-    gulp recitations
-    gulp download_translations
-    gulp translations
-    gulp watch serve
- 
+```bash
+gulp build
+gulp ayas ayas_search
+gulp recitations
+gulp download_translations
+gulp translations
+gulp watch serve
+```
 
 ثم افتح [localhost:7000](http://localhost:7000/) لبدء التطبيق. أنصح باستخدام Firefox وفي منظور التصميم المستجيب (Responsive Design View) لأن Chrome لا يعرض الكلمات العربية المشكلة بصورة صحيحة في نسخه الأخيرة.
 * هل بإمكانك الترجمة أو التوثيق؟ أنشئ فرعاً عن المشروع على GitHub وأجر تعديلاتك ثم ادفعها إليّ!
