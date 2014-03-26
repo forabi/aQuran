@@ -35,17 +35,19 @@
 ![نتائج البحث](http://i.imgur.com/4bEwPzY.png)
 ![تلاوة الصفحة](http://i.imgur.com/DwMuKR6.png)
 
-##كيف يمكنني المساعدة؟
+##تجربة المشروع والمساهمة في التطوير
+
 * إن كنت تجيد التعامل مع مشاريع الويب فانسخ المشروع إلى جهازك وابنه باستخدام الأوامر التالية:
+        1. تأكد من تثبيت `node` و`npm` على جهازك
+        2. استنسخ المشروع إلى جهازك `git clone https://github.com/forabi/aQuran.git`
+        3. انتقل إلى مجلد المشروع `cd aQuran`
+        4. ثبت متطلبات المشروع `npm install`
+        5. ابن المشروع `gulp build`
+        6. ولّد النص القرآني `gulp ayas ayas_search`
+        7. ولد البيانات الوصفية لللتلاوات `gulp recitations`
+        8. حمل مصادر الترجمات من مشروع ذكر `gulp download_translations`
+        9. ولّد الترجمات `gulp translations`
+        10. ابدأ المشروع على الخادم المحلي `gulp serve`
+        11. افتح [localhost:7000](http://localhost:7000/) لبدء التطبيق. أنصح باستخدام Firefox وفي منظور التصميم المستجيب (Responsive Design View) لأن Chrome لا يعرض الكلمات العربية المشكلة بصورة صحيحة في نسخه الأخيرة.
 
-```bash
-gulp build
-gulp ayas ayas_search
-gulp recitations
-gulp download_translations
-gulp translations
-gulp watch serve
-```
-
-ثم افتح [localhost:7000](http://localhost:7000/) لبدء التطبيق. أنصح باستخدام Firefox وفي منظور التصميم المستجيب (Responsive Design View) لأن Chrome لا يعرض الكلمات العربية المشكلة بصورة صحيحة في نسخه الأخيرة.
 * هل بإمكانك الترجمة أو التوثيق؟ أنشئ فرعاً عن المشروع على GitHub وأجر تعديلاتك ثم ادفعها إليّ!
