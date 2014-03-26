@@ -3,7 +3,7 @@
 # module.exports = (app) -> 
 app.service 'ContentService', ['IDBStoreFactory', 'ExplanationFactory', 'AudioSrcFactory', 'Preferences', '$http', '$q', '$log', (IDBStoreFactory, ExplanationFactory, AudioSrcFactory, Preferences, $http, $q, $log) -> 
     IDBStoreFactory 'resources/ayas.json',
-        dbVersion: 1
+        dbVersion: 3
         storeName: 'ayas'
         storePrefix: ''
         keyPath: 'gid'

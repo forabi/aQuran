@@ -1,7 +1,7 @@
 app.service 'ExplanationService', ['IDBStoreFactory', '$q', '$http', 'CacheService', '$log', 'Preferences', (IDBStoreFactory, $q, $http, CacheService, $log, Preferences) ->
 
     database = IDBStoreFactory 'resources/translations.json',
-        dbVersion: 1
+        dbVersion: 2
         storeName: 'explanations'
         storePrefix: ''
         keyPath: 'id'
