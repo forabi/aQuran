@@ -4,6 +4,8 @@ app.service 'Preferences', ['$localStorage', ($localStorage) ->
 
         first_time: yes
 
+        theme: 'balanced'
+
         search:
             history: []
             max_history: 10

@@ -8,8 +8,8 @@ html(ng-app='quran', lang='en')
             link(rel='stylesheet', href=style)
     body
         ion-nav-bar(animation='nav-title-slide-android', 
-           type='bar-positive',
-           back-button-type='button-positive',
+           type='bar-{{ options.theme }}',
+           back-button-type='button-{{ options.theme }}',
            back-button-icon='ion-android-arrow-back')
 
         ion-nav-view(animation='slide-left-right')

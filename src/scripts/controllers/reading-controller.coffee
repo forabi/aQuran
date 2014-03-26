@@ -14,17 +14,17 @@ app.controller 'ReadingController', ['$ionicLoading', '$rootScope', '$scope', '$
 
     $scope.rightButtons = [
         (
-            type: 'button-positive'
+            type: 'button-{{ options.theme }}'
             content: '<i class="icon ion-android-search"></i>'
             tap: (e) ->
                 $state.go 'search'
-        ),
-        (
-            type: 'button-positive'
-            content: '<i class="icon ion-android-more"></i>'
-            tap: (e) ->
-                $state.go 'search'
         )
+        # (
+        #     type: 'button-positive'
+        #     content: '<i class="icon ion-android-more"></i>'
+        #     tap: (e) ->
+        #         $state.go 'search'
+        # )
     ]
 
     $scope.playlist = []

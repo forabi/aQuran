@@ -1,8 +1,9 @@
 ion-view(title='Recitations')
     ion-content(has-header='true', overflow-scroll='true', padding='false')
         .list
-            label.item.item-radio(ng-repeat='recitation in recitations', ng-click='set(recitation)')
-                input(type='radio', name='recitations', ng-model='options.audio.recitation', ng-value='recitation')
+            label.item.item-radio(ng-repeat='recitation in recitations')
+                input(ng-if='!options.audio.auto_quality', type='radio', name='recitations', ng-model='options.audio.recitation', ng-value='recitation')
+                input(ng-if='options.audio.auto_quality', type='radio', name='recitations', ng-model='options.audio.recitation.name', ng-value='recitation.name')
                 .item-content {{ recitation.name }}
                 i.radio-icon.ion-checkmark
                 //- .list(ng-if='options.audio.auto_quality')

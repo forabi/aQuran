@@ -1,8 +1,8 @@
 app.controller 'RecitationsController', ['$scope', '$log', 'RecitationService', ($scope, $log, RecitationService) ->
     $scope.recitations = []
 
-    $scope.set = (recitation) ->
-        $scope.options.audio.recitation = recitation
+    # $scope.set = (recitation) ->
+    #     $scope.options.audio.recitation = recitation
 
     RecitationService.properties.then (db) ->
         db.find()
@@ -12,6 +12,7 @@ app.controller 'RecitationsController', ['$scope', '$log', 'RecitationService', 
             $scope.recitations = _.chain properties
             .uniq true, 'name'
             .value()
+            # $log.debug properties
     .catch (err) ->
         $log.error err
 ]

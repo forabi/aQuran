@@ -38,6 +38,7 @@ ion-view(title='Search')
             .card.text-center(ng-switch-when='searching')
                 .item.item-body
                     i.icon.placeholder-icon.ion-loading-c.icon-large
+                    //- h2 {{ progress.message }}
 
             div(ng-switch-default)
                 .card(ng-if='online && options.search.online.prompt && !options.search.online.enabled')

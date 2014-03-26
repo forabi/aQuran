@@ -1,13 +1,24 @@
 ion-view(title='Preferences')
     ion-content(has-header='true', overflow-scroll='true', has-footer='true')
-        list
-            .item.item-divider.item-text-wrap Quran display
+        list.list
+            .item.item-divider.item-text-wrap Appearance
+            .item.item-toggle.item-text-wrap Theme:
+                .list
+                    label.item.item-radio(ng-repeat='theme in themes')
+                        input(type='radio', name='themes', ng-model='options.theme', ng-value='theme.id')
+                        .item-content {{ theme.name }}
+                        i.radio-icon.ion-checkmark
             .item.item-toggle.item-text-wrap Show Arabic text
                 label.toggle
                     input(type='checkbox', ng-model='options.reader.arabic_text')
                     .track: .handle
-            a.item.item-toggle.item-text-wrap Display sura name in:
-                div: small {{ sura_names[options.reader.sura_name].name }}, e.g. {{ sura_names[options.reader.sura_name].example }}
+            .item.item-toggle.item-text-wrap Display sura name in:
+                //- div: small {{ sura_names[options.reader.sura_name].name }}, e.g. {{ sura_names[options.reader.sura_name].example }}
+                .list
+                    label.item.item-radio(ng-repeat='sura_name in sura_names')
+                        input(type='radio', name='sura_names', ng-model='options.reader.sura_name', ng-value='sura_name.value')
+                        .item-content {{ sura_name.name }}, e.g. {{ sura_name.example }}
+                        i.radio-icon.ion-checkmark
             div(ng-show='options.reader.arabic_text')
                 .item.item-toggle.item-text-wrap Standard text
                     label.toggle

@@ -7,6 +7,7 @@
             status: 'init'
             total: 0
             current: 0
+            message: ''
 
         # $scope.$on '$destroy', () ->
             # $log.debug 'Search scope will be destroyed'
@@ -37,6 +38,8 @@
                     .then () ->
                         $scope.progress.status = 'ready'
                     .catch error
+                    # .then undefined, undefined, (message) ->
+                    #     $scope.progress.message = message
 
         $scope.search.execute()
 
