@@ -17,6 +17,9 @@ app.service 'ContentService', ['IDBStoreFactory', 'ExplanationFactory', 'AudioSr
             ]
         transforms: [
             (aya) ->
+                aya.sura_name = aya[Preferences.reader.sura_name]
+                aya
+            (aya) ->
                 if Preferences.explanations.enabled
                     $q.all Preferences.explanations.ids.map (id) ->
                         # $log.debug "Loading explanation #{id} for aya #{aya.gid}"

@@ -24,7 +24,7 @@ app.service 'Preferences', ['$localStorage', ($localStorage) ->
                 current: 1
             colorized: yes
             aya_mode: 'uthmani'
-            sura_name: 'sura_name'
+            sura_name: 'sura_name_romanization'
             sura_name_transliteration: on
         
         audio:

@@ -9,7 +9,7 @@ ion-view(title='Search')
                     ng-model='search.query',
                     ng-change='progress.status="init"'
                     )
-                button.button.button-small.button-positive.button-icon(type='submit') Search
+                button.button.button-small.button-positive.button-icon(type='submit')
                     i.icon.placeholder-icon.ion-ios7-search-strong
                 
         span(ng-switch='progress.status')
@@ -17,7 +17,7 @@ ion-view(title='Search')
                 .card(ng-repeat='aya in search.results')
                     small.item.item-divider.item-text-wrap
                         a.subdued Juz {{ aya.juz_id }}
-                        a.subdued {{ aya[options.reader.sura_name] }}
+                        a.subdued {{ aya.sura_name }}
                         a.subdued Aya {{ aya.aya_id }}
                     
                     a.item.item-text-wrap.sura-body(

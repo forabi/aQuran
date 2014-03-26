@@ -42,7 +42,7 @@ app.service 'ExplanationService', ['IDBStoreFactory', '$q', '$http', 'CacheServi
                     ]
             .then (store) ->
                 # Store in cache
-                $log.debug 'Store ready'
+                # $log.debug 'Store ready'
                 CacheService.put "trans:#{id}", store
                 store
             .catch (err) ->

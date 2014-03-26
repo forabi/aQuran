@@ -19,6 +19,20 @@ app.service 'SearchService', ['APIService', 'ContentService', 'ArabicService', '
                 deferred.resolve db
             deferred.promise
 
+    getFromIDBStore = (ayas) ->
+        deferred = $q.defer()
+        ContentService.then (idb) ->
+            async.mapSeries ayas, (aya, callback) ->
+                idb.findOne gid: aya.gid
+                .exec()
+                .then (aya) ->
+                    callback null, aya
+            , (err, all) ->
+                if err then throw err
+                # deferred.resolve all
+                deferred.resolve _.map all, (aya, index) -> _.extend aya, ayas[index]
+        deferred.promise
+
     methods = {}
     methods.online = (str, options) ->
         $log.debug 'Searching online...'
@@ -41,25 +55,26 @@ app.service 'SearchService', ['APIService', 'ContentService', 'ArabicService', '
             $log.debug 'Online search response:', response
             # Remap response to match assumed schema
             data = _(response.data.search.ayas).map (aya, index) -> 
-                $log.log 'Processing aya:', aya
-                _.extend aya.identifier, 
-                    index: index
-                    html: aya.aya.text
-                    standard_full: aya.aya.text_no_highlight
-                    sura_name: aya.sura.arabic_name
-                    sura_name_en: aya.sura.english_name
-                    page_id: aya.position.page
+                gid: aya.identifier.gid, index: index
+                # $log.log 'Processing aya:', aya
+                # _.extend aya.identifier, 
+                #     index: index
+                #     html: aya.aya.text
+                #     standard_full: aya.aya.text_no_highlight
+                #     sura_name: aya.sura.arabic_name
+                #     sura_name_en: aya.sura.english_name
+                #     page_id: aya.position.page
             .toArray()
             .sortBy 'index'
             .value()
-            $log.debug 'Tranformed online search data:', data
+            # $log.debug 'Tranformed online search data:', data
             data
+            
 
     methods.offline = (str, options) -> 
         # Make sure our database is only loaded once,
         # and only when performing an offline search
         (database || loadDatabase()).then (db) ->
-        
             deferred = $q.defer()
 
             # str = str.replace(Arabic.Hamzas.RegExp, Arabic.Hamzas.String.split(/./).join('|')) if options.ignoreHamzaCase
@@ -100,17 +115,9 @@ app.service 'SearchService', ['APIService', 'ContentService', 'ArabicService', '
             # cursor = database.find query
             db.find query
             .sort gid: 1
-            .exec (err, ayas) ->
+            .exec (err, all) ->
                 if err then throw err
-                ContentService.then (idb) ->
-                    async.mapSeries ayas, (aya, callback) ->
-                        idb.findOne gid: aya.gid
-                        .exec()
-                        .then (aya) ->
-                            callback null, aya
-                    , (err, all) ->
-                        if err then throw err
-                        deferred.resolve all
+                deferred.resolve all
             
             # cursor.sort options.sort # This will not work
 
@@ -160,6 +167,7 @@ app.service 'SearchService', ['APIService', 'ContentService', 'ArabicService', '
             .catch (reason) ->
                 if mode != 'offline' then methods.offline str, options
                 else throw reason
+            .then getFromIDBStore
             .then (results) ->
                 if results.length
                     _.pull Preferences.search.history, str
