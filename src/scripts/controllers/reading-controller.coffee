@@ -92,7 +92,7 @@ app.controller 'ReadingController', ['$ionicLoading', '$rootScope', '$scope', '$
         loadContent()
         .then (content) ->
             $log.debug 'New content ready', content
-            $scope.view.content.concat content  
+            $scope.view.content.concat content
             $scope.$broadcast 'scroll.infiniteScrollComplete'
 
     loadContent().then (content) ->

@@ -2,8 +2,10 @@
     app.service 'ArabicService', [() ->
 
         _arabic_alphapet = /[\u060c-\u06fe\ufb50-\ufefc]/g
-        _diacritics_str = '([\u064b-\u0652])'
-        _quranic_annotation_signs = /[\u0617-\u061a\u06d6-\u06ed]/g
+        # _diacritics_str = '([\u064b-\u0652])'
+        _diacritics_str = '([\u0618\u0619\u061A\u064B\u064C\u064D\u064E\u064F\u0650\u0651\u0652\u0657\u0658\u06E1\u08F0\u08F1\u08F2\u064B.small\u064E.small\u08F1.small\u064F.small\u08F0.small\u064C.small\u0657.small\u0650.small\u064D.small\u0652.small2\u0650.small2\u064E.small2\u0657.urd])'
+        # _quranic_annotation_signs = /[\u0617-\u061a\u06d6-\u06ed]/g
+        _quranic_annotation_signs = /[\u0615\u0617\u065C\u0670\u06D6\u06D7\u06D8\u06D9\u06DA\u06DB\u06DC\u06DD\u06DE\u06DF\u06E0\u06E2\u06E3\u06E4\u06E5\u06E6\u06E7\u06E8\u06E9\u06EA\u06EB\u06EC\u06ED\u0670.isol\u0670.medi\u06E5.medi\u06E6]/
         _hamza_str = '([آإأءئؤاىو])'
         _numbers = [
             "\u0660"
@@ -34,7 +36,7 @@
         Alphabet:
             RegExp: _arabic_alphapet
         Diacritics:
-            RegExp: /([\u064b-\u0652])/g
+            RegExp: new RegExp _diacritics_str, 'g'
             String: _diacritics_str
         Hamzas:
             String: _hamza_str

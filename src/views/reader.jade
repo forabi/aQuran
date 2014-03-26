@@ -1,4 +1,4 @@
-ion-view(title='title', right-buttons='rightButtons')
+ion-view(title='{{ title }}', right-buttons='rightButtons')
     ion-content(has-header='true', overflow-scroll='true', has-footer='true')
         div(ng-switch='progress.status')
             div(ng-switch-default)
@@ -17,7 +17,7 @@ ion-view(title='title', right-buttons='rightButtons')
                             span.aya-text(colorize='{{ aya.uthmani }}', ng-class='{ assertive: audioPlayer.currentTrack - 1 == aya.index }') {{ aya.uthmani }}
                             i.aya-number {{ aya.aya_id_display }}
 
-                ion-infinite-scroll(on-infinite='loadMore()', distance='10%')
+                ion-infinite-scroll(on-infinite='loadMore()', distance='1%')
 
             .card.text-center(ng-switch-when='loading')
                 .item.item-body

@@ -178,7 +178,11 @@ gulp.task('html', function() {
                 'scripts/services/content-service.js',
                 'scripts/services/search-service.js'
                 ],
-            styles: ['ionic/css/ionic.min.css', 'styles/main.css']
+            styles: [
+                'ionic/css/ionic.min.css',
+                // 'http://code.ionicframework.com/nightly/css/ionic.min.css',
+                'styles/main.css'
+                ]
         }
     })).pipe(gulp.dest('dist/chrome'));
 });
