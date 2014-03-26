@@ -227,7 +227,7 @@ gulp.task('download_translations', function() {
 gulp.task('download_recitations', function() {
     var url = 'http://www.everyayah.com/data/recitations.js';
     return download(url)
-    .pipe('src/resources');
+    .pipe(gulp.dest('src/resources'));
 });
 
 gulp.task('recitations', function() {
@@ -296,7 +296,7 @@ gulp.task('serve', function(callback) {
     connect.createServer(connect.static(__dirname + '/dist/chrome')).listen(port);
 });
 
-gulp.task('init', ['ayas', 'download_translations', 'download_recitations']);
+gulp.task('init', ['ayas', 'ayas_search', 'download_translations', 'download_recitations']);
 
 gulp.task('build', ['manifest', 'res', 'locales', 'ionic', 'scripts', 'html', 'styles', 'images']);
 
