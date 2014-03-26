@@ -296,7 +296,7 @@ gulp.task('serve', function(callback) {
     connect.createServer(connect.static(__dirname + '/dist/chrome')).listen(port);
 });
 
-gulp.task('init', ['ayas', 'ayas_search', 'download_translations', 'download_recitations']);
+gulp.task('init', ['ayas', 'ayas_search', 'download_translations', 'download_recitations', 'recitations']);
 
 gulp.task('build', ['manifest', 'res', 'locales', 'ionic', 'scripts', 'html', 'styles', 'images']);
 
