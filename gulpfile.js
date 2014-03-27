@@ -302,6 +302,7 @@ gulp.task('build', ['manifest', 'res', 'locales', 'ionic', 'scripts', 'html', 's
 
 gulp.task('watch', function() {
     // var server = livereload();
+    gulp.watch(paths.manifest, ['manifest']);
     gulp.watch(paths.coffee, paths.js, ['scripts', 'html']);
     gulp.watch(paths.jade, ['html']);
     gulp.watch(paths.styles, ['styles']);

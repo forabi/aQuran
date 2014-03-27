@@ -3,7 +3,7 @@
     description: 'A full-featured Quran app with multiple translations
     and recitations'
     version: '1'
-    release: new Date()
+    released: new Date()
     manifest_version: 2
 
     default_locale: 'en'
