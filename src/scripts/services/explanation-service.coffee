@@ -3,7 +3,6 @@ app.service 'ExplanationService', ['IDBStoreFactory', '$q', '$http', 'CacheServi
     database = IDBStoreFactory 'resources/translations.json',
         dbVersion: 2
         storeName: 'explanations'
-        storePrefix: ''
         keyPath: 'id'
         autoIncrement: no
         indexes: [
@@ -32,7 +31,6 @@ app.service 'ExplanationService', ['IDBStoreFactory', '$q', '$http', 'CacheServi
                             gid: index + 1, text: item
                     dbVersion: 1
                     storeName: id
-                    storePrefix: ''
                     keyPath: 'gid'
                     autoIncrement: no
                     indexes: [(name: 'gid', unique: yes)]

@@ -3,6 +3,7 @@ app.factory 'IDBStoreFactory', ['$q', '$http', '$log', 'QueryBuilder', 'Preferen
     (url, options) ->
         options = _.defaults options,
             dbVersion: 1
+            storePrefix: ''
             transforms: []
             transformResponse: (response) -> response.data
 

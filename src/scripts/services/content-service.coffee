@@ -5,7 +5,6 @@ app.service 'ContentService', ['IDBStoreFactory', 'ExplanationFactory', 'AudioSr
     IDBStoreFactory 'resources/ayas.json',
         dbVersion: 3
         storeName: 'ayas'
-        storePrefix: ''
         keyPath: 'gid'
         autoIncrement: no
         indexes: [

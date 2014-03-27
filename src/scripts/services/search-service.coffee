@@ -31,7 +31,7 @@ app.service 'SearchService', ['APIService', 'ContentService', 'ArabicService', '
             , (err, all) ->
                 if err then throw err
                 # deferred.resolve all
-                deferred.resolve _.map all, (aya, index) -> _.extend aya, ayas[index]
+                deferred.resolve _.merge ayas, all
         deferred.promise
 
     methods = {}
