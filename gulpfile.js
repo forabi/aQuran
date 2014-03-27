@@ -36,7 +36,7 @@ var paths = {
     styles: ['src/styles/main.less', 'src/styles/*.css'],
     jade: ['src/index.jade', 'src/views/*.jade'],
     images: 'src/images/*',
-    manifest: 'src/manifest.webapp',
+    manifest: 'src/manifest.coffee',
     locales: ['src/_locales/**/*.*'],
     resources: ['src/resources/**/*.json', 'src/resources/amiri/**.ttf', 'src/styles/fonts/*', 'src/styles/flags/**/*'],
     translations: 'src/resources/translations/*.trans.zip',
@@ -196,6 +196,7 @@ gulp.task('manifest', function() {
     .pipe(cson())
     .pipe(rename(function(file) {
         file.extname = '.webapp';
+        return file;
     }))
     .pipe(gulp.dest('dist/chrome'))
 });
