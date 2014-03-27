@@ -1,7 +1,7 @@
 # _ = require 'lodash'
 # q = require 'q'
 # module.exports = (app) ->
-app.controller 'ReadingController', ['$ionicLoading', '$rootScope', '$scope', '$state', '$stateParams', '$timeout', '$log', 'ContentService', 'SearchService', 'Preferences', ($ionicLoading, $rootScope, $scope, $state, $stateParams, $timeout, $log, ContentService, SearchService, Preferences) ->
+app.controller 'ReadingController', ['$rootScope', '$scope', '$state', '$stateParams', '$timeout', '$log', 'ContentService', 'SearchService', 'Preferences', ($rootScope, $scope, $state, $stateParams, $timeout, $log, ContentService, SearchService, Preferences) ->
     # database = undefined
 
     # $scope.loading = $ionicLoading.show 
@@ -28,6 +28,8 @@ app.controller 'ReadingController', ['$ionicLoading', '$rootScope', '$scope', '$
     ]
 
     $scope.playlist = []
+
+    $scope.pages = []
 
     $scope.view = _.defaults $stateParams, $scope.options.reader.view
 
@@ -80,24 +82,26 @@ app.controller 'ReadingController', ['$ionicLoading', '$rootScope', '$scope', '$
             .exec()
         .then transform
         .then (content) ->
-            $log.debug 'Content ready', content
+            # $log.debug 'Content ready', content
             $rootScope.title = content[0].sura_name # TODO: use a proper title
             $scope.progress.status = 'ready'
             content
         .catch error
 
     $scope.loadMore = () ->
-        $log.debug 'Loading more...'
-        $scope.view.current++
-        loadContent()
-        .then (content) ->
-            $log.debug 'New content ready', content
-            $scope.view.content = $scope.view.content.concat content
-            $scope.$broadcast 'scroll.infiniteScrollComplete'
+        $timeout () ->
+        # $log.debug 'Loading more...'
+            $scope.view.current++
+            loadContent()
+            .then (content) ->
+                # $log.debug 'New content ready', content
+                $scope.pages.push content
+                $scope.$broadcast 'scroll.infiniteScrollComplete'
+                $scope.options.first_time = no
 
-    loadContent().then (content) ->
-        $scope.view.content = content
-        $scope.options.first_time = no
+    # loadContent().then (content) ->
+    #     $scope.pages.push content
+    #     $scope.options.first_time = no
 
     error = (err) ->
         $scope.progress.status = 'error'
