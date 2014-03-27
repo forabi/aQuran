@@ -18,7 +18,6 @@ var gulp = require('gulp'),
     jsonEditor = require('gulp-json-editor'),
     // coffeelint = require('gulp-coffeelint'),
     livereload = require('gulp-livereload'),
-    ngmin = require('gulp-ngmin'),
     uglify = require('gulp-uglify'),
     browserify = require('gulp-browserify'),
     connect = require('connect');
