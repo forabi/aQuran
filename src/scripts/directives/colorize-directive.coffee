@@ -2,7 +2,6 @@
     app.directive 'colorize', ['ArabicService', '$timeout', '$log', (Arabic, $timeout, $log) -> 
         restrict: 'A'
         replace: yes
-        transclude: yes
         link: ($scope, $element, $attrs) ->
             colorize = (text, searchText, highlight) ->
                 if searchText and highlight
@@ -29,10 +28,10 @@
             $timeout () -> 
                 colorize = yes if $attrs.colorize and $attrs.colorize is not 'false'
                 text = $attrs.colorizeText
-                text = colorize text if colorize
                 highlight = $attrs.highlight
                 searchText = $attrs.searchText
+                text = colorize text, searchText, highlight if colorize
                 # $log.debug 'Text', text
                 # $log.debug 'Full Text', searchText
-                $element.html text, searchText, highlight
+                $element.html text
     ]
