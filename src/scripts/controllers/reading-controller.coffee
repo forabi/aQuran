@@ -88,11 +88,11 @@ app.controller 'ReadingController', ['$ionicLoading', '$rootScope', '$scope', '$
 
     $scope.loadMore = () ->
         $log.debug 'Loading more...'
-        $scope.content.current++
+        $scope.view.current++
         loadContent()
         .then (content) ->
             $log.debug 'New content ready', content
-            $scope.view.content.concat content
+            $scope.view.content = $scope.view.content.concat content
             $scope.$broadcast 'scroll.infiniteScrollComplete'
 
     loadContent().then (content) ->
