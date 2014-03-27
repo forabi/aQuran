@@ -13,7 +13,7 @@ ion-view(title='{{ title }}', right-buttons='rightButtons')
                 .sura(ng-if='progress.status == "ready"', ng-repeat='sura in view.content')
                     h2.sura-name.item.item-divider(ng-if='sura.ayas[0].aya_id == 1'): b {{ sura.sura_name }}
                     .sura-body.item.item-text-wrap
-                        span(ng-repeat='aya in sura.ayas', ng-click='audioPlayer.play({{ aya.index }})', index='{{ aya.index }}')
+                        span.aya(ng-repeat='aya in sura.ayas', ng-click='audioPlayer.play({{ aya.index }})', index='{{ aya.index }}')
                             span.aya-text(colorize='{{ aya.uthmani }}', ng-class='{ assertive: audioPlayer.currentTrack - 1 == aya.index }') {{ aya.uthmani }}
                             i.aya-number {{ aya.aya_id_display }}
 

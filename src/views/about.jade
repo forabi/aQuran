@@ -1,12 +1,26 @@
-ion-view(title='About aQuran')
-    ion-content(has-header='true', overflow-scroll='true', has-footer='false')
-    	h1 aQuran
-    	p A simple and easy-to-use Quran app with multiple translations and recitations
-    	h2 Components
-    	ul This app uses components from the following projects:
-    		li Al-Fanous SQL database for standard texts and metadata
-    			small Note: The database was modified with uthmanic script provided by Khaled Hosney
-    		li Khaled Hosney's Uthamnic script
-    		li Recitations by the EveryAyah project
-    		li Translations and explanations by the Zekr project
-    	
+ion-view(title='About {{ info.name }}')
+    ion-content(has-header='true', overflow-scroll='true', has-footer='true')
+        .list
+            .item.item-divider.item-text-wrap {{ info.name }}
+            small.item.item-text-wrap Version {{ info.version }}, released on {{ info.released | date }}
+            .item.item-text-wrap {{ info.description }}
+            a(href='{{ info.developer.url }}').item.item-text-wrap Developed by {{ info.developer.name }}
+            
+            .item.item-divider.item-text-wrap Components
+            small.item.item-text-wrap This app uses components from the following projects:
+            .item.item-text-wrap
+                a.positive Al-Fanous SQL database for standard texts and metadata
+                div: small Note: The database was modified with uthmanic script provided by Khaled Hosney
+            a.item.item-text-wrap.positive Al-Fanous Dev API for online searches
+            a.item.item-text-wrap.positive Khaled Hosney's Uthamnic script
+            a.item.item-text-wrap.positive Recitations by the EveryAyah project
+            a.item.item-text-wrap.positive Translations and explanations by the Zekr project
+
+            .item.item-divider.item-text-wrap Special thanks
+            .item.item-text-wrap: b Al-Fanous team for the Dev API
+            .item.item-text-wrap <b>Khaled Hosney</b> for his Amiri Quran font and for providing me with
+                | modified copies of the font and for his help with the optimization
+                | of the Uthamnic script
+            .item.item-text-wrap <b>The EveryAyah</b> team for the hosting of recitations
+            .item.item-text-wrap <b>The Arabia I/O community</b> for their kind support and suggestions
+            

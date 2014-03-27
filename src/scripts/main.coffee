@@ -55,6 +55,16 @@ app.config ['$stateProvider', '$urlRouterProvider', '$locationProvider', '$logPr
       url: '/recitations'
       templateUrl: 'views/recitations.html'
       controller: 'RecitationsController'
+
+    .state 'about', 
+      url: '/about'
+      templateUrl: 'views/about.html'
+      controller: ['$http', '$scope', ($http, $scope) ->
+        $http.get 'manifest.webapp', headers: 'application/json', cache: yes
+        .then (response) ->
+          # $scope.info = _.merge response.data, response.data.locales.ar
+          $scope.info = response.data
+      ]
     
 
     $urlRouterProvider.otherwise '/reader/1'
