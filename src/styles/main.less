@@ -99,11 +99,7 @@
     display: inline-block;
     position: relative;
     text-overflow: initial !important;
-    .original {
-        color: transparent;
-        display: inline;
-    }
-    .letters, .diacritics, .quranic-signs, .overlay {
+    .diacritics, .quranic-signs, .overlay {
         position: absolute;
         top: 0;
         right: 0;
@@ -120,6 +116,8 @@
     }
     .letters {
         font-family: "Amiri Quran Letters";
+        display: inline;
+        text-align: justify;
         // color: initial;
     }
 }

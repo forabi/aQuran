@@ -11,16 +11,10 @@
                     searchText = searchText.replace highlight, "<span class='highlighted'>$1</span>"
 
                 html = text.split(/\s+/g).map (word, index) ->
-                    wordDiacritics   = word.replace Arabic.Quranic.Sign.RegExp, ''
-                    wordSigns        = word.replace Arabic.Diacritics.RegExp, ''
-                    wordBare         = word.replace Arabic.Quranic.Sign.RegExp, ''
-                                          .replace Arabic.Diacritics.RegExp, ''
-
                     "<span class='layers'>
-                        <span class='original'>#{word}</span>
-                        <span class='diacritics'>#{wordDiacritics}</span>
-                        <span class='quranic-signs'>#{wordSigns}</span>
-                       <span class='letters'>#{wordBare}</span>
+                        <span class='diacritics'>#{word}</span>
+                        <span class='quranic-signs'>#{word}</span>
+                       <span class='letters'>#{word}</span>
                      </span>"
                 .join ' '
 
