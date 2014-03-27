@@ -76,7 +76,7 @@ app.controller 'ReadingController', ['$rootScope', '$scope', '$state', '$statePa
     loadContent = () ->
         query = {}
         query[$scope.view.type] = $scope.view.current
-        $scope.progress.status = 'loading'
+        # $scope.progress.status = 'loading'
         ContentService.then (db) ->   
             db.find query
             .exec()
@@ -89,15 +89,14 @@ app.controller 'ReadingController', ['$rootScope', '$scope', '$state', '$statePa
         .catch error
 
     $scope.loadMore = () ->
-        $timeout () ->
         # $log.debug 'Loading more...'
-            $scope.view.current++
-            loadContent()
-            .then (content) ->
-                # $log.debug 'New content ready', content
-                $scope.pages.push content
-                $scope.$broadcast 'scroll.infiniteScrollComplete'
-                $scope.options.first_time = no
+        $scope.view.current++
+        loadContent()
+        .then (content) ->
+            # $log.debug 'New content ready', content
+            $scope.pages.push content
+            $scope.$broadcast 'scroll.infiniteScrollComplete'
+            $scope.options.first_time = no
 
     # loadContent().then (content) ->
     #     $scope.pages.push content

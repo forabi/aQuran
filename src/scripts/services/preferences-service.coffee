@@ -24,6 +24,7 @@ app.service 'Preferences', ['$localStorage', ($localStorage) ->
             view:
                 type: 'page_id'
                 current: 1
+                total: 604
             colorized: yes
             aya_mode: 'uthmani'
             sura_name: 'sura_name_romanization'
