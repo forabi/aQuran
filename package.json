@@ -1,16 +1,6 @@
 {
-  "name": "quran-for-chrome",
+  "name": "aQuran",
   "version": "0.0.0",
-  "dependencies": {
-    "async": "^0.2.10",
-    "lodash": "^2.4.1",
-    "angular-ui-bootstrap": "git://github.com/angular-ui/bootstrap",
-    "nedb": "^0.10.4",
-    "angular": "^1.2.10",
-    "q": "^1.0.0",
-    "bootstrap": "git+https://github.com/twbs/bootstrap.git",
-    "es6-promise": "^0.1.1"
-  },
   "devDependencies": {
     "gulp": "^3.5.2",
     "gulp-jade": "^0.4.2",
@@ -36,7 +26,12 @@
     "gulp-clean": "^0.2.4",
     "gulp-manifest": "0.0.3",
     "gulp-json-editor": "^2.0.2",
-    "gulp-cson": "0.0.1"
+    "gulp-cson": "0.0.1",
+    "gulp-load": "^0.1.1",
+    "gulp-load-plugins": "^0.4.0",
+    "coffee-script": "^1.7.1",
+    "q": "^1.0.1",
+    "gulp-revmap": "git://github.com/zedix/gulp-revmap"
   },
   "engines": {
     "node": ">=0.8.0"

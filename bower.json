@@ -1,0 +1,29 @@
+{
+  "name": "aQuran",
+  "version": "0.0.0",
+  "homepage": "https://github.com/forabi/aQuran",
+  "authors": [
+    "Muhammad Fawwaz Orabi <mfawwaz93@gmail.com>"
+  ],
+  "description": "A full-featured Quran app with multiple translations and recitations",
+  "license": "MIT",
+  "private": true,
+  "directory": "src/bower",
+  "ignore": [
+    "**/.*",
+    "node_modules",
+    "bower_components",
+    "test",
+    "tests",
+    "npm-debug.log",
+    "temp",
+    ".tmp",
+    "tmp",
+    "dist",
+    ".sass-cache",
+    "*.sublime-workspace",
+    "*.sublime-project",
+    "*.dtapart",
+    "*.trans.zip"
+  ]
+}
