@@ -19,9 +19,9 @@ ion-view(title='{{ title }}', right-buttons='rightButtons')
                                     //- {{ aya.uthmani }}
                                 i.aya-number {{ aya.aya_id_display }}
 
-                ion-infinite-scroll(ng-if='view.current < view.total', on-infinite='loadMore()', distance='20%', icon='ion-loading-c')
+                ion-infinite-scroll(on-infinite='loadMore()', distance='20%', icon='ion-loading-c')
 
-            .card.text-center(ng-switch-when='loading')
+            .card.text-center(ng-switch-when='init')
                 .item.item-body
                     i.icon.placeholder-icon.ion-loading-c.icon-large
                     div(ng-if='options.first_time')

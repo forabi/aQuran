@@ -94,13 +94,15 @@ app.controller 'ReadingController', ['$rootScope', '$scope', '$state', '$statePa
         loadContent()
         .then (content) ->
             # $log.debug 'New content ready', content
+            # array = _.last $scope.pages, 2
+            # array.push content
+            # $scope.pages = array
             $scope.pages.push content
             $scope.$broadcast 'scroll.infiniteScrollComplete'
-            $scope.options.first_time = no
 
-    # loadContent().then (content) ->
-    #     $scope.pages.push content
-    #     $scope.options.first_time = no
+    loadContent().then (content) ->
+        $scope.pages.push content
+        $scope.options.first_time = no
 
     error = (err) ->
         $scope.progress.status = 'error'
