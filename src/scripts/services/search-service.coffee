@@ -8,7 +8,7 @@ app.service 'SearchService', ['APIService', 'ContentService', 'ArabicService', '
 
     database = undefined
     loadDatabase = () ->
-        database = $http.get 'resources/ayas_search.json', cache: yes
+        database = $http.get 'resources/search.json', cache: yes
         .then (response) ->
             response.data
         .then (ayas) ->

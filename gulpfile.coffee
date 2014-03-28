@@ -12,6 +12,7 @@ glob            = require 'glob'
 sqlite3         = require 'sqlite3'
 properties      = require 'properties'
 admZip          = require 'adm-zip'
+connect         = require 'connect'
 
 plugins = (require 'gulp-load-plugins')()
 config = _.defaults gutil.env,
@@ -20,13 +21,15 @@ config = _.defaults gutil.env,
         when gutil.env.firefox then 'firefox'
         else 'web' # web, chrome, firefox
     port: 7000 # on which port the server is hosted
-    production: yes
-    minfiy: yes # whether to minfiy resources for production
+    production: no
+    minify: no # whether to minify resources for production
     sourceMaps: yes
     bump: yes # whether to increase the version of the app on 'release'
     experimental: yes # whether to use the Uthmanic script by Khaled Hosny
     translations: yes # true, false, or an array of translations to include
     recitations: yes # whether to include recitations metadata
+    styles: []
+    scripts: []
     jade:
         locals:
             manifest: 'manifest.cache'
@@ -50,7 +53,6 @@ config = _.defaults gutil.env,
         )
     ]
     src:
-        ionic: 'ionic/**/*'
         icons: 'icons/*.png'
         manifest: 'manifest.coffee'
         database: 'database/main.db'
@@ -60,7 +62,7 @@ config = _.defaults gutil.env,
         less: 'styles/main.less'
         css: 'styles/*.css'
         jade: ['index.jade', 'views/*.jade']
-        coffee: ['*.coffee', 'scripts/**/*.coffee']
+        coffee: ['!(chromereload|manifest).coffee', 'scripts/**/*.coffee']
         js: 'scripts/*.js'
         coffeeConcat: [
             (file: 'main.js', src: [
@@ -128,18 +130,34 @@ gulp.task 'manifest', () ->
         file
     .pipe gulp.dest "dist/#{config.target}"
 
-gulp.task 'less', () ->
+gulp.task 'less', ['css'], () ->
     gulp.src config.src.less, cwd: 'src'
     .pipe plugins.less sourceMap: config.sourceMaps, compress: config.minify
+    .pipe plugins.tap (file) ->
+        config.styles.push path.relative 'src', file.path
     .pipe gulp.dest "dist/#{config.target}/styles"
 
 gulp.task 'css', () ->
-    gulp.src config.src.css, cwd: 'src'
+    # bundle = (bundle) ->
+    plugins.bowerFiles()
+    .pipe plugins.filter ['**/*.css']
+    .pipe plugins.using()
+    .pipe plugins.tap (file) ->
+        config.styles.push path.join 'styles', path.relative 'src/bower', file.path
     .pipe gulp.dest "dist/#{config.target}/styles"
 
-gulp.task 'styles', ['less', 'css']
+    plugins.bowerFiles()
+    .pipe plugins.filter ['**/fonts/*']
+    .pipe gulp.dest "dist/#{config.target}/styles"
 
-gulp.task 'jade', ['scripts'], (callback) ->
+gulp.task 'amiri', () ->
+    gulp.src 'resources/amiri/*-*.ttf', cwd: 'src', base: 'src'
+    .pipe gulp.dest "dist/#{config.target}"
+
+gulp.task 'styles', ['less', 'css', 'amiri']
+
+gulp.task 'jade', ['scripts', 'styles'], (callback) ->
+
     scripts = config.scripts || [] # TODO
     styles = config.styles || []
 
@@ -157,27 +175,30 @@ gulp.task 'html', ['jade']
 gulp.task 'coffee', ['js'], () ->
     gulp.src config.src.coffee, cwd: 'src'
     .pipe plugins.coffee bare: yes
+    .pipe (if config.minify then plugins.uglify() else gutil.noop())
     .pipe plugins.tap (file) ->
-        config.scripts.push file.path
+        config.scripts.push path.relative 'src', file.path
     .pipe gulp.dest "dist/#{config.target}/scripts"
 
 gulp.task 'js', (callback) ->
     bundle = (bundle) ->
         src = bundle.src.map (file) -> "*/**/#{file}"
         gutil.log 'Bundling file', gutil.colors.cyan bundle.file + '...'
-        plugins.bowerFiles()
-        # .pipe plugins.using()
-        .pipe plugins.filter src
-        .pipe plugins.order src
-        # .pipe plugins.using()
-        .pipe plugins.concat bundle.file
-    
-    config.scripts = config.bundles.map (bundle) -> bundle.file
-    
-    combine.apply combine, config.bundles.map bundle
-    .pipe gulp.dest "dist/#{config.target}/scripts"
+        Q.when (plugins.bowerFiles()
+            # .pipe plugins.using()
+            .pipe plugins.filter src
+            .pipe plugins.order src
+            .pipe (if config.minify then plugins.uglify() else gutil.noop())
+            # .pipe plugins.using()
+            .pipe plugins.concat bundle.file
+            .pipe gulp.dest "dist/#{config.target}/scripts"
+        )
 
-gulp.task 'scripts', ['js']
+    
+    config.scripts = config.bundles.map (bundle) -> "scripts/#{bundle.file}"
+    Q.all config.bundles.map bundle
+
+gulp.task 'scripts', ['js', 'coffee']
 
 gulp.task 'icons', () ->
     gulp.src config.src.icons, cwd: 'src'
@@ -312,6 +333,10 @@ gulp.task 'release', ['clean'], () ->
     gulp.run 'package'
 
 gulp.task 'data', ['quran', 'recitations', 'translations', 'search']
-gulp.task 'build', ['data', 'images', 'scripts', 'styles', 'html', 'ionic', 'manifest']
+gulp.task 'build', ['data', 'images', 'scripts', 'styles', 'html', 'manifest']
 
 gulp.task 'serve', () ->
+    connect
+    .createServer connect.static "#{__dirname}/dist/#{config.target}"
+    .listen config.port, () ->
+        gutil.log "Server listening on port #{config.port}"

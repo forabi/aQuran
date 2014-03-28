@@ -82,7 +82,7 @@ app.controller 'ReadingController', ['$rootScope', '$scope', '$state', '$statePa
             .exec()
         .then transform
         .then (content) ->
-            # $log.debug 'Content ready', content
+            $log.debug 'Content ready', content
             $rootScope.title = content[0].sura_name # TODO: use a proper title
             $scope.progress.status = 'ready'
             content

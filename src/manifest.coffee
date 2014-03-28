@@ -19,13 +19,13 @@
             description: 'Required to communicate with Al-Fanous web service when performing an online search'
 
     icons:
-        '16' : 'images/icon-16.png'
-        '24' : 'images/icon-24.png'
-        '48' : 'images/icon-48.png'
-        '64' : 'images/icon-64.png'
-        '72' : 'images/icon-72.png'
-        '96' : 'images/icon-96.png'
-        '128': 'images/icon-128.png'
+        '16' : 'icons/icon-16.png'
+        '24' : 'icons/icon-24.png'
+        '48' : 'icons/icon-48.png'
+        '64' : 'icons/icon-64.png'
+        '72' : 'icons/icon-72.png'
+        '96' : 'icons/icon-96.png'
+        '128': 'icons/icon-128.png'
 
     launch_path: '/index.html'
 
