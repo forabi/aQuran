@@ -49,5 +49,9 @@
     "async": {
       "main": "lib/async.js"
     }
+  },
+  "resolutions": {
+    "angular": ">= 1.1.5",
+    "angular-audio-player": "~0.2.1"
   }
 }
