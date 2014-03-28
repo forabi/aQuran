@@ -30,9 +30,9 @@
     "lodash": "~2.4.1",
     "async": "~0.2.10",
     "idb-wrapper": "~1.4.1",
-    "ionic": "~0.9.27",
+    "ionic": "latest",
     "nedb": "*",
-    "angular-audio-player": "~0.0.10",
+    "angular-audio-player": "mrgamer/angular-audio-player#~0.2.1",
     "ngstorage": "~0.3.0"
   },
   "overrides": {
