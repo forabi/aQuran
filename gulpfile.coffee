@@ -156,7 +156,7 @@ gulp.task 'amiri', () ->
 
 gulp.task 'styles', ['less', 'css', 'amiri']
 
-gulp.task 'jade', ['scripts', 'styles'], (callback) ->
+gulp.task 'jade', ['scripts', 'styles'], () ->
 
     scripts = config.scripts || [] # TODO
     styles = config.styles || []
