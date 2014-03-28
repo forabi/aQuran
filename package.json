@@ -31,7 +31,13 @@
     "gulp-load-plugins": "^0.4.0",
     "coffee-script": "^1.7.1",
     "q": "^1.0.1",
-    "gulp-revmap": "git://github.com/zedix/gulp-revmap"
+    "gulp-revmap": "git://github.com/zedix/gulp-revmap",
+    "gulp-bower-files": "^0.2.1",
+    "gulp-order": "^1.0.6",
+    "gulp-concat": "^2.2.0",
+    "gulp-using": "0.0.1",
+    "stream-combiner": "0.0.4",
+    "gulp-tap": "^0.1.1"
   },
   "engines": {
     "node": ">=0.8.0"

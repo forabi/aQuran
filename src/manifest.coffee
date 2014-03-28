@@ -1,7 +1,7 @@
 {
     name: 'aQuran'
-    description: 'A full-featured Quran app with multiple translations
-    and recitations'
+    description: 'A full-featured Quran app with multiple translations and recitations'
+
     version: '1'
     released: new Date()
     manifest_version: 2
@@ -14,11 +14,9 @@
 
     permissions:
         storage:
-            description: 'Required to store application databases,
-            including translations'
+            description: 'Required to store application databases, including translations'
         systemXHR:
-            description: 'Required to communicate with Al-Fanous web service 
-            when performing an online search'
+            description: 'Required to communicate with Al-Fanous web service when performing an online search'
 
     icons:
         '16' : 'images/icon-16.png'

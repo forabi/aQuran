@@ -2,6 +2,7 @@ gulp            = require 'gulp'
 gutil           = require 'gulp-util'
 _               = require 'lodash'
 Q               = require 'q'
+combine         = require 'stream-combiner'
 
 fs              = require 'fs'
 path            = require 'path'
@@ -14,8 +15,10 @@ admZip          = require 'adm-zip'
 
 plugins = (require 'gulp-load-plugins')()
 config = _.defaults gutil.env,
-    target: 'web' # web, chrome, firefox
-    nightly: no # whether to use the latest ionic nightly build
+    target: switch
+        when gutil.env.chrome then 'chrome'
+        when gutil.env.firefox then 'firefox'
+        else 'web' # web, chrome, firefox
     port: 7000 # on which port the server is hosted
     production: yes
     minfiy: yes # whether to minfiy resources for production
@@ -24,6 +27,28 @@ config = _.defaults gutil.env,
     experimental: yes # whether to use the Uthmanic script by Khaled Hosny
     translations: yes # true, false, or an array of translations to include
     recitations: yes # whether to include recitations metadata
+    jade:
+        locals:
+            manifest: 'manifest.cache'
+    bundles: [
+        (file: 'ionic.js', src: [
+            'ionic.bundle.js'
+            'angular-sanitize.js'
+            ]
+        )
+        (file: 'utils.js', src: [
+            'async.js'
+            'nedb*.js'
+            'lodash*.js'
+            'idbstore.js'
+            ]
+        )
+        (file: 'ng-modules.js', src: [
+            'ngStorage.js'
+            'angular-audio-player*.js'
+            ]
+        )
+    ]
     src:
         ionic: 'ionic/**/*'
         icons: 'icons/*.png'
@@ -37,52 +62,53 @@ config = _.defaults gutil.env,
         jade: ['index.jade', 'views/*.jade']
         coffee: ['*.coffee', 'scripts/**/*.coffee']
         js: 'scripts/*.js'
-        bundles: [
-            ['ionic/js/ionic.bundle.min.js', 'ionic/js/angular/angular-sanitize.min.js']
-            ['async.js', 'nedb.js', 'lodash.js', 'idbstore.js']
-            ['ngStorage.js', 'angular-audio-player.js']
-            [
-                'main.js'
+        coffeeConcat: [
+            (file: 'main.js', src: [
+                'scripts/main.coffee'
 
                 # Services
-                'scripts/services/cache-service.js'
-                'scripts/services/preferences-service.js'
-                'scripts/services/localization-service.js'
-                'scripts/services/api-service.js'
-                'scripts/services/recitation-service.js'
-                'scripts/services/content-service.js'
-                'scripts/services/search-service.js'
-                'scripts/services/explanation-service.js'
-                'scripts/services/storage-service.js'
-                'scripts/services/arabic-service.js'
+                'scripts/services/cache-service.coffee'
+                'scripts/services/preferences-service.coffee'
+                'scripts/services/localization-service.coffee'
+                'scripts/services/api-service.coffee'
+                'scripts/services/recitation-service.coffee'
+                'scripts/services/content-service.coffee'
+                'scripts/services/search-service.coffee'
+                'scripts/services/explanation-service.coffee'
+                'scripts/services/storage-service.coffee'
+                'scripts/services/arabic-service.coffee'
+                'scripts/services/*.coffee'
 
                 # Factories
-                'scripts/factories/explanation-factory.js'
-                'scripts/factories/audio-src-factory.js'
-                'scripts/factories/query-builder.js'
-                'scripts/factories/idbstore-factory.js'
+                'scripts/factories/explanation-factory.coffee'
+                'scripts/factories/audio-src-factory.coffee'
+                'scripts/factories/query-builder.coffee'
+                'scripts/factories/idbstore-factory.coffee'
+                'scripts/factories/*.coffee'
 
-                'scripts/filters/arabic-number-filter.js'
+                'scripts/filters/*.coffee'
 
                 # Directives
-                'scripts/directives/auto-direction-directive.js'
-                'scripts/directives/emphasize-directive.js'
-                'scripts/directives/colorize-directive.js'
+                'scripts/directives/auto-direction-directive.coffee'
+                'scripts/directives/emphasize-directive.coffee'
+                'scripts/directives/colorize-directive.coffee'
 
                 # Controller
-                'scripts/controllers/aya-controller.js'
-                'scripts/controllers/preferences-controller.js'
-                'scripts/controllers/recitations-controller.js'
-                'scripts/controllers/explanations-controller.js'
-                'scripts/controllers/navigation-controller.js'
-                'scripts/controllers/search-controller.js'
-                'scripts/controllers/reading-controller.js'
-            ]
+                'scripts/controllers/aya-controller.coffee'
+                'scripts/controllers/preferences-controller.coffee'
+                'scripts/controllers/recitations-controller.coffee'
+                'scripts/controllers/explanations-controller.coffee'
+                'scripts/controllers/navigation-controller.coffee'
+                'scripts/controllers/search-controller.coffee'
+                'scripts/controllers/reading-controller.coffee'
+                ]
+            )
         ]
 
 try
     fs.mkdirSync "dist"
     fs.mkdirSync "dist/#{config.target}"
+    fs.mkdirSync "dist/#{config.target}/scripts"
     fs.mkdirSync "dist/#{config.target}/resources"
     fs.mkdirSync "dist/#{config.target}/translations" if config.translations
     fs.mkdirSync "dist/#{config.target}/icons"
@@ -94,14 +120,13 @@ gulp.task 'clean', () ->
 gulp.task 'manifest', () ->
     gulp.src config.src.manifest, cwd: 'src'
     .pipe plugins.cson()
+    .pipe plugins.jsonEditor (json) ->
+        json.permissions = _.keys json.permissions if config.target is 'chrome'
+        json
     .pipe plugins.rename (file) ->
-        file.extname = '.webapp' if config.target is not 'chrome'
+        file.extname = '.webapp' if config.target != 'chrome'
         file
     .pipe gulp.dest "dist/#{config.target}"
-
-gulp.task 'ionic', () ->
-    gulp.src config.src.ionic, cwd: 'src'
-    .pipe gulp.dest "dist/#{config.target}/ionic"
 
 gulp.task 'less', () ->
     gulp.src config.src.less, cwd: 'src'
@@ -114,11 +139,12 @@ gulp.task 'css', () ->
 
 gulp.task 'styles', ['less', 'css']
 
-gulp.task 'jade', () ->
-    scripts = [] # TODO
-    styles = []
+gulp.task 'jade', ['scripts'], (callback) ->
+    scripts = config.scripts || [] # TODO
+    styles = config.styles || []
 
     gulp.src config.src.jade, cwd: 'src', base: 'src'
+    .pipe plugins.using()
     .pipe plugins.jade
         pretty: not config.minify
         locals:
@@ -128,18 +154,30 @@ gulp.task 'jade', () ->
 
 gulp.task 'html', ['jade']
 
-gulp.task 'coffee', () ->
-    stream = gulp.src config.src.coffee, cwd: 'src'
+gulp.task 'coffee', ['js'], () ->
+    gulp.src config.src.coffee, cwd: 'src'
     .pipe plugins.coffee bare: yes
-    # .pipe plugins.uglify()
-    stream.pipe gulp.dest "dist/#{config.target}/scripts"
-
-gulp.task 'js', () ->
-    gulp.src config.src.js, cwd: 'src'
-    # .pipe plugins.uglify()
+    .pipe plugins.tap (file) ->
+        config.scripts.push file.path
     .pipe gulp.dest "dist/#{config.target}/scripts"
 
-gulp.task 'scripts', ['coffee', 'js']
+gulp.task 'js', (callback) ->
+    bundle = (bundle) ->
+        src = bundle.src.map (file) -> "*/**/#{file}"
+        gutil.log 'Bundling file', gutil.colors.cyan bundle.file + '...'
+        plugins.bowerFiles()
+        # .pipe plugins.using()
+        .pipe plugins.filter src
+        .pipe plugins.order src
+        # .pipe plugins.using()
+        .pipe plugins.concat bundle.file
+    
+    config.scripts = config.bundles.map (bundle) -> bundle.file
+    
+    combine.apply combine, config.bundles.map bundle
+    .pipe gulp.dest "dist/#{config.target}/scripts"
+
+gulp.task 'scripts', ['js']
 
 gulp.task 'icons', () ->
     gulp.src config.src.icons, cwd: 'src'
@@ -253,6 +291,15 @@ gulp.task 'recitations', () ->
         .value()
     .pipe gulp.dest "dist/#{config.target}/resources"
 
+gulp.task 'package', ['build'], () ->
+    switch config.target
+        when 'chrome'
+            '' # Do something
+        when 'firefox'
+            '' # Create a zip file
+        else # Standard web app
+            config.jade.locals.manifest = ''
+
 gulp.task 'release', ['clean'], () ->
     
     config.production = yes
@@ -262,7 +309,7 @@ gulp.task 'release', ['clean'], () ->
         config.version += 1
         config.date = new Date()
 
-    gulp.run 'build'
+    gulp.run 'package'
 
 gulp.task 'data', ['quran', 'recitations', 'translations', 'search']
 gulp.task 'build', ['data', 'images', 'scripts', 'styles', 'html', 'ionic', 'manifest']

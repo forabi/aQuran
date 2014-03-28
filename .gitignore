@@ -1,5 +1,5 @@
 node_modules
-bower_components
+src/bower
 npm-debug.log
 temp
 .tmp

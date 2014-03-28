@@ -8,11 +8,11 @@
   "description": "A full-featured Quran app with multiple translations and recitations",
   "license": "MIT",
   "private": true,
-  "directory": "src/bower",
   "ignore": [
     "**/.*",
     "node_modules",
     "bower_components",
+    "src/bower",
     "test",
     "tests",
     "npm-debug.log",
@@ -25,5 +25,29 @@
     "*.sublime-project",
     "*.dtapart",
     "*.trans.zip"
-  ]
+  ],
+  "dependencies": {
+    "lodash": "~2.4.1",
+    "async": "~0.2.10",
+    "idb-wrapper": "~1.4.1",
+    "ionic": "~0.9.27",
+    "nedb": "*",
+    "angular-audio-player": "~0.0.10",
+    "ngstorage": "~0.3.0"
+  },
+  "overrides": {
+    "ionic": {
+      "main": [
+        "release/css/ionic.css",
+        "release/fonts/*",
+        "release/js/ionic.bundle.js"
+      ]
+    },
+    "nedb": {
+      "main": "browser-version/out/nedb.js"
+    },
+    "async": {
+      "main": "lib/async.js"
+    }
+  }
 }
