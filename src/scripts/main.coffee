@@ -1,5 +1,5 @@
 # angular = require 'angular'
-app   =   angular.module 'quran', ['ngSanitize', 'ngStorage', 'ionic', 'ngAudioPlayer']
+app   =   angular.module 'quran', ['ngSanitize', 'ngStorage', 'ionic', 'AudioPlayer']
 
 app.constant 'API', 'http://www.alfanous.org/jos2'
 app.constant 'EveryAyah', 'http://www.everyayah.com/data'

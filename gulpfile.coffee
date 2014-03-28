@@ -151,7 +151,7 @@ gulp.task 'css', () ->
     .pipe gulp.dest "dist/#{config.target}/styles"
 
 gulp.task 'amiri', () ->
-    gulp.src 'resources/amiri/*-*.ttf', cwd: 'src', base: 'src'
+    gulp.src 'resources/amiri/*.ttf', cwd: 'src', base: 'src'
     .pipe gulp.dest "dist/#{config.target}"
 
 gulp.task 'styles', ['less', 'css', 'amiri']

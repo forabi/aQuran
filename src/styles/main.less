@@ -3,6 +3,11 @@
 @import "flag-icon-css/less/flag-icon";
 
 @font-face {
+    font-family: "Amiri Quran";
+    src: url("../resources/amiri/amiri-quran.ttf");
+}
+
+@font-face {
     font-family: "Amiri Quran Letters";
     src: url("../resources/amiri/amiri-quran-letters.ttf");
 }
@@ -40,6 +45,7 @@
     text-align-last: justify;
     text-justify: auto;
     text-overflow: initial !important;
+    white-space: nowrap;
     &:not(.search) {
         line-height: @aya-line-height;
         font-size: @aya-font-size;
@@ -57,6 +63,7 @@
     // white-space: 
     .aya-text {
         // color: black;
+        white-space: normal;
         font-family: @aya-font-family;
         // pointer-events: none;
         // &.playing {
