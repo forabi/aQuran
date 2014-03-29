@@ -28,10 +28,10 @@ ion-view(title='Aya')
                     audio(audio-player, player-control='ayaPlayer', player-name='ayaPlayer')
                         source(ng-src='{{ aya.recitation.src }}', type='{{ aya.recitation.type }}')
 
-                    button.button.button-icon.tab-item(ng-disabled='!online', ng-show='!ayaPlayer.playing', ng-click='ayaPlayer.play()')
+                    a.tab-item(ng-if='online && !ayaPlayer.playing', ng-click='ayaPlayer.play()')
                         i.icon.ion-volume-medium
                         | Listen
-                    button.button.button-icon.tab-item.tab-item(ng-show='ayaPlayer.playing', ng-click='ayaPlayer.pause()')
+                    a.tab-item(ng-if='ayaPlayer.playing', ng-click='ayaPlayer.pause()')
                         i.icon.ion-pause
                         | Pause
 
