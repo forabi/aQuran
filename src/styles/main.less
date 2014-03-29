@@ -26,7 +26,6 @@
     font-size: 250%;
 }
 .sura-name {
-    direction: rtl;
     &:not(.search) {
         font-family: @sura-name-font-family;
         font-size: @sura-name-font-size;
@@ -37,15 +36,14 @@
 
     }
 }
-.sura-body {
+.page {
     pointer-events: none;
-    direction: rtl;
-    // display: inline-block !important;
+    direction: rtl !important;
+    display: inline-block !important;
     text-align: justify;
     text-align-last: justify;
     text-justify: auto;
     text-overflow: initial !important;
-    white-space: nowrap;
     &:not(.search) {
         line-height: @aya-line-height;
         font-size: @aya-font-size;
@@ -62,7 +60,6 @@
     white-space: nowrap;
     // white-space: 
     .aya-text {
-        // color: black;
         white-space: normal;
         font-family: @aya-font-family;
         // pointer-events: none;

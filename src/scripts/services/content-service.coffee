@@ -17,6 +17,10 @@ app.service 'ContentService', ['IDBStoreFactory', 'ExplanationFactory', 'AudioSr
         transforms: [
             (aya) ->
                 aya.sura_name = aya[Preferences.reader.sura_name]
+                aya.text = switch
+                    when not Preferences.reader.diacritics then aya.standard
+                    when Preferences.reader.standard_text and Preferences.reader.diacritics then aya.standard_full
+                    else aya.uthmani
                 aya
             (aya) ->
                 if Preferences.explanations.enabled

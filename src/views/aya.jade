@@ -9,11 +9,12 @@ ion-view(title='Aya')
                 .item.item-text-wrap
                     small
                         a.subdued(href='#') Juz {{ aya.juz_id }}
-                        a.subdued(href='#') {{ aya.sura_name_en }}
+                        a.subdued(href='#') {{ aya.sura_name }}
                         a.subdued(ui-sref='reader({ current: {{ aya.page_id }} })') Aya {{ aya.aya_id }}
-                    .sura-body.single-aya
-                        span.aya-text(colorize='{{ aya.uthmani }}') {{ aya.uthmani }}
-                        //- i.aya-number {{ aya.aya_id }}
+                    .page
+                        .aya.single-aya
+                            span.aya-text(colorize='{{ options.reader.colorized }}', colorize-text='{{ aya.text }}')
+                            i.aya-number {{ aya.aya_id_display }}
                 
                 a.item.item-text-wrap.subdued(href='#', auto-direction='', ng-if='aya.topic.length > 0'): small الموضوع: {{ aya.topic }}
                 .item.tabs.tabs-secondary.tabs-icon-left

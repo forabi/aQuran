@@ -10,13 +10,12 @@ ion-view(title='{{ title }}', right-buttons='rightButtons')
                     button.button.button.icon.ion-pause(ng-show='audioPlayer.playing', ng-click='audioPlayer.pause()')
                     //- button.button.button.icon.ion-ios7-fastforward(ng-click='audioPlayer.next()')
                 //- TODO: fix index issue
-                span(ng-repeat='page in pages')
-                    span.sura(ng-repeat='sura in page')
-                        h2.sura-name.item.item-divider(ng-if='sura.ayas[0].aya_id == 1'): b {{ sura.sura_name }}
-                        .sura-body.item.item-text-wrap
-                            span.aya(ng-repeat='aya in sura.ayas', ng-click='audioPlayer.play({{ aya.index }})', index='{{ aya.index }}')
-                                span.aya-text(colorize='false', colorize-text='{{ aya.uthmani }}', ng-class='{ assertive: audioPlayer.currentTrack - 1 == aya.index }')
-                                    //- {{ aya.uthmani }}
+                .item.item-text-wrap
+                    span.page(ng-repeat='page in pages')
+                        span.aya(ng-repeat='aya in page')
+                            h2.sura-name.item.item-divider(ng-if='aya.aya_id == 1'): b {{ aya.sura_name }}
+                            span(ng-click='audioPlayer.play({{ aya.index }})', index='{{ aya.index }}')
+                                span.aya-text(colorize='{{ options.reader.colorized }}', colorize-text='{{ aya.text }}', ng-class='{ assertive: audioPlayer.currentTrack - 1 == aya.index }')
                                 i.aya-number {{ aya.aya_id_display }}
 
                 .item.item-text-wrap(ng-if='view.current < view.total')

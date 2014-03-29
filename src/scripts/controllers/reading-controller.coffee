@@ -63,14 +63,14 @@ app.controller 'ReadingController', ['$rootScope', '$scope', '$state', '$statePa
             $scope.playlist.push aya.recitation
             aya.index = index
             aya
-        .sortBy 'gid'
-        .groupBy 'sura_id'
-        .map (ayas, key) -> 
-            ayas: ayas
-            sura_name: ayas[0].sura_name
-            sura_name_romanization: ayas[0].sura_name_romanization
-            sura_id: ayas[0].sura_id
-        .sortBy 'sura_id'
+        # .sortBy 'gid'
+        # .groupBy 'sura_id'
+        # .map (ayas, key) -> 
+        #     ayas: ayas
+        #     sura_name: ayas[0].sura_name
+        #     sura_name_romanization: ayas[0].sura_name_romanization
+        #     sura_id: ayas[0].sura_id
+        # .sortBy 'sura_id'
         .value()
 
     loadContent = () ->
