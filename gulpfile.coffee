@@ -315,7 +315,7 @@ gulp.task 'translations', () ->
         urls = switch 
             when config.translations instanceof Array
                 config.translations.map (id) ->
-                    regex = new RegExp ".+\/#{id}.+.trans.zip$", 'gi'
+                    regex = new RegExp ".+\/#{id}.*.trans.zip$", 'gi'
                     _.where urls, (url) -> 
                         url.match regex
             else urls
