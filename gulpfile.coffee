@@ -31,7 +31,7 @@ config = _.defaults gutil.env,
     recitations: yes # whether to include recitations metadata
     styles: []
     scripts: []
-    countries: []
+    countries: ['*']
     bower: 'src/bower'
     jade:
         locals:
@@ -118,6 +118,13 @@ try
     fs.mkdirSync "dist/#{config.target}/translations" if config.translations
     fs.mkdirSync "dist/#{config.target}/icons"
 
+gulp.task 'watch', () ->
+    # server = livereload();
+    gulp.watch config.src.manifest, cwd: 'src', ['manifest']
+    gulp.watch [config.src.coffee, config.src.js], cwd: 'src', ['scripts', 'html']
+    gulp.watch config.src.jade, cwd: 'src', ['html']
+    gulp.watch config.src.less, cwd: 'src', ['styles']
+
 gulp.task 'clean', () ->
     gulp.src config.target, cwd: 'dist'
     .pipe plugins.clean()
@@ -133,7 +140,7 @@ gulp.task 'manifest', () ->
         file
     .pipe gulp.dest "dist/#{config.target}"
 
-gulp.task 'flags', ['translations'], () ->
+gulp.task 'flags', () ->
     gulp.src (config.countries.map (country) -> "flags/**/#{country.toLowerCase()}.*"), cwd: "#{config.bower}/flag-icon-css"
     .pipe plugins.using()
     .pipe gulp.dest "dist/#{config.target}/flags"
@@ -163,7 +170,7 @@ gulp.task 'amiri', () ->
     gulp.src 'resources/amiri/*.ttf', cwd: 'src', base: 'src'
     .pipe gulp.dest "dist/#{config.target}"
 
-gulp.task 'styles', ['less', 'css', 'amiri', 'flags']
+gulp.task 'styles', ['less', 'css', 'amiri']
 
 gulp.task 'jade', ['scripts', 'styles'], () ->
 
@@ -380,7 +387,7 @@ gulp.task 'release', ['clean'], () ->
     gulp.run 'package'
 
 gulp.task 'data', ['quran', 'recitations', 'translations', 'search']
-gulp.task 'build', ['data', 'images', 'scripts', 'styles', 'html', 'manifest']
+gulp.task 'build', ['data', 'flags', 'images', 'scripts', 'styles', 'html', 'manifest']
 
 gulp.task 'serve', () ->
     connect
