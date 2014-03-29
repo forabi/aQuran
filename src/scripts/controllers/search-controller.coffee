@@ -21,6 +21,7 @@
                 if query
                     # $log.debug 'Search executing...'
                     $scope.progress.status = 'searching'
+                    $scope.search.results = []
                     SearchService.search query
                     .then (results) ->
                         $log.debug "Found #{results.length} results:", results

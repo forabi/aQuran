@@ -30,6 +30,7 @@ config = _.defaults gutil.env,
     recitations: yes # whether to include recitations metadata
     styles: []
     scripts: []
+    bower: 'src/bower'
     jade:
         locals:
             manifest: 'manifest.cache'
@@ -62,7 +63,7 @@ config = _.defaults gutil.env,
         less: 'styles/main.less'
         css: 'styles/*.css'
         jade: ['index.jade', 'views/*.jade']
-        coffee: ['!(chromereload|manifest).coffee', 'scripts/**/*.coffee']
+        coffee: ['!chromereload.coffee', '!launcher.coffee', '!manifest.coffee', 'scripts/**/*.coffee']
         js: 'scripts/*.js'
         coffeeConcat: [
             (file: 'main.js', src: [
@@ -130,9 +131,15 @@ gulp.task 'manifest', () ->
         file
     .pipe gulp.dest "dist/#{config.target}"
 
-gulp.task 'less', ['css'], () ->
+gulp.task 'flags', () ->
+    gulp.src 'flags/**/*', cwd: "#{config.bower}/flag-icon-css"
+    .pipe plugins.using()
+    .pipe gulp.dest "dist/#{config.target}/flags"
+
+gulp.task 'less', ['flags', 'css'], () ->
     gulp.src config.src.less, cwd: 'src'
-    .pipe plugins.less sourceMap: config.sourceMaps, compress: config.minify
+    .pipe plugins.less sourceMap: config.sourceMaps, compress: config.minify, paths: config.bower
+    .pipe plugins.using()
     .pipe plugins.tap (file) ->
         config.styles.push path.relative 'src', file.path
     .pipe gulp.dest "dist/#{config.target}/styles"
@@ -140,10 +147,10 @@ gulp.task 'less', ['css'], () ->
 gulp.task 'css', () ->
     # bundle = (bundle) ->
     plugins.bowerFiles()
-    .pipe plugins.filter ['**/*.css']
+    .pipe plugins.filter ['**/ionic/**/*.css']
     .pipe plugins.using()
     .pipe plugins.tap (file) ->
-        config.styles.push path.join 'styles', path.relative 'src/bower', file.path
+        config.styles.push path.join 'styles', path.relative config.bower, file.path
     .pipe gulp.dest "dist/#{config.target}/styles"
 
     plugins.bowerFiles()
@@ -154,7 +161,7 @@ gulp.task 'amiri', () ->
     gulp.src 'resources/amiri/*.ttf', cwd: 'src', base: 'src'
     .pipe gulp.dest "dist/#{config.target}"
 
-gulp.task 'styles', ['less', 'css', 'amiri']
+gulp.task 'styles', ['less', 'css', 'amiri', 'flags']
 
 gulp.task 'jade', ['scripts', 'styles'], () ->
 

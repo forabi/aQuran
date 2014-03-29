@@ -33,7 +33,8 @@
     "ionic": "latest",
     "nedb": "*",
     "angular-audio-player": "mrgamer/angular-audio-player#~0.2.1",
-    "ngstorage": "~0.3.0"
+    "ngstorage": "~0.3.0",
+    "flag-icon-css": "~0.6.0"
   },
   "overrides": {
     "ionic": {
@@ -48,10 +49,12 @@
     },
     "async": {
       "main": "lib/async.js"
+    },
+    "flag-icon-css": {
+      "main": ["less/**/*", "css/**/*", "flags/**/*"]
     }
   },
   "resolutions": {
-    "angular": ">= 1.1.5",
-    "angular-audio-player": "~0.2.1"
+    "angular": ">= 1.1.5"
   }
 }
