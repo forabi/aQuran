@@ -4,7 +4,7 @@ _               = require 'lodash'
 Q               = require 'q'
 combine         = require 'stream-combiner'
 
-fs              = require 'fs'
+fs              = require 'graceful-fs'
 path            = require 'path'
 async           = require 'async'
 glob            = require 'glob'
@@ -20,10 +20,10 @@ config = _.defaults gutil.env,
         when gutil.env.chrome then 'chrome'
         when gutil.env.firefox then 'firefox'
         else 'web' # web, chrome, firefox
+    name: 'aQuran'
     version: 1
     port: 7000 # on which port the server is hosted
-    production: no
-    minify: no # whether to minify resources for production
+    env: if gutil.env.production then 'production' else 'development'
     sourceMaps: yes
     bump: yes # whether to increase the version of the app on 'release'
     experimental: yes # whether to use the Uthmanic script by Khaled Hosny
@@ -34,9 +34,7 @@ config = _.defaults gutil.env,
     scripts: []
     countries: ['*']
     bower: 'src/bower'
-    jade:
-        locals:
-            manifest: 'manifest.cache'
+    cacheManifest: 'manifest.cache'
     bundles: [
         (file: 'ionic.js', src: [
             'ionic.bundle.js'
@@ -68,47 +66,24 @@ config = _.defaults gutil.env,
         jade: ['index.jade', 'views/*.jade']
         coffee: ['!chromereload.coffee', '!launcher.coffee', '!manifest.coffee', 'scripts/**/*.coffee']
         js: 'scripts/*.js'
-        coffeeConcat: [
-            (file: 'main.js', src: [
-                'scripts/main.coffee'
+    coffeeConcat: 
+        file: 'main.js'
+        src: [
+            'main*'
 
-                # Services
-                'scripts/services/cache-service.coffee'
-                'scripts/services/preferences-service.coffee'
-                'scripts/services/localization-service.coffee'
-                'scripts/services/api-service.coffee'
-                'scripts/services/recitation-service.coffee'
-                'scripts/services/content-service.coffee'
-                'scripts/services/search-service.coffee'
-                'scripts/services/explanation-service.coffee'
-                'scripts/services/storage-service.coffee'
-                'scripts/services/arabic-service.coffee'
-                'scripts/services/*.coffee'
+            # Services
+            '*/**/services/*'
 
-                # Factories
-                'scripts/factories/explanation-factory.coffee'
-                'scripts/factories/audio-src-factory.coffee'
-                'scripts/factories/query-builder.coffee'
-                'scripts/factories/idbstore-factory.coffee'
-                'scripts/factories/*.coffee'
+            # Factories
+            '*/**/factories/*'
 
-                'scripts/filters/*.coffee'
+            '*/**/filters/*'
 
-                # Directives
-                'scripts/directives/auto-direction-directive.coffee'
-                'scripts/directives/emphasize-directive.coffee'
-                'scripts/directives/colorize-directive.coffee'
+            # Directives
+            '*/**/directives/*'
 
-                # Controller
-                'scripts/controllers/aya-controller.coffee'
-                'scripts/controllers/preferences-controller.coffee'
-                'scripts/controllers/recitations-controller.coffee'
-                'scripts/controllers/explanations-controller.coffee'
-                'scripts/controllers/navigation-controller.coffee'
-                'scripts/controllers/search-controller.coffee'
-                'scripts/controllers/reading-controller.coffee'
-                ]
-            )
+            # Controllers
+            '*/**/controllers/*'
         ]
 
 try
@@ -148,7 +123,7 @@ gulp.task 'flags', () ->
 
 gulp.task 'less', ['flags', 'css'], () ->
     gulp.src config.src.less, cwd: 'src'
-    .pipe plugins.less sourceMap: config.sourceMaps, compress: config.minify, paths: config.bower
+    .pipe plugins.less sourceMap: config.sourceMaps, compress: config.env is 'production', paths: config.bower
     .pipe plugins.using()
     .pipe plugins.tap (file) ->
         config.styles.push path.relative 'src', file.path
@@ -181,10 +156,11 @@ gulp.task 'jade', ['scripts', 'styles'], () ->
     gulp.src config.src.jade, cwd: 'src', base: 'src'
     .pipe plugins.using()
     .pipe plugins.jade
-        pretty: not config.minify
+        pretty: config.env is not 'production'
         locals:
             scripts: scripts
             styles: styles
+            manifest: config.cacheManifest
     .pipe gulp.dest "dist/#{config.target}"
 
 gulp.task 'html', ['jade']
@@ -192,7 +168,10 @@ gulp.task 'html', ['jade']
 gulp.task 'coffee', ['js'], () ->
     gulp.src config.src.coffee, cwd: 'src'
     .pipe plugins.coffee bare: yes
-    .pipe (if config.minify then plugins.uglify() else gutil.noop())
+    .pipe (plugins.order config.coffeeConcat.src)
+    .pipe (if config.env is 'production' then plugins.uglify() else gutil.noop())
+    .pipe (if config.env is 'production' then plugins.concat config.coffeeConcat.file else gutil.noop())
+    .pipe (plugins.order config.coffeeConcat.src)
     .pipe plugins.tap (file) ->
         config.scripts.push path.relative 'src', file.path
     .pipe gulp.dest "dist/#{config.target}/scripts"
@@ -205,7 +184,7 @@ gulp.task 'js', (callback) ->
             # .pipe plugins.using()
             .pipe plugins.filter src
             .pipe plugins.order src
-            .pipe (if config.minify then plugins.uglify() else gutil.noop())
+            .pipe (if config.env is 'production' then plugins.uglify() else gutil.noop())
             # .pipe plugins.using()
             .pipe plugins.concat bundle.file
             .pipe gulp.dest "dist/#{config.target}/scripts"
@@ -375,30 +354,40 @@ gulp.task 'recitations', () ->
         .value()
     .pipe gulp.dest "dist/#{config.target}/resources"
 
-gulp.task 'package', ['release'], () ->
+gulp.task 'cache', ['build'], () ->
+    if config.target is 'web' and config.env is 'production'
+        gulp.src "dist/#{config.target}/**/*"
+        .pipe plugins.manifest
+            hash: yes
+            timestamp: no
+            filename: config.cacheManifest
+            exclude: config.cacheManifest
+        .pipe gulp.dest "dist/#{config.target}"
+    else 
+        gulp.src "dist/#{config.target}/#{config.cacheManifest}"
+        .pipe plugins.clean()
+
+gulp.task 'package', ['dist'], () ->
+    config.env = 'production'
     switch config.target
         when 'chrome'
             '' # Do something
         when 'firefox'
             # Create a zip file
             zip = new admZip()
-            glob.sync "**/*", cwd: "dist/#{config.target}"
-            .map (file) -> if file.isFile() then zip.addLocalFile file
-            zip.writeZip "dist/#{config.target}v#{config.version}.zip"
+            zip.addLocalFolder "dist/#{config.target}"
+            zip.writeZip "dist/#{config.name.toLowerCase()}-#{config.target}-v#{config.version}.zip"
         else # Standard web app
-            config.jade.locals.manifest = ''
+            # Something
 
-gulp.task 'release', ['clean'], () ->
-    
-    config.production = yes
-    config.minify = yes
-    
+gulp.task 'release', () -> 
     if config.bump
         config.version += 1
         config.date = new Date()
 
 gulp.task 'data', ['quran', 'recitations', 'translations', 'search']
 gulp.task 'build', ['data', 'flags', 'images', 'scripts', 'styles', 'html', 'manifest']
+gulp.task 'dist', ['build', 'cache']
 
 gulp.task 'serve', () ->
     connect

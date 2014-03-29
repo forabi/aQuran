@@ -37,7 +37,8 @@
     "gulp-concat": "^2.2.0",
     "gulp-using": "0.0.1",
     "stream-combiner": "0.0.4",
-    "gulp-tap": "^0.1.1"
+    "gulp-tap": "^0.1.1",
+    "graceful-fs": "^2.0.3"
   },
   "engines": {
     "node": ">=0.8.0"
