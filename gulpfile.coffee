@@ -26,6 +26,7 @@ config = _.defaults gutil.env,
     sourceMaps: yes
     bump: yes # whether to increase the version of the app on 'release'
     experimental: yes # whether to use the Uthmanic script by Khaled Hosny
+    download: no
     translations: yes # true, false, or an array of translations to include
     recitations: yes # whether to include recitations metadata
     styles: []
@@ -60,6 +61,7 @@ config = _.defaults gutil.env,
         database: 'database/main.db'
         recitations: 'resources/recitations.js'
         translations: 'resources/translations/*.trans.zip'
+        translationsTxt: 'resources/translations.txt'
         hosny: 'khaledhosny-quran/quran/*.txt'
         less: 'styles/main.less'
         css: 'styles/*.css'
@@ -201,8 +203,7 @@ gulp.task 'js', (callback) ->
             .pipe plugins.concat bundle.file
             .pipe gulp.dest "dist/#{config.target}/scripts"
         )
-
-    
+  
     config.scripts = config.bundles.map (bundle) -> "scripts/#{bundle.file}"
     Q.all config.bundles.map bundle
 
@@ -225,7 +226,7 @@ gulp.task 'quran', (callback) ->
             # process
             files = glob.sync config.src.hosny, cwd: 'src'
             numbers = /[٠١٢٣٤٥٦٧٨٩]+/g
-            strip = /\u06DD|[٠١٢٣٤٥٦٧٨٩]/g;
+            strip = /\u06DD|[٠١٢٣٤٥٦٧٨٩]/g
             
             process = (file) ->
                 deferred = Q.defer()
@@ -265,11 +266,15 @@ gulp.task 'search', ['quran'], () ->
     .pipe gulp.dest "dist/#{config.target}/resources"
 
 gulp.task 'translations', () ->
+    ids = []
+    urls = fs.readFileSync("src/#{config.src.translationsTxt}").toString().split /\n/g
+
     write = (json) ->
         fs.writeFileSync "dist/#{config.target}/resources/translations.json", json
 
     process = (file) ->
         deferred = Q.defer()
+        gutil.log 'Processing file', gutil.colors.cyan file
         file = new admZip path.join 'src', file
         entries = file.getEntries()
         props = undefined
@@ -289,15 +294,39 @@ gulp.task 'translations', () ->
 
         deferred.promise
 
-    if config.translations
-        files = switch 
-            when typeof config.translations is 'string'
-                config.translations.split /,/g
-                .map (id) -> glob.sync "resources/translations/#{id}.trans.zip", cwd: 'src'
-            when config.translations instanceof Array then config.translations.map (file) -> "src/resources/translations/#{file}.trans.zip"
-            else glob.sync 'resources/translations/*.trans.zip', cwd: 'src'
+    download = (id) ->
+        dest = "resources/translations/#{id}.trans.zip"
+        deferred = Q.defer()
+        if not config.download then deferred.resolve dest
+        else
+            url = _.findWhere urls, (url) -> url.match id
+            # gutil.log "Downloading: #{url}"
+            plugins.download url
+            .pipe (gulp.dest 'src/resources/translations').on('end', () ->
+                deferred.resolve dest
+                )
+            
+        deferred.promise
 
-        Q.all (_.flatten files).map process
+    if config.translations
+        if typeof config.translations is 'string'
+                config.translations = config.translations.split /,/g
+
+        urls = switch 
+            when config.translations instanceof Array
+                config.translations.map (id) ->
+                    regex = new RegExp ".+\/#{id}.+.trans.zip$", 'gi'
+                    _.where urls, (url) -> 
+                        url.match regex
+            else urls
+
+        urls = _.chain(urls).flatten().uniq().value()
+        ids = urls.map (file) -> file.match(/.+\/(.+).trans.zip$/i)[1]
+        gutil.log 'Translations IDs', gutil.colors.green ids
+
+        Q.all ids.map download
+        .then (files) ->
+            Q.all files.map process
         .then (items) ->
             config.countries = _.chain items
                 .pluck 'country'
