@@ -30,6 +30,7 @@ config = _.defaults gutil.env,
     recitations: yes # whether to include recitations metadata
     styles: []
     scripts: []
+    countries: []
     bower: 'src/bower'
     jade:
         locals:
@@ -131,8 +132,8 @@ gulp.task 'manifest', () ->
         file
     .pipe gulp.dest "dist/#{config.target}"
 
-gulp.task 'flags', () ->
-    gulp.src 'flags/**/*', cwd: "#{config.bower}/flag-icon-css"
+gulp.task 'flags', ['translations'], () ->
+    gulp.src (config.countries.map (country) -> "flags/**/#{country.toLowerCase()}.*"), cwd: "#{config.bower}/flag-icon-css"
     .pipe plugins.using()
     .pipe gulp.dest "dist/#{config.target}/flags"
 
@@ -292,11 +293,17 @@ gulp.task 'translations', () ->
         files = switch 
             when typeof config.translations is 'string'
                 config.translations.split /,/g
-                .map (id) -> "resources/translations/#{id}.trans.zip"
+                .map (id) -> glob.sync "resources/translations/#{id}.trans.zip", cwd: 'src'
             when config.translations instanceof Array then config.translations.map (file) -> "src/resources/translations/#{file}.trans.zip"
             else glob.sync 'resources/translations/*.trans.zip', cwd: 'src'
 
-        Q.all files.map process
+        Q.all (_.flatten files).map process
+        .then (items) ->
+            config.countries = _.chain items
+                .pluck 'country'
+                .uniq().value()
+            gutil.log 'Countries:', gutil.colors.green config.countries
+            items
         .then(JSON.stringify)
         .then(write)
 
