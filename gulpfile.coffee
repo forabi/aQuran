@@ -116,8 +116,8 @@ gulp.task 'manifest', () ->
         file
     .pipe gulp.dest "dist/#{config.target}"
 
-gulp.task 'flags', () ->
-    gulp.src (config.countries.map (country) -> "flags/**/#{country.toLowerCase()}.*"), cwd: "#{config.bower}/flag-icon-css"
+gulp.task 'flags', ['translations'], () ->
+    gulp.src (config.countries.map (country) -> "flags/1x1/#{country.toLowerCase()}.*"), cwd: "#{config.bower}/flag-icon-css"
     .pipe plugins.using()
     .pipe gulp.dest "dist/#{config.target}/flags"
 
@@ -368,7 +368,6 @@ gulp.task 'cache', ['build'], () ->
         .pipe plugins.clean()
 
 gulp.task 'package', ['dist'], () ->
-    config.env = 'production'
     switch config.target
         when 'chrome'
             '' # Do something
