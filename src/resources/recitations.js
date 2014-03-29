@@ -474,10 +474,5 @@
      "subfolder":"translations/besim_korkut_ajet_po_ajet",
      "name":"Besim Korkut (Bosnian)",
      "bitrate":"128kbps"
-   },
-   "73":{
-     "subfolder":"aziz_alili_128kbps",
-     "name":"Aziz Alili",
-     "bitrate":"128kbps"
    }
 }

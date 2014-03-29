@@ -59,7 +59,6 @@ config = _.defaults gutil.env,
         icons: 'icons/*.png'
         manifest: 'manifest.coffee'
         database: 'database/main.db'
-        recitations: 'resources/recitations.js'
         translations: 'resources/translations/*.trans.zip'
         translationsTxt: 'resources/translations.txt'
         hosny: 'khaledhosny-quran/quran/*.txt'
@@ -337,7 +336,12 @@ gulp.task 'translations', () ->
         .then(write)
 
 gulp.task 'recitations', () ->
-    gulp.src config.src.recitations, cwd: 'src'
+    (
+        if not config.download then gulp.src 'resources/recitations.js', cwd: 'src'
+        else
+            plugins.download 'http://www.everyayah.com/data/recitations.js'
+            .pipe gulp.dest 'src/resources'
+    )
     .pipe plugins.rename (file) ->
         file.extname = '.json'
         file
