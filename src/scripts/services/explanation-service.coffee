@@ -1,4 +1,4 @@
-app.service 'ExplanationService', ['IDBStoreFactory', '$q', '$http', 'CacheService', '$log', 'Preferences', (IDBStoreFactory, $q, $http, CacheService, $log, Preferences) ->
+app.service 'ExplanationService', ['IDBStoreFactory', '$log', (IDBStoreFactory, $log) ->
     cache = []
     database = IDBStoreFactory 'resources/translations.json',
         dbVersion: 2

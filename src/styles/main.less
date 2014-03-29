@@ -37,27 +37,23 @@
     }
 }
 .page {
-    pointer-events: none;
-    direction: rtl !important;
     display: inline-block !important;
+    direction: rtl !important;
     text-align: justify;
     text-align-last: justify;
     text-justify: auto;
     text-overflow: initial !important;
-    &:not(.search) {
-        line-height: @aya-line-height;
-        font-size: @aya-font-size;
-    }
-    &.single-aya {
-        font-size: @aya-font-size * 1.2;
-    }
-    &.search {
-        line-height: @aya-line-height * .8;
-        font-size: @aya-font-size * .8;
-    }
+    white-space: nowrap;
 }
 .aya {
+    text-align: justify;
+    text-justify: auto;
+    text-overflow: initial !important;
+    pointer-events: none;
     white-space: nowrap;
+    direction: rtl !important;
+    font-size: @aya-font-size;
+    line-height: @aya-line-height;
     // white-space: 
     .aya-text {
         white-space: normal;
@@ -79,6 +75,15 @@
         &::before {
             content: '\06DD';
         }
+    }
+    &.single-aya {
+        font-size: @aya-font-size * 1.2;
+        text-align-last: initial;
+    }
+    &.search {
+        line-height: @aya-line-height * .8;
+        font-size: @aya-font-size * .8;
+        text-align-last: initial;
     }
 }
 .translation {

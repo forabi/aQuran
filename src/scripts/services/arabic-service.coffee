@@ -8,16 +8,16 @@
         _quranic_annotation_signs = /[\u0615\u0617\u065C\u0670\u06D6\u06D7\u06D8\u06D9\u06DA\u06DB\u06DC\u06DD\u06DE\u06DF\u06E0\u06E2\u06E3\u06E4\u06E5\u06E6\u06E7\u06E8\u06E9\u06EA\u06EB\u06EC\u06ED\u0670.isol\u0670.medi\u06E5.medi\u06E6]/
         _hamza_str = '([آإأءئؤاىو])'
         _numbers = [
-            "\u0660"
-            "\u0661"
-            "\u0662"
-            "\u0663"
-            "\u0664"
-            "\u0665"
-            "\u0666"
-            "\u0667"
-            "\u0668"
-            "\u0669"
+            "٠"
+            "١"
+            "٢"
+            "٣"
+            "٤"
+            "٥"
+            "٦"
+            "٧"
+            "٨"
+            "٩"
         ]
 
         _replaces = [

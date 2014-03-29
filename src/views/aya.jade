@@ -11,7 +11,6 @@ ion-view(title='Aya')
                         a.subdued(href='#') Juz {{ aya.juz_id }}
                         a.subdued(href='#') {{ aya.sura_name }}
                         a.subdued(ui-sref='reader({ current: {{ aya.page_id }} })') Aya {{ aya.aya_id }}
-                    .page
                         .aya.single-aya
                             span.aya-text(colorize='{{ options.reader.colorized }}', colorize-text='{{ aya.text }}')
                             i.aya-number {{ aya.aya_id_display }}

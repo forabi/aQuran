@@ -20,6 +20,7 @@ config = _.defaults gutil.env,
         when gutil.env.chrome then 'chrome'
         when gutil.env.firefox then 'firefox'
         else 'web' # web, chrome, firefox
+    version: 1
     port: 7000 # on which port the server is hosted
     production: no
     minify: no # whether to minify resources for production
@@ -229,20 +230,20 @@ gulp.task 'quran', (callback) ->
             fs.writeFile "dist/#{config.target}/resources/quran.json", json, callback
 
         if config.experimental
-            # process
+            # Read all files from khaledhosny-quran
             files = glob.sync config.src.hosny, cwd: 'src'
-            numbers = /[٠١٢٣٤٥٦٧٨٩]+/g
-            strip = /\u06DD|[٠١٢٣٤٥٦٧٨٩]/g
+            numbers = /[٠١٢٣٤٥٦٧٨٩]+/g # Hindi numbers
+            strip = /\u06DD|[٠١٢٣٤٥٦٧٨٩]/g # Aya number and aya sign
             
             process = (file) ->
                 deferred = Q.defer()
                 fs.readFile (path.join 'src', file), (err, data) ->
                     if err then throw err
                     text = data.toString()
-                    aya_ids = text.match numbers
-                    sura_id = Number file.match /\d+/g
+                    aya_ids = text.match numbers # Get aya_ids from file contents
+                    sura_id = Number file.match /\d+/g # Get sura_id from filename
                     
-                    text = text.replace strip, ''
+                    text = text.replace strip, '' # Strip aya number and aya sign
                     .trim()
                     .split '\n'
                     .map (line, index) ->
@@ -254,9 +255,9 @@ gulp.task 'quran', (callback) ->
 
             Q.all files.map process
             .then (suras) ->
-                _.flatten suras
+                _.flatten suras # [[{}, {}], [{}, {}]...] becomes [{}, {}, {}, {}...]
             .then (json) ->
-                _.merge rows, json
+                _.merge rows, json # Merge JSON with SQL data
             .then(JSON.stringify)
             .then(write)
             
@@ -265,6 +266,8 @@ gulp.task 'quran', (callback) ->
 gulp.task 'search', ['quran'], () ->
     gulp.src "dist/#{config.target}/resources/quran.json"
     .pipe plugins.jsonEditor (ayas) ->
+        # A subset of quran.json that only contains texts,
+        # should be light enough to load in memory for offline search
         ayas.map (aya) -> _.pick aya, 'gid', 'standard', 'standard_full'
     .pipe plugins.rename (file) ->
         file.basename = 'search'
@@ -273,9 +276,11 @@ gulp.task 'search', ['quran'], () ->
 
 gulp.task 'translations', () ->
     ids = []
-    urls = fs.readFileSync("src/#{config.src.translationsTxt}").toString().split /\n/g
+    urls = # Load URLs of translation packages from translations.txt
+        fs.readFileSync "src/#{config.src.translationsTxt}"
+        .toString().split /\n/g
 
-    write = (json) ->
+    write = (json) -> # Write translation metadata
         fs.writeFileSync "dist/#{config.target}/resources/translations.json", json
 
     process = (file) ->
@@ -284,6 +289,7 @@ gulp.task 'translations', () ->
         file = new admZip path.join 'src', file
         entries = file.getEntries()
         props = undefined
+        # Walk through zip contents and process each entry
         async.each entries, (entry, callback) ->
             if entry.name.match /.properties$/gi
                 text = entry.getData().toString 'utf-8'
@@ -327,6 +333,7 @@ gulp.task 'translations', () ->
             else urls
 
         urls = _.chain(urls).flatten().uniq().value()
+        # Extract IDs from URLs
         ids = urls.map (file) -> file.match(/.+\/(.+).trans.zip$/i)[1]
         gutil.log 'Translations IDs', gutil.colors.green ids
 
@@ -334,6 +341,8 @@ gulp.task 'translations', () ->
         .then (files) ->
             Q.all files.map process
         .then (items) ->
+            # We need to know which countries have translations
+            # so we can copy the corresponding flags to the dist folder
             config.countries = _.chain items
                 .pluck 'country'
                 .uniq().value()
@@ -366,12 +375,16 @@ gulp.task 'recitations', () ->
         .value()
     .pipe gulp.dest "dist/#{config.target}/resources"
 
-gulp.task 'package', ['build'], () ->
+gulp.task 'package', ['release'], () ->
     switch config.target
         when 'chrome'
             '' # Do something
         when 'firefox'
-            '' # Create a zip file
+            # Create a zip file
+            zip = new admZip()
+            glob.sync "**/*", cwd: "dist/#{config.target}"
+            .map (file) -> if file.isFile() then zip.addLocalFile file
+            zip.writeZip "dist/#{config.target}v#{config.version}.zip"
         else # Standard web app
             config.jade.locals.manifest = ''
 
@@ -383,8 +396,6 @@ gulp.task 'release', ['clean'], () ->
     if config.bump
         config.version += 1
         config.date = new Date()
-
-    gulp.run 'package'
 
 gulp.task 'data', ['quran', 'recitations', 'translations', 'search']
 gulp.task 'build', ['data', 'flags', 'images', 'scripts', 'styles', 'html', 'manifest']

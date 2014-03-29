@@ -25,7 +25,7 @@ ion-view(title='Search')
                         .aya(ng-switch='aya.html.length > 0')
                             .aya-text.layers.search(
                                 ng-switch-default,
-                                colorize,
+                                colorize='{{ options.reader.colorized }}',
                                 colorize-text='{{ aya.standard_full }}',
                                 search-text='{{ aya.standard }}',
                                 highlight='{{ search.query }}'
