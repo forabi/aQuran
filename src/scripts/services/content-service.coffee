@@ -30,7 +30,7 @@ app.service 'ContentService', ['IDBStoreFactory', 'ExplanationFactory', 'AudioSr
                     .then (explanations) ->
                         aya.explanations = explanations
                         aya
-                else aya
+                else $q.when aya
             (promise) ->
                 # We expect a promise because the previous transform is async
                 promise.then (aya) ->
