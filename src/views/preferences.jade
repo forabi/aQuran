@@ -51,6 +51,8 @@ ion-view(title='Preferences')
                     input(type='checkbox', ng-model='options.search.online.enabled')
                     .track: .handle
 
+            a.item.item-text-wrap(ui-sref='about') About the app
+
         .list(ui-view='theme')
             label.item.item-radio(ng-repeat='theme in themes')
                 input(type='radio', name='themes', ng-model='options.theme', ng-value='theme.id')
