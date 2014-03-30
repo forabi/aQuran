@@ -24,10 +24,10 @@ ion-view(title='Aya')
                         i.icon.ion-pricetag
                         | Tag
                     
-                    audio(audio-player, player-control='ayaPlayer', player-name='ayaPlayer')
+                    audio(ng-if='options.audio.enabled', audio-player, player-control='ayaPlayer', player-name='ayaPlayer')
                         source(ng-src='{{ aya.recitation.src }}', type='{{ aya.recitation.type }}')
 
-                    a.tab-item(ng-if='online && !ayaPlayer.playing', ng-click='ayaPlayer.play()')
+                    a.tab-item(ng-if='options.audio.enabled && online && !ayaPlayer.playing', ng-click='ayaPlayer.play()')
                         i.icon.ion-volume-medium
                         | Listen
                     a.tab-item(ng-if='ayaPlayer.playing', ng-click='ayaPlayer.pause()')

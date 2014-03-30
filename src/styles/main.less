@@ -55,20 +55,21 @@
     .aya-text {
         white-space: normal;
         font-family: @aya-font-family;
-        font-size: @aya-font-size;
         line-height: @aya-line-height;
         pointer-events: none;
     }
     .aya-number {
         line-height: @aya-line-height;
         font-family: @aya-number-font-family;
-        font-size: @aya-font-size;
         color: @aya-number-color;
         margin-right: 4px;
         margin-left: 4px;
         &::before {
             content: '\06DD';
         }
+    }
+    &:not(.single-aya) {
+        font-size: @aya-font-size;
     }
     &.single-aya {
         font-size: @aya-font-size * 1.2;

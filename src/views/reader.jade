@@ -2,7 +2,7 @@ ion-view(title='{{ title }}', right-buttons='rightButtons')
     ion-content(has-header='true', has-footer='true')
         div(ng-switch='progress.status')
             div(ng-switch-default)
-                .button-bar.bar-subheader
+                .button-bar.bar-subheader(ng-if='options.audio.enabled')
                     audio(audio-player, player-control='audioPlayer', playlist='playlist', player-name='audioPlayer')
                         | Play
                     //- button.button.button.icon.ion-ios7-rewind(ng-click='audioPlayer.prev()')
