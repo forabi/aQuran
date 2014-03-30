@@ -119,7 +119,7 @@ gulp.task 'manifest', () ->
 gulp.task 'flags', ['translations'], () ->
     gulp.src (config.countries.map (country) -> "flags/1x1/#{country.toLowerCase()}.*"), cwd: "#{config.bower}/flag-icon-css"
     .pipe plugins.using()
-    .pipe gulp.dest "dist/#{config.target}/flags"
+    .pipe gulp.dest "dist/#{config.target}/flags/1x1"
 
 gulp.task 'less', ['flags', 'css'], () ->
     gulp.src config.src.less, cwd: 'src'

@@ -12,10 +12,10 @@ app.controller 'ExplanationsController', ['$scope', '$log', 'ExplanationService'
 
         $scope.toggle = (item) ->
             if not $scope.isEnabled item
-                $log.debug "Item #{item.id} will be enabled now"
+                # $log.debug "Item #{item.id} will be enabled now"
                 $scope.explanations.enabled.push item
             else
-                $log.debug "Item #{item.id} will be disabled now"
+                # $log.debug "Item #{item.id} will be disabled now"
                 _.remove $scope.explanations.enabled, id: item.id
             $scope.options.explanations.ids = _.pluck $scope.explanations.enabled, 'id'
 
@@ -30,6 +30,7 @@ app.controller 'ExplanationsController', ['$scope', '$log', 'ExplanationService'
         .then (properties) ->
             $log.debug properties
             $scope.explanations.available = transform properties
+            $scope.explanations.enabled = _.filter $scope.explanations.available, (item) -> _.contains $scope.options.explanations.ids, item.id
     .catch (err) ->
         $log.error err
         

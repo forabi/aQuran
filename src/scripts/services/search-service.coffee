@@ -23,7 +23,7 @@ app.service 'SearchService', ['APIService', 'ContentService', 'ArabicService', '
         deferred = $q.defer()
         # notify 'Preparing results...'
         ContentService.then (idb) ->
-            async.mapSeries ayas, (aya, callback) ->
+            async.mapLimit ayas, 10, (aya, callback) ->
                 idb.findOne gid: aya.gid
                 .exec()
                 .then (aya) ->

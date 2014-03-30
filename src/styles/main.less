@@ -39,39 +39,33 @@
 .page {
     display: inline-block !important;
     direction: rtl !important;
-    text-align: justify;
-    text-align-last: justify;
-    text-justify: auto;
-    text-overflow: initial !important;
-    white-space: nowrap;
+    // text-overflow: initial !important;
+    // white-space: nowrap;
+    &.arabic-only {
+        padding: 15px;
+        text-align: justify;
+        text-align-last: justify;
+        text-justify: auto;  
+    }
 }
 .aya {
-    text-align: justify;
-    text-justify: auto;
     text-overflow: initial !important;
     pointer-events: none;
-    white-space: nowrap;
     direction: rtl !important;
-    font-size: @aya-font-size;
-    line-height: @aya-line-height;
-    // white-space: 
     .aya-text {
         white-space: normal;
         font-family: @aya-font-family;
-        // pointer-events: none;
-        // &.playing {
-        //     color: red;
-        // }
+        font-size: @aya-font-size;
+        line-height: @aya-line-height;
+        pointer-events: none;
     }
     .aya-number {
         line-height: @aya-line-height;
         font-family: @aya-number-font-family;
-        // font-size: @aya-font-size;
-        // "\06DD"
+        font-size: @aya-font-size;
         color: @aya-number-color;
-        // font-weight: bold;
-        margin-right: 5px;
-        margin-left: 5px;
+        margin-right: 4px;
+        margin-left: 4px;
         &::before {
             content: '\06DD';
         }
@@ -85,9 +79,13 @@
         font-size: @aya-font-size * .8;
         text-align-last: initial;
     }
-}
-.translation {
-    font-family: @translation-font-family;
+    .explanation-text {
+        padding-top: 15px;
+        font-family: @explanation-font-family;
+        font-size: @explanation-font-size;
+        line-height: @explanation-line-height;
+        text-align: justify;
+    }
 }
 
 .highlighted {

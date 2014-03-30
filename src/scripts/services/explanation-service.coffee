@@ -31,7 +31,7 @@ app.service 'ExplanationService', ['IDBStoreFactory', '$log', (IDBStoreFactory, 
                 indexes: [(name: 'gid', unique: yes)]
                 transforms: [
                     (item) ->
-                        _.extend explanation, item
+                        _.extend item, explanation
                 ]
         .then (store) ->
             # Store in cache
