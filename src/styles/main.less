@@ -25,17 +25,7 @@
 .icon.icon-large {
     font-size: 250%;
 }
-.sura-name {
-    &:not(.search) {
-        font-family: @sura-name-font-family;
-        font-size: @sura-name-font-size;
-        text-align: center;
-        font-weight: bold;
-    }
-    .search {
 
-    }
-}
 .page {
     display: inline-block !important;
     direction: rtl !important;
@@ -46,6 +36,12 @@
         text-align: justify;
         text-align-last: justify;
         text-justify: auto;  
+    }
+    .sura-name {
+        font-family: @sura-name-font-family;
+        font-size: @sura-name-font-size;
+        text-align: center;
+        font-weight: bold;
     }
 }
 .aya {
@@ -61,6 +57,7 @@
     .aya-number {
         line-height: @aya-line-height;
         font-family: @aya-number-font-family;
+        font-size: @aya-number-font-size;
         color: @aya-number-color;
         margin-right: 4px;
         margin-left: 4px;
@@ -69,16 +66,23 @@
         }
     }
     &:not(.single-aya) {
-        font-size: @aya-font-size;
+        .aya-text {
+            font-size: @aya-font-size;
+        }
+        
     }
     &.single-aya {
-        font-size: @aya-font-size * 1.2;
-        text-align-last: initial;
+        .aya-text {
+            font-size: @aya-font-size * 1.2;
+            text-align-last: initial;  
+        }
     }
     &.search {
-        line-height: @aya-line-height * .8;
-        font-size: @aya-font-size * .8;
-        text-align-last: initial;
+        .aya-text {
+            line-height: @aya-line-height * .8;
+            font-size: @aya-font-size * .8;
+            text-align-last: initial;
+        }
     }
     .explanation-text {
         padding-top: 15px;

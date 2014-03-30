@@ -17,7 +17,7 @@ ion-view(title='{{ title }}', right-buttons='rightButtons')
                         span(ng-if='options.reader.arabic_text', ng-click='audioPlayer.play({{ aya.index }})', index='{{ aya.index }}')
                             span.aya-text(colorize='{{ options.reader.colorized }}', colorize-text='{{ aya.text }}', ng-class='{ assertive: audioPlayer.currentTrack - 1 == aya.index }')
                             i.aya-number {{ aya.aya_id_display }}
-                        div.explanation-text(ng-repeat='explanation in aya.explanations', dir='{{ explanation.direction }}')
+                        .explanation-text(ng-repeat='explanation in aya.explanations', dir='{{ explanation.direction }}')
                             | {{ explanation.text }}
 
                 .item.item-text-wrap(ng-if='view.current < view.total')
