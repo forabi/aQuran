@@ -28,7 +28,8 @@ ion-view(title='{{ title }}', right-buttons='rightButtons')
                     i.icon.placeholder-icon.ion-loading-c.icon-large
                     div(ng-if='options.first_time')
                         h2 Indexing databases for the first time...
-                        small This may take a few minutes
+                        small This may take a few minutes.
+                            | Please allow the application to store data for offline use if asked by your browser
             
             .card.text-center(ng-switch-when='error')
                 .item.item-body
