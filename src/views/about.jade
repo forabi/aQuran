@@ -2,8 +2,11 @@ ion-view(title='About {{ info.name }}')
     ion-content(has-header='true', overflow-scroll='true', has-footer='true')
         .list
             .item.item-divider.item-text-wrap {{ info.name }}
-            small.item.item-text-wrap Version {{ info.version }}, released on {{ info.released | date }}
-            .item.item-text-wrap {{ info.description }}
+            .item.item-text-wrap.item-avatar
+                img(src='icons/icon-48.png')
+                | {{ info.description }}
+                div: small Version {{ info.version }}, released on {{ info.released | date }}
+                
             a(href='{{ info.developer.url }}').item.item-text-wrap Developed by {{ info.developer.name }}
             
             .item.item-divider.item-text-wrap Components

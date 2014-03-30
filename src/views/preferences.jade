@@ -14,11 +14,11 @@ ion-view(title='Preferences')
                     label.toggle
                         input(type='checkbox', ng-model='options.reader.standard_text')
                         .track: .handle
-                .item.item-toggle.item-text-wrap Show diacritics
+                .item.item-toggle.item-text-wrap(ng-if='options.reader.standard_text') Show diacritics
                     label.toggle
                         input(type='checkbox', ng-model='options.reader.diacritics')
                         .track: .handle
-                .item.item-toggle.item-text-wrap Use different colors for diacritics and Quranic annotation signs
+                .item.item-toggle.item-text-wrap(ng-if='options.reader.diacritics') Use different colors for diacritics and Quranic annotation signs
                     label.toggle
                         input(type='checkbox', ng-model='options.reader.colorized')
                         .track: .handle
