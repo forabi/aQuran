@@ -1,0 +1,1 @@
+web: gulp build serve --production --port $PORT

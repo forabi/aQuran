@@ -2,6 +2,7 @@
   "name": "aQuran",
   "version": "0.0.0",
   "devDependencies": {
+    "bower": "latest",
     "gulp": "^3.5.2",
     "gulp-jade": "^0.4.2",
     "gulp-less": "^1.2.1",
