@@ -1,4 +1,4 @@
-ion-content.list(has-header='true', has-footer='true')
+ion-content.list(has-header='true')
     label.item.item-radio(ng-repeat='theme in themes')
         input(type='radio', name='themes', ng-model='options.theme', ng-value='theme.id')
         .item-content {{ theme.name }}

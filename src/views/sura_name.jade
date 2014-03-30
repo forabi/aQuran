@@ -1,4 +1,4 @@
-ion-content.list(has-header='true', has-footer='true')
+ion-content.list(has-header='true')
     label.item.item-radio(ng-repeat='sura_name in sura_names')
         input(type='radio', name='sura_names', ng-model='options.reader.sura_name', ng-value='sura_name.value')
         .item-content {{ sura_name.name }}, e.g. {{ sura_name.example }}

@@ -14,10 +14,16 @@ app.controller 'ReadingController', ['$rootScope', '$scope', '$state', '$statePa
 
     $scope.rightButtons = [
         (
-            type: 'button-{{ options.theme }}'
+            type: "button-#{$scope.options.theme}"
             content: '<i class="icon ion-android-search"></i>'
             tap: (e) ->
                 $state.go 'search'
+        )
+        (
+            type: "button-#{$scope.options.theme}"
+            content: '<i class="icon ion-android-mixer"></i>'
+            tap: (e) ->
+                $state.go 'preferences'
         )
         # (
         #     type: 'button-positive'

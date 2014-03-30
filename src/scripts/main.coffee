@@ -18,7 +18,7 @@ app.run ['$rootScope', 'Preferences', '$window', ($rootScope, Preferences, $wind
 
 app.config ['$stateProvider', '$urlRouterProvider', '$locationProvider', '$logProvider' , ($stateProvider, $urlRouterProvider, $locationProvider, $logProvider) ->
     
-    # $logProvider.debugEnabled no
+    $logProvider.debugEnabled no
 
     $stateProvider
     .state 'reader', 

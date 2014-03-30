@@ -1,5 +1,5 @@
 ion-view(title='{{ title }}', right-buttons='rightButtons')
-    ion-content(has-header='true', has-footer='true')
+    ion-content(has-header='true')
         div(ng-switch='progress.status')
             div(ng-switch-default)
                 .button-bar.bar-subheader(ng-if='online && options.audio.enabled')
