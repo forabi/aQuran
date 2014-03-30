@@ -46,6 +46,16 @@ app.config ['$stateProvider', '$urlRouterProvider', '$locationProvider', '$logPr
       templateUrl: 'views/preferences.html'
       controller: 'PreferencesController'
 
+    .state 'themes', 
+      # url: '/themes'
+      templateUrl: 'views/themes.html'
+      controller: 'PreferencesController'
+
+    .state 'sura-name', 
+      # url: '/sura_name'
+      templateUrl: 'views/sura_name.html'
+      controller: 'PreferencesController'
+
     .state 'explanations', 
       url: '/explanations'
       templateUrl: 'views/explanations.html'

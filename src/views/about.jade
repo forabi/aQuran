@@ -1,5 +1,5 @@
 ion-view(title='About {{ info.name }}')
-    ion-content(has-header='true', overflow-scroll='true', has-footer='true')
+    ion-content(has-header='true', has-footer='true')
         .list
             .item.item-divider.item-text-wrap {{ info.name }}
             .item.item-text-wrap.item-avatar
@@ -11,13 +11,13 @@ ion-view(title='About {{ info.name }}')
             
             .item.item-divider.item-text-wrap Components
             small.item.item-text-wrap This app uses components from the following projects:
-            .item.item-text-wrap
-                a.positive Al-Fanous SQL database for standard texts and metadata
+            a(href='http://www.alfanous.org/').item.item-text-wrap
+                .positive Al-Fanous SQL database for standard texts and metadata
                 div: small Note: The database was modified with uthmanic script provided by Khaled Hosney
-            a.item.item-text-wrap.positive Al-Fanous Dev API for online searches
-            a.item.item-text-wrap.positive Khaled Hosney's Uthamnic script
-            a.item.item-text-wrap.positive Recitations by the EveryAyah project
-            a.item.item-text-wrap.positive Translations and explanations by the Zekr project
+            a(href='http://www.alfanous.org/jos2').item.item-text-wrap.positive Al-Fanous Dev API for online searches
+            a(href='https://bitbucket.org/khaledhosny/quran').item.item-text-wrap.positive Khaled Hosney's Uthamnic script
+            a(href='http://www.everyayah.com').item.item-text-wrap.positive Recitations by the EveryAyah project
+            a(href='http://zekr.org/resources.html').item.item-text-wrap.positive Translations and explanations by the Zekr project
 
             .item.item-divider.item-text-wrap Special thanks
             .item.item-text-wrap: b Al-Fanous team for the Dev API

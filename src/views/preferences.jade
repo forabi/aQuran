@@ -1,13 +1,13 @@
 ion-view(title='Preferences')
-    ion-content(has-header='true', overflow-scroll='true', has-footer='true')
-        .list(ui-view)
+    ion-content(has-header='true', has-footer='true')
+        .list(ui-view='main')
             .item.item-divider.item-text-wrap Appearance
-            a.item.item-toggle.item-text-wrap Select theme
+            a.item.item-toggle.item-text-wrap(ui-sref='themes') Select theme
             .item.item-toggle.item-text-wrap Show Arabic text
                 label.toggle
                     input(type='checkbox', ng-model='options.reader.arabic_text')
                     .track: .handle
-            a.item.item-toggle.item-text-wrap Select how to display sura names
+            a.item.item-toggle.item-text-wrap(ui-sref='sura-name') Select how to display sura names
                 //- div: small {{ sura_names[options.reader.sura_name].name }}, e.g. {{ sura_names[options.reader.sura_name].example }}
             div(ng-show='options.reader.arabic_text')
                 .item.item-toggle.item-text-wrap Standard text
@@ -52,15 +52,3 @@ ion-view(title='Preferences')
                     .track: .handle
 
             a.item.item-text-wrap(ui-sref='about') About the app
-
-        .list(ui-view='theme')
-            label.item.item-radio(ng-repeat='theme in themes')
-                input(type='radio', name='themes', ng-model='options.theme', ng-value='theme.id')
-                .item-content {{ theme.name }}
-                i.radio-icon.ion-checkmark
-        
-        .list(ui-view='sura-name')
-            label.item.item-radio(ng-repeat='sura_name in sura_names')
-                input(type='radio', name='sura_names', ng-model='options.reader.sura_name', ng-value='sura_name.value')
-                .item-content {{ sura_name.name }}, e.g. {{ sura_name.example }}
-                i.radio-icon.ion-checkmark
