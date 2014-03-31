@@ -1,4 +1,4 @@
-app.filter 'ArabicNumber', ['ArabicService', (Arabic) ->
+app.filter 'arabicNumber', ['ArabicService', (Arabic) ->
     (text) ->
         Arabic.Numbers.Array.forEach (num, i) ->
             text = text.replace (new RegExp i.toString, 'g'), i.toLocaleString()

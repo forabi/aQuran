@@ -18,11 +18,11 @@ app.run ['$rootScope', 'Preferences', '$window', ($rootScope, Preferences, $wind
 
 app.config ['$stateProvider', '$urlRouterProvider', '$locationProvider', '$logProvider' , ($stateProvider, $urlRouterProvider, $locationProvider, $logProvider) ->
     
-    $logProvider.debugEnabled no
+    # $logProvider.debugEnabled no
 
     $stateProvider
     .state 'reader', 
-      url: '/reader/:current?highlight'
+      url: '/reader/:current?highlight&scrollTo'
       templateUrl: 'views/reader.html'
       controller: 'ReadingController'
 

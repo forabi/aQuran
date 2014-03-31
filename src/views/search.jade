@@ -21,7 +21,7 @@ ion-view(title='Search')
                         a.subdued Aya {{ aya.aya_id }}
                     
                     a.item.item-text-wrap.sura-body(
-                        ui-sref='reader({ current: {{ aya.page_id }}, type: "page", highlight: "{{ search.query }}" })')
+                        ui-sref='reader({ current: {{ aya.page_id }}, scrollTo: {{ aya.gid }}, highlight: "{{ search.query }}" })')
                         .aya(ng-switch='aya.html.length > 0')
                             .aya-text.layers.search(
                                 ng-switch-default,

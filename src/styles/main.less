@@ -59,15 +59,28 @@
         pointer-events: none;
     }
     .aya-number {
-        line-height: @aya-line-height;
-        font-family: @aya-number-font-family;
-        font-size: @aya-number-font-size;
-        color: @aya-number-color;
-        margin-right: 4px;
-        margin-left: 4px;
-        &::before {
-            content: '\06DD';
+        &:not(.explanation-aya-number) {
+            line-height: @aya-line-height;
+            font-family: @aya-number-font-family;
+            font-size: @aya-number-font-size;
+            color: @aya-number-color;
+            margin-right: 4px;
+            margin-left: 4px;
+            &::before {
+                content: '\06DD';
+            }
         }
+        &.explanation-aya-number {
+            color: gray;
+            margin-right: 4px;
+            &::before {
+                // content: '[';
+            }
+            &::after {
+                // content: ']';
+                content: '.';
+            }
+        }        
     }
     &:not(.single-aya) {
         .aya-text {
