@@ -21,6 +21,7 @@ ion-view(title='{{ title }}', right-buttons='rightButtons')
                             | {{ explanation.text }}
 
                 .item.item-text-wrap(ng-if='view.current < view.total')
+                    //- button.button.button-block(ng-click='loadMore()') Load More...
                     ion-infinite-scroll(on-infinite='loadMore()', distance='20%', icon='ion-loading-c')
 
             .card.text-center(ng-switch-when='init')
