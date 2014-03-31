@@ -2,14 +2,7 @@
 # q = require 'q'
 # module.exports = (app) ->
 app.controller 'ReadingController', ['$rootScope', '$scope', '$state', '$stateParams', '$log', 'ContentService', 'Preferences', ($rootScope, $scope, $state, $stateParams, $log, ContentService, Preferences) ->
-    # database = undefined
-
-    # $scope.loading = $ionicLoading.show 
-    #         content: '<i class="text-center icon icon-large ion-loading-c"></i>'
-    #         animation: 'fade-in'
-    #         showBackdrop: yes
-    #         maxWidth: 200
-    #         showDelay: 0
+        
     $scope.playlist = []
 
     $scope.rightButtons = [
@@ -25,12 +18,6 @@ app.controller 'ReadingController', ['$rootScope', '$scope', '$state', '$statePa
             tap: (e) ->
                 $state.go 'preferences'
         )
-        # (
-        #     type: 'button-positive'
-        #     content: '<i class="icon ion-android-more"></i>'
-        #     tap: (e) ->
-        #         $state.go 'search'
-        # )
     ]
 
     $scope.playlist = []
@@ -39,29 +26,12 @@ app.controller 'ReadingController', ['$rootScope', '$scope', '$state', '$statePa
 
     $scope.view = _.defaults $stateParams, $scope.options.reader.view
 
-    # $scope.static =
-    #     views: [
-    #         (id: 'page_id' , name: 'Page')
-    #         (id: 'sura_id' , name: 'Sura')
-    #         (id: 'hizb_gid', name: 'Hizb')
-    #     ]
-    #     modes: [
-    #         (id: 'standard'     , name: 'Standard')
-    #         (id: 'standard_full', name: 'Standard (Full)')
-    #         (id: 'uthmani'      , name: 'Uthmani (Full)')
-    #         (id: 'uthmani_min'  , name: 'Uthmani (Minimum)')
-    #     ]
-    #     sura_name: [
-    #         (id: 'sura_name'             , name: 'Arabic')
-    #         (id: 'sura_name_en'          , name: 'English')
-    #         (id: 'sura_name_romanization', name: 'Arabic (transliterated)')
-    #     ]
-
     $scope.progress =
         status: 'init'
         total: 0
         current: 0
 
+         
     transform = (docs) ->
         # default sorting
         _.chain docs
@@ -92,7 +62,8 @@ app.controller 'ReadingController', ['$rootScope', '$scope', '$state', '$statePa
             $rootScope.title = content[0].sura_name # TODO: use a proper title
             $scope.progress.status = 'ready'
             content
-        .catch error
+        , error, (message) ->
+            $scope.progress.message = message
 
     $scope.loadMore = () ->
         # $log.debug 'Loading more...'
@@ -100,7 +71,9 @@ app.controller 'ReadingController', ['$rootScope', '$scope', '$state', '$statePa
         loadContent()
         .then (content) ->
             # $log.debug 'New content ready', content
-            # array = _.last $scope.pages, 2
+            # TODO: remove old content to reduce memory usage
+            # array = $scope.pages
+            # array = _.last array, Math.min array.length, 2
             # array.push content
             # $scope.pages = array
             $scope.pages.push content
@@ -109,6 +82,7 @@ app.controller 'ReadingController', ['$rootScope', '$scope', '$state', '$statePa
     loadContent().then (content) ->
         $scope.pages.push content
         $scope.options.first_time = no
+        $scope.scrollTo = $stateParams.scrollTo
 
     error = (err) ->
         $scope.progress.status = 'error'

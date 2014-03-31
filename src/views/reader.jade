@@ -1,5 +1,5 @@
 ion-view(title='{{ title }}', right-buttons='rightButtons')
-    ion-content(has-header='true')
+    ion-content(has-header='true', delegate-handle='readerScroll')
         div(ng-switch='progress.status')
             div(ng-switch-default)
                 .button-bar.bar-subheader(ng-if='online && options.audio.enabled')
@@ -10,13 +10,14 @@ ion-view(title='{{ title }}', right-buttons='rightButtons')
                     button.button.button.icon.ion-pause(ng-show='audioPlayer.playing', ng-click='audioPlayer.pause()')
                     //- button.button.button.icon.ion-ios7-fastforward(ng-click='audioPlayer.next()')
                 //- TODO: fix index issue
-                span.page(ng-repeat='page in pages', ng-class='{ "arabic-only": options.explanations.ids.length == 0 || !options.explanations.enabled }')
-                    span.aya(ng-repeat='aya in page', ng-class='{ "item item-text-wrap": aya.explanations.length > 0 }')
+                span.page(ng-repeat='page in pages', scroll-to='{{ scrollTo }}', ng-class='{ "arabic-only": options.explanations.ids.length == 0 || !options.explanations.enabled }')
+                    span.aya(id='{{ aya.gid }}', ng-repeat='aya in page', ng-class='{ "item item-text-wrap": aya.explanations.length > 0 }')
                         h2.sura-name.item.item-divider(ng-if='aya.aya_id == 1'): b {{ aya.sura_name }}
                         span(ng-if='options.reader.arabic_text', ng-click='audioPlayer.play({{ aya.index }})', index='{{ aya.index }}')
                             span.aya-text(colorize='{{ options.reader.colorized }}', colorize-text='{{ aya.text }}', ng-class='{ assertive: audioPlayer.currentTrack - 1 == aya.index }')
                             i.aya-number {{ aya.aya_id_display }}
                         .explanation-text(ng-repeat='explanation in aya.explanations', dir='{{ explanation.direction }}')
+                            i.aya-number.explanation-aya-number(ng-if='explanation.language != "ar"') {{ aya.aya_id }}
                             | {{ explanation.text }}
 
                 .item.item-text-wrap(ng-if='view.current < view.total')
@@ -27,6 +28,7 @@ ion-view(title='{{ title }}', right-buttons='rightButtons')
                     i.icon.placeholder-icon.ion-loading-c.icon-large
                     div(ng-if='options.first_time')
                         h2 Indexing databases for the first time...
+                        div(ng-if='progress.message') {{ progress.message | progress }}
                         small This may take a few minutes.
                             | Please allow the application to store data for offline use if asked by your browser
             
