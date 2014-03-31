@@ -10,12 +10,14 @@ app.factory 'IDBStoreFactory', ['$q', '$http', '$log', 'QueryBuilder', 'Preferen
         deferred = $q.defer()
         
         get = () -> 
+            deferred.notify action: "STORE.FETCHING", data: storeName: options.storeName
             $http.get url, cache: yes
             .then(options.transformResponse)
         
         insert = (data) ->
             # TODO: clear database
             # console.log 'DATA:', data
+            deferred.notify action: "STORE.INSERTING", data: storeName: options.storeName
             d = $q.defer()
             store.putBatch data, () ->
                 d.resolve store
@@ -35,7 +37,7 @@ app.factory 'IDBStoreFactory', ['$q', '$http', '$log', 'QueryBuilder', 'Preferen
         store.onStoreReady = () ->
             if Number Preferences["#{options.storeName}-version"] is options.dbVersion
                 deferred.resolve store
-            else get().then(insert).then (store) -> deferred.resolve store
+            else get().then(insert).then deferred.resolve
         store.onError = (err) ->
             deferred.reject err
 
