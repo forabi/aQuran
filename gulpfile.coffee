@@ -119,12 +119,14 @@ gulp.task 'manifest', () ->
 gulp.task 'flags', ['translations'], () ->
     gulp.src (config.countries.map (country) -> "flags/1x1/#{country.toLowerCase()}.*"), cwd: "#{config.bower}/flag-icon-css"
     .pipe plugins.using()
+    .pipe plugins.cached()
     .pipe gulp.dest "dist/#{config.target}/flags/1x1"
 
 gulp.task 'less', ['flags', 'css'], () ->
     gulp.src config.src.less, cwd: 'src'
     .pipe plugins.less sourceMap: config.sourceMaps, compress: config.env is 'production', paths: config.bower
     .pipe plugins.using()
+    .pipe plugins.cached()
     .pipe plugins.tap (file) ->
         config.styles.push path.relative 'src', file.path
     .pipe gulp.dest "dist/#{config.target}/styles"
@@ -136,14 +138,17 @@ gulp.task 'css', () ->
     .pipe plugins.using()
     .pipe plugins.tap (file) ->
         config.styles.push path.join 'styles', path.relative config.bower, file.path
+    .pipe plugins.cached()
     .pipe gulp.dest "dist/#{config.target}/styles"
 
     plugins.bowerFiles()
     .pipe plugins.filter ['**/fonts/*']
+    .pipe plugins.cached()
     .pipe gulp.dest "dist/#{config.target}/styles"
 
 gulp.task 'amiri', () ->
     gulp.src 'resources/amiri/*.ttf', cwd: 'src', base: 'src'
+    .pipe plugins.cached()
     .pipe gulp.dest "dist/#{config.target}"
 
 gulp.task 'styles', ['less', 'css', 'amiri']

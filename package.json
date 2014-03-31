@@ -9,7 +9,7 @@
     "sqlite3": "~2.2.0",
     "gulp-rename": "^1.1.0",
     "gulp-uglify": "^0.2.1",
-    "gulp-changed": "^0.2.1",
+    "gulp-changed": "^0.3.0",
     "gulp-livereload": "^1.1.1",
     "gulp-coffeelint": "^0.2.2",
     "gulp-coffee": "^1.4.1",
@@ -36,7 +36,8 @@
     "gulp-using": "0.0.1",
     "stream-combiner": "0.0.4",
     "gulp-tap": "^0.1.1",
-    "graceful-fs": "^2.0.3"
+    "graceful-fs": "^2.0.3",
+    "gulp-cached": "0.0.3"
   },
   "engines": {
     "node": ">=0.8.0"
