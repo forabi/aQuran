@@ -332,9 +332,12 @@ gulp.task 'translations', () ->
 
 gulp.task 'recitations', () ->
     (
-        if not config.download then gulp.src 'resources/recitations.js', cwd: 'src'
+        if not config.download then gulp.src 'resources/recitations.json', cwd: 'src'
         else
             plugins.download 'http://www.everyayah.com/data/recitations.js'
+            .pipe plugins.rename (file) -> 
+                file.extname = '.json'
+                file
             .pipe gulp.dest 'src/resources'
     )
     .pipe plugins.rename (file) ->
