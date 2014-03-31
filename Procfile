@@ -1,1 +1,1 @@
-web: gulp build serve --production --port $PORT
+web: gulp clean; gulp build serve --production --port $PORT --download
