@@ -1,4 +1,9 @@
 ion-view(title='{{ title }}', right-buttons='rightButtons')
+    ion-nav-buttons(side='right')
+        a.button(ui-sref='search')
+            .icon.ion-android-search
+        a.button(ui-sref='preferences')
+            .icon.ion-android-mixer
     ion-content(has-header='true', delegate-handle='readerScroll')
         div(ng-switch='progress.status')
             div(ng-switch-default)

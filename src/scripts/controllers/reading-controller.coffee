@@ -5,23 +5,6 @@ app.controller 'ReadingController', ['$rootScope', '$scope', '$state', '$statePa
         
     $scope.playlist = []
 
-    $scope.rightButtons = [
-        (
-            type: "button-#{$scope.options.theme}"
-            content: '<i class="icon ion-android-search"></i>'
-            tap: (e) ->
-                $state.go 'search'
-        )
-        (
-            type: "button-#{$scope.options.theme}"
-            content: '<i class="icon ion-android-mixer"></i>'
-            tap: (e) ->
-                $state.go 'preferences'
-        )
-    ]
-
-    $scope.playlist = []
-
     $scope.pages = []
 
     $scope.view = _.defaults $stateParams, $scope.options.reader.view
@@ -30,7 +13,6 @@ app.controller 'ReadingController', ['$rootScope', '$scope', '$state', '$statePa
         status: 'init'
         total: 0
         current: 0
-
          
     transform = (docs) ->
         # default sorting

@@ -5,22 +5,11 @@ app.factory 'QueryBuilder', ['$q', '$log', ($q, $log) ->
         _limit = undefined
         _lower = undefined
         _upper = undefined
-        _exclude_lower = undefined
-        _exclude_upper = undefined
-        _order = undefined
-        _one = undefined
-        _transforms = undefined
-
-        _reset = () ->
-            _index = undefined
-            _limit = undefined
-            _lower = undefined
-            _upper = undefined
-            _exclude_lower = no
-            _exclude_upper = no
-            _order = 'ASC'
-            _one = no
-            _transforms = transforms || []
+        _exclude_lower = no
+        _exclude_upper = no
+        _order = 'ASC'
+        _one = no
+        _transforms = transforms || []
 
         _parse_bounds = (range) ->
             if range instanceof Array # Something like [1, 34]
@@ -76,9 +65,6 @@ app.factory 'QueryBuilder', ['$q', '$log', ($q, $log) ->
                 else results
             .then (results) ->
                 results = results[0] || null if _one # Returns only one object for findOne()
-                results
-            .then (results) ->
-                _reset()
                 results
 
 
@@ -165,7 +151,6 @@ app.factory 'QueryBuilder', ['$q', '$log', ($q, $log) ->
             _index = 'id'
             find query
 
-        _reset()
         transform: transform
         find: find
         findOne: findOne
