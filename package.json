@@ -1,6 +1,9 @@
 {
   "name": "aQuran",
   "version": "0.0.0",
+  "scripts": {
+  	"start": "gulp clean; gulp build serve --production --port $OPENSHIFT_NODEJS_PORT --download"
+  },
   "devDependencies": {
     "bower": "latest",
     "gulp": "^3.5.2",

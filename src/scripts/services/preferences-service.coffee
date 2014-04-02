@@ -38,6 +38,10 @@ app.service 'Preferences', ['$localStorage', ($localStorage) ->
             auto_quality: yes
             enabled: yes
 
+        connection:
+            bandwidth: 0.5 # MB/s
+            auto: no
+
 
     # get: (section) -> Storage.get section
     # set: (section) -> Storage.set section

@@ -34,20 +34,23 @@ app.factory 'AudioSrcFactory', ['$sce', 'EveryAyah', 'Preferences', 'RecitationS
                         # The current working draft of the Network Information API
                         # provides an estimation of the bandwidth in MB/s
                         # When bandwidth is unknown, we get Infinity
-                        bandwidth = navigator.mozConnection.bandwidth # TODO: polyfill navigator.connection
-                        # $log.debug 'Bandwidth:', bandwidth
-                        # $log.debug 'Available:', available
+                        bandwidth = if not Preferences.connection.auto then Preferences.connection.bandwidth else navigator.mozConnection.bandwidth
+                        # TODO: polyfill navigator.connection
+                        
+                        $log.debug 'Bandwidth:', bandwidth
+                        $log.debug 'Available:', available
                         best = switch bandwidth
                             when Infinity then max available
                             else # Remove everything larger than connection bandwidth
                                 _.remove available, (item) -> bandwidth < item * 8 / 1024 # convert kbit/s to MB/s
                                 max available
                         # $log.debug "Best quality:", best
-                        best || available[0] # minimum available bitrate if bandwidth is too low
+                        if best is Infinity then available[0] else best # minimum available bitrate if bandwidth is too low
 
                     RecitationService.properties.then (db) ->
                         db.find().where('name').is(Preferences.audio.recitation.name).exec()
                     .then (available) ->
+                        $log.debug available
                         available.map (item) ->
                             Number item.subfolder.match(/(\d+)kbps/i)[1]
                     .then choose
