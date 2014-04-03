@@ -122,7 +122,7 @@ gulp.task 'flags', ['translations'], () ->
     gulp.src (config.countries.map (country) -> "flags/1x1/#{country.toLowerCase()}.*"), cwd: "#{config.bower}/flag-icon-css"
     .pipe plugins.using()
     .pipe plugins.cached()
-    .pipe gulp.dest "#{config.dist}/flags/1x1"
+    .pipe gulp.dest "#{config.dist}/styles/flag-icon-css/flags/1x1"
 
 gulp.task 'scss', ['flags', 'css'], () ->
     gulp.src config.src.scss, cwd: 'src'
@@ -139,7 +139,7 @@ gulp.task 'scss', ['flags', 'css'], () ->
 gulp.task 'css', () ->
     # bundle = (bundle) ->
     plugins.bowerFiles()
-    .pipe plugins.filter ['**/ionic/**/*.css']
+    .pipe plugins.filter ['**/ionic/**/*.css', '**/flag-icon-css/css/flag-icon.css']
     .pipe plugins.using()
     .pipe plugins.tap (file) ->
         config.styles.push path.join 'styles', path.relative config.bower, file.path
@@ -399,7 +399,7 @@ gulp.task 'release', () ->
 
 gulp.task 'data', ['quran', 'recitations', 'translations', 'search']
 gulp.task 'build', ['data', 'flags', 'images', 'scripts', 'styles', 'html', 'manifest']
-gulp.task 'default', ['build']
+gulp.task 'default', ['build', 'cache']
 
 gulp.task 'serve', () ->
     connect
