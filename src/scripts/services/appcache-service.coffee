@@ -1,4 +1,4 @@
-app.service 'AppCacheManager', ['$window', '$rootScope', ($window, $rootScope) ->
+app.service 'AppCacheManager', ['$window', '$rootScope', '$log', ($window, $rootScope, $log) ->
     $window.applicationCache.onchecking = (e) ->
         $log.info 'AppCache Checking...', e
         # Checking for updates
