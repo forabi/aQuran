@@ -1,0 +1,6 @@
+src
+tmp
+node_modules
+dist
+*.sublime-project
+*.sublime-workspace
