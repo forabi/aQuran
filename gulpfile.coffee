@@ -380,7 +380,7 @@ gulp.task 'cache', ['build'], () ->
         gulp.src "#{config.dist}/#{config.cacheManifest}"
         .pipe plugins.clean()
 
-gulp.task 'package', ['dist'], () ->
+gulp.task 'package', ['build', 'cache'], () ->
     switch config.target
         when 'chrome'
             '' # Do something
@@ -399,7 +399,7 @@ gulp.task 'release', () ->
 
 gulp.task 'data', ['quran', 'recitations', 'translations', 'search']
 gulp.task 'build', ['data', 'flags', 'images', 'scripts', 'styles', 'html', 'manifest']
-gulp.task 'dist', ['build', 'cache']
+gulp.task 'default', ['build']
 
 gulp.task 'serve', () ->
     connect
