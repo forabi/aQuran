@@ -8,12 +8,12 @@ app.factory 'IDBStoreFactory', ['$q', '$http', '$log', 'QueryBuilder', 'Preferen
             transformResponse: (response) -> response.data
 
         deferred = $q.defer()
-        
-        get = () -> 
+
+        get = () ->
             deferred.notify action: "STORE.FETCHING", data: storeName: options.storeName
             $http.get url, cache: yes
             .then(options.transformResponse)
-        
+
         insert = (data) ->
             # TODO: clear database
             # console.log 'DATA:', data

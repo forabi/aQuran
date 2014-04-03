@@ -1,7 +1,7 @@
 # nedb = require 'nedb'
 # async = require 'async'
-# module.exports = (app) -> 
-app.service 'ContentService', ['IDBStoreFactory', 'ExplanationFactory', 'AudioSrcFactory', 'Preferences', '$q', '$log', (IDBStoreFactory, ExplanationFactory, AudioSrcFactory, Preferences, $q, $log) -> 
+# module.exports = (app) ->
+app.service 'ContentService', ['IDBStoreFactory', 'ExplanationFactory', 'AudioSrcFactory', 'Preferences', '$q', '$log', (IDBStoreFactory, ExplanationFactory, AudioSrcFactory, Preferences, $q, $log) ->
     IDBStoreFactory 'resources/quran.json',
         dbVersion: 3
         storeName: 'ayas'
@@ -35,7 +35,7 @@ app.service 'ContentService', ['IDBStoreFactory', 'ExplanationFactory', 'AudioSr
                 # We expect a promise because the previous transform is async
                 promise.then (aya) ->
                     if Preferences.audio.enabled
-                        AudioSrcFactory aya.sura_id, aya.aya_id 
+                        AudioSrcFactory aya.sura_id, aya.aya_id
                         .then (audioSrc) ->
                             aya.recitation = audioSrc
                             aya

@@ -1,6 +1,6 @@
-@import "variables";
-@import (reference) "mixins";
-@import "flag-icon-css/less/flag-icon";
+@import "_variables";
+@import "_mixins";
+@import "flag-icon-css/css/flag-icon.css";
 
 @font-face {
     font-family: "Amiri Quran";
@@ -39,11 +39,11 @@
     &.arabic-only {
         padding: 15px;
         text-align-last: justify;
-        text-justify: auto;  
+        text-justify: auto;
     }
     .sura-name {
-        font-family: @sura-name-font-family;
-        font-size: @sura-name-font-size;
+        font-family: $sura-name-font-family;
+        font-size: $sura-name-font-size;
         text-align: center;
         font-weight: bold;
     }
@@ -53,8 +53,8 @@
     direction: rtl !important;
     .aya-text {
         white-space: normal;
-        font-family: @aya-font-family;
-        line-height: @aya-line-height;
+        font-family: $aya-font-family;
+        line-height: $aya-line-height;
         pointer-events: none;
         .playing {
             color: blue;
@@ -62,10 +62,10 @@
     }
     .aya-number {
         &:not(.explanation-aya-number) {
-            line-height: @aya-line-height;
-            font-family: @aya-number-font-family;
-            font-size: @aya-number-font-size;
-            color: @aya-number-color;
+            line-height: $aya-line-height;
+            font-family: $aya-number-font-family;
+            font-size: $aya-number-font-size;
+            color: $aya-number-color;
             margin-right: 4px;
             margin-left: 4px;
             &::before {
@@ -82,31 +82,31 @@
                 // content: ']';
                 content: '.';
             }
-        }        
+        }
     }
     &:not(.single-aya), &:not(.search) {
         .aya-text {
-            font-size: @aya-font-size;
-        } 
+            font-size: $aya-font-size;
+        }
     }
     &.single-aya {
         .aya-text {
-            font-size: @aya-font-size * 1.2;
-            text-align-last: initial;  
+            font-size: $aya-font-size * 1.2;
+            text-align-last: initial;
         }
     }
     &.search {
         .aya-text {
-            line-height: @aya-line-height * .8;
-            font-size: @aya-font-size * .8;
+            line-height: $aya-line-height * .8;
+            font-size: $aya-font-size * .8;
             text-align-last: initial;
         }
     }
     .explanation-text {
         padding-top: 15px;
-        font-family: @explanation-font-family;
-        font-size: @explanation-font-size;
-        line-height: @explanation-line-height;
+        font-family: $explanation-font-family;
+        font-size: $explanation-font-size;
+        line-height: $explanation-line-height;
         text-align: justify;
     }
 }
@@ -144,12 +144,12 @@
     }
     .diacritics {
         font-family: "Amiri Quran Diacritics";
-        color: @diacritic-color;
+        color: $diacritic-color;
         opacity: 0.8
     }
     .quranic-signs {
         font-family: "Amiri Quran Quanic Signs";
-        color: @annotation-sings-color;
+        color: $annotation-sings-color;
         opacity: 0.8
     }
     .letters {

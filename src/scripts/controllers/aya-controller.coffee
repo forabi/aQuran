@@ -3,7 +3,7 @@ app.controller 'AyaController', ['$scope', 'ContentService' , '$stateParams', '$
     $scope.progress =
         status: 'init'
 
-    $scope.aya = 
+    $scope.aya =
         gid: Number $stateParams.gid || 1
 
     ContentService.then (db) ->

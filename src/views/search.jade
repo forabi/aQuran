@@ -11,7 +11,7 @@ ion-view(title='Search')
                         )
                 button.button.button-small.button-positive(type='submit')
                     i.icon.ion-ios7-search-strong
-                
+
             span(ng-switch='progress.status')
                 div(ng-switch-when='ready')
                     .item.item-text-wrap(ng-repeat='aya in search.results')
@@ -20,7 +20,7 @@ ion-view(title='Search')
                                 a.subdued Juz {{ aya.juz_id }}
                                 a.subdued {{ aya.sura_name }}
                                 a.subdued Aya {{ aya.aya_id }}
-                        
+
                         a.sura-body(
                             ui-sref='reader({ current: {{ aya.page_id }}, scrollTo: {{ aya.gid }}, highlight: "{{ search.query }}" })')
                             .aya.search(ng-switch='aya.html.length > 0')

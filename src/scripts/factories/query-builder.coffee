@@ -1,5 +1,5 @@
 # _ = require('lodash')
-app.factory 'QueryBuilder', ['$q', '$log', ($q, $log) -> 
+app.factory 'QueryBuilder', ['$q', '$log', ($q, $log) ->
     (db, transforms) ->
         _index = undefined
         _limit = undefined
@@ -36,25 +36,25 @@ app.factory 'QueryBuilder', ['$q', '$log', ($q, $log) ->
 
         exec = () ->
             deferred = $q.defer() # A deferred promise
-            
+
             success = (result) ->
                 deferred.resolve result
-            
+
             error = (err) ->
                 # $log.error err
                 deferred.reject err
 
             # Options for IDBWrapper
-            options = 
+            options =
                 index: _index
                 keyRange: _make_range()
                 order: _order
                 onError: error
-                
+
             # $log.debug 'Executing query:', options
             # IDBWrapper method
             db.query success, options
-            
+
 
             deferred.promise
             .then (results) ->
@@ -85,14 +85,14 @@ app.factory 'QueryBuilder', ['$q', '$log', ($q, $log) ->
 
         where = (index) ->
             _index = index
-            
+
             between = (lower, upper) ->
                 _lower = lower
                 _upper = upper
                 _exclude_lower = yes
                 _exclude_upper = yes
                 limit: limit, sort: sort, transform: transform, exec: exec
-            
+
             from = (lower) ->
                 _lower = lower
                 limit: limit, sort: sort, transform: transform, exec: exec,
@@ -106,11 +106,11 @@ app.factory 'QueryBuilder', ['$q', '$log', ($q, $log) ->
                     _upper = value
                     exec: exec
                 else exec: exec, from: from, between: between, transform: transform # Syntactic sugar
-            
+
             between: between, is: is_, from: from, limit: limit, exec: exec, transform: transform
 
         find = (query, range) ->
-            switch 
+            switch
                 # db.find('page_id') or db.find()
                 when not query or typeof query is 'string'
                     _index = query

@@ -23,7 +23,7 @@ app.controller 'ExplanationsController', ['$scope', '$log', 'ExplanationService'
             # $log.debug 'item.id:', item.id
             # $log.debug '$scope.options.explanations.ids:', $scope.options.explanations.ids
             _.contains $scope.options.explanations.ids, item.id
-        
+
         db.find()
         # .sort language: 1
         .exec()
@@ -33,7 +33,7 @@ app.controller 'ExplanationsController', ['$scope', '$log', 'ExplanationService'
             $scope.explanations.enabled = _.filter $scope.explanations.available, (item) -> _.contains $scope.options.explanations.ids, item.id
     .catch (err) ->
         $log.error err
-        
+
         # db.find id: $in: $scope.options.explanations.ids
         # # .sort language: 1
         # .exec (err, properties) ->

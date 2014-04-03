@@ -1,8 +1,8 @@
 # _ = require 'lodash'
 # module.exports = (app) ->
-app.service 'SearchService', ['APIService', 'ContentService', 'ArabicService', 'Preferences', '$log', '$http', '$q', (APIService, ContentService, Arabic, Preferences, $log, $http, $q) -> 
+app.service 'SearchService', ['APIService', 'ContentService', 'ArabicService', 'Preferences', '$log', '$http', '$q', (APIService, ContentService, Arabic, Preferences, $log, $http, $q) ->
     # We cannot perform a regex search on an indexedDB
-    # so we load a subset of aya data into memory with
+    # so we load a subset of ayas data into memory with
     # the excellent louischatriot/nedb which allows
     # queries with MongoDb-like syntax
 
@@ -55,10 +55,10 @@ app.service 'SearchService', ['APIService', 'ContentService', 'ArabicService', '
         .then (response) ->
             $log.debug 'Online search response:', response
             # Remap response to match assumed schema
-            data = _(response.data.search.ayas).map (aya, index) -> 
+            data = _(response.data.search.ayas).map (aya, index) ->
                 gid: aya.identifier.gid, index: index
                 # $log.log 'Processing aya:', aya
-                # _.extend aya.identifier, 
+                # _.extend aya.identifier,
                 #     index: index
                 #     html: aya.aya.text
                 #     standard_full: aya.aya.text_no_highlight
@@ -70,9 +70,9 @@ app.service 'SearchService', ['APIService', 'ContentService', 'ArabicService', '
             .value()
             # $log.debug 'Tranformed online search data:', data
             data
-            
 
-    methods.offline = (str, options) -> 
+
+    methods.offline = (str, options) ->
         # Make sure our database is only loaded once,
         # and only when performing an offline search
         (database || loadDatabase()).then (db) ->
@@ -106,7 +106,7 @@ app.service 'SearchService', ['APIService', 'ContentService', 'ArabicService', '
             #     str = str
             #     .split /\s/g
             #     .map (word) -> '\b' + word + '\b'
-            #     .join ' ' 
+            #     .join ' '
 
             regex = new RegExp str, 'gi'
             # $log.debug 'Matching against', regex
@@ -119,7 +119,7 @@ app.service 'SearchService', ['APIService', 'ContentService', 'ArabicService', '
             .exec (err, all) ->
                 if err then throw err
                 deferred.resolve all
-            
+
             # cursor.sort options.sort # This will not work
 
             # Sorting in NeDB is broken,

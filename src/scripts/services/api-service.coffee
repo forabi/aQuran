@@ -1,4 +1,4 @@
-app.service 'APIService', ['API', '$http', '$log', (API, $http, $log) ->     
+app.service 'APIService', ['API', '$http', '$log', (API, $http, $log) ->
     checkForErrors = (response) ->
         throw 'API Error' if response.data.error.code is not 0
         response
@@ -11,7 +11,7 @@ app.service 'APIService', ['API', '$http', '$log', (API, $http, $log) ->
             $log.debug 'Response for suggestions', response
             suggestions = []
             _(response.data.suggest).each (words, key) ->
-                words.forEach (word) -> suggestions.push 
+                words.forEach (word) -> suggestions.push
                     string: term.replace key, word
                     replace: key
                     with: word

@@ -61,12 +61,12 @@ config = _.defaults gutil.env,
         translations: 'resources/translations/*.trans.zip'
         translationsTxt: 'resources/translations.txt'
         hosny: 'khaledhosny-quran/quran/*.txt'
-        less: 'styles/main.less'
+        scss: 'styles/main.scss'
         css: 'styles/*.css'
         jade: ['index.jade', 'views/*.jade']
         coffee: ['!chromereload.coffee', '!launcher.coffee', '!manifest.coffee', 'scripts/**/*.coffee']
         js: 'scripts/*.js'
-    coffeeConcat: 
+    coffeeConcat:
         file: 'main.js'
         src: [
             'main*'
@@ -101,7 +101,7 @@ gulp.task 'watch', () ->
     gulp.watch config.src.manifest, cwd: 'src', ['manifest']
     gulp.watch [config.src.coffee, config.src.js], cwd: 'src', ['scripts', 'html']
     gulp.watch config.src.jade, cwd: 'src', ['html']
-    gulp.watch config.src.less, cwd: 'src', ['styles']
+    gulp.watch config.src.scss, cwd: 'src', ['styles']
 
 gulp.task 'clean', () ->
     gulp.src config.target, cwd: 'dist'
@@ -124,9 +124,12 @@ gulp.task 'flags', ['translations'], () ->
     .pipe plugins.cached()
     .pipe gulp.dest "#{config.dist}/flags/1x1"
 
-gulp.task 'less', ['flags', 'css'], () ->
-    gulp.src config.src.less, cwd: 'src'
-    .pipe plugins.less sourceMap: config.sourceMaps, compress: config.env is 'production', paths: config.bower
+gulp.task 'scss', ['flags', 'css'], () ->
+    gulp.src config.src.scss, cwd: 'src'
+    .pipe plugins.sass
+        sourceComments: if config.env is not 'production' then 'map'
+        outputStyle: if config.env is 'production' then 'compressed'
+        includePaths: [config.bower]
     .pipe plugins.using()
     .pipe plugins.cached()
     .pipe plugins.tap (file) ->
@@ -153,7 +156,7 @@ gulp.task 'amiri', () ->
     .pipe plugins.cached()
     .pipe gulp.dest config.dist
 
-gulp.task 'styles', ['less', 'css', 'amiri']
+gulp.task 'styles', ['scss', 'css', 'amiri']
 
 gulp.task 'jade', ['scripts', 'styles'], () ->
 
@@ -196,7 +199,7 @@ gulp.task 'js', (callback) ->
             .pipe plugins.concat bundle.file
             .pipe gulp.dest "#{config.dist}/scripts"
         )
-  
+
     config.scripts = config.bundles.map (bundle) -> "scripts/#{bundle.file}"
     Q.all config.bundles.map bundle
 
@@ -220,7 +223,7 @@ gulp.task 'quran', (callback) ->
             files = glob.sync config.src.hosny, cwd: 'src'
             numbers = /[٠١٢٣٤٥٦٧٨٩]+/g # Hindi numbers
             strip = /\u06DD|[٠١٢٣٤٥٦٧٨٩]/g # Aya number and aya sign
-            
+
             process = (file) ->
                 deferred = Q.defer()
                 fs.readFile (path.join 'src', file), (err, data) ->
@@ -228,7 +231,7 @@ gulp.task 'quran', (callback) ->
                     text = data.toString()
                     aya_ids = text.match numbers # Get aya_ids from file contents
                     sura_id = Number file.match /\d+/g # Get sura_id from filename
-                    
+
                     text = text.replace strip, '' # Strip aya number and aya sign
                     .trim()
                     .split '\n'
@@ -246,7 +249,7 @@ gulp.task 'quran', (callback) ->
                 _.merge rows, json # Merge JSON with SQL data
             .then(JSON.stringify)
             .then(write)
-            
+
         else write JSON.stringify rows
 
 gulp.task 'search', ['quran'], () ->
@@ -303,18 +306,18 @@ gulp.task 'translations', () ->
             .pipe (gulp.dest 'src/resources/translations').on('end', () ->
                 deferred.resolve dest
                 )
-            
+
         deferred.promise
 
     if config.translations
         if typeof config.translations is 'string'
                 config.translations = config.translations.split /,/g
 
-        urls = switch 
+        urls = switch
             when config.translations instanceof Array
                 config.translations.map (id) ->
                     regex = new RegExp ".+\/#{id}.*.trans.zip$", 'gi'
-                    _.where urls, (url) -> 
+                    _.where urls, (url) ->
                         url.match regex
             else urls
 
@@ -342,7 +345,7 @@ gulp.task 'recitations', () ->
         if not config.download then gulp.src 'resources/recitations.json', cwd: 'src'
         else
             plugins.download 'http://www.everyayah.com/data/recitations.js'
-            .pipe plugins.rename (file) -> 
+            .pipe plugins.rename (file) ->
                 file.extname = '.json'
                 file
             .pipe gulp.dest 'src/resources'
@@ -373,7 +376,7 @@ gulp.task 'cache', ['build'], () ->
             filename: config.cacheManifest
             exclude: config.cacheManifest
         .pipe gulp.dest config.dist
-    else 
+    else
         gulp.src "#{config.dist}/#{config.cacheManifest}"
         .pipe plugins.clean()
 
@@ -389,7 +392,7 @@ gulp.task 'package', ['dist'], () ->
         else # Standard web app
             # Something
 
-gulp.task 'release', () -> 
+gulp.task 'release', () ->
     if config.bump
         config.version += 1
         config.date = new Date()

@@ -17,7 +17,7 @@
             query: $stateParams.query || ''
             suggestions: []
             results: []
-            execute: (query = $scope.search.query) -> 
+            execute: (query = $scope.search.query) ->
                 if query
                     # $log.debug 'Search executing...'
                     $scope.progress.status = 'searching'

@@ -6,9 +6,9 @@ ion-view(title='About {{ info.name }}')
                 img(src='icons/icon-48.png')
                 | {{ info.description }}
                 div: small Version {{ info.version }}, released on {{ info.released | date }}
-                
+
             a(href='{{ info.developer.url }}').item.item-text-wrap Developed by {{ info.developer.name }}
-            
+
             .item.item-divider.item-text-wrap Components
             small.item.item-text-wrap This app uses components from the following projects:
             a(href='http://www.alfanous.org/').item.item-text-wrap
@@ -26,4 +26,4 @@ ion-view(title='About {{ info.name }}')
                 | of the Uthamnic script
             .item.item-text-wrap <b>The EveryAyah</b> team for the hosting of recitations
             .item.item-text-wrap <b>The Arabia I/O community</b> for their kind support and suggestions
-            
+

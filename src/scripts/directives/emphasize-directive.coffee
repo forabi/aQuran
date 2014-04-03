@@ -1,5 +1,5 @@
 # module.exports = (app) ->
-app.directive 'emphasize', ['$timeout', ($timeout) -> 
+app.directive 'emphasize', ['$timeout', ($timeout) ->
     restrict: 'A'
     replace: yes
     link: ($scope, $element, $attrs) ->
@@ -8,7 +8,7 @@ app.directive 'emphasize', ['$timeout', ($timeout) ->
             console.log text.replace regexp, '<em>$1</em>'
             text.replace regexp, '<em>$1</em>'
 
-        $timeout () -> 
+        $timeout () ->
             term = $attrs['emphasize']
             $element.html emphasize $element.text(), term
 ]

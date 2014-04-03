@@ -37,7 +37,7 @@ ion-view(title='{{ title }}', right-buttons='rightButtons')
                         div(ng-if='progress.message') {{ progress.message | progress }}
                         small This may take a few minutes.
                             | Please allow the application to store data for offline use if asked by your browser
-            
+
             .card.text-center(ng-switch-when='error')
                 .item.item-body
                     i.icon.placeholder-icon.ion-alert-circled.icon-large

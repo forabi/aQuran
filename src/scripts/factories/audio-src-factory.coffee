@@ -17,14 +17,14 @@ app.factory 'AudioSrcFactory', ['$sce', 'EveryAyah', 'Preferences', 'RecitationS
     (sura, aya) ->
         sura = number sura
         aya  = number aya
-        
+
         if not Preferences.audio.auto_quality or not navigator.mozConnection
             subfolder = Preferences.audio.recitation.subfolder
             src = "#{EveryAyah}/#{subfolder}/#{sura}#{aya}.mp3"
             $q.when
                 src: $sce.trustAsResourceUrl src
                 type: 'audio/mp3'
-        else        
+        else
             getQuality = () ->
                 cached = CacheService.get "audio:#{Preferences.audio.recitation.name}:quality"
                 if cached then $q.when cached
@@ -40,7 +40,7 @@ app.factory 'AudioSrcFactory', ['$sce', 'EveryAyah', 'Preferences', 'RecitationS
                         available = _.clone _available
                         bandwidth = if not Preferences.connection.auto then Preferences.connection.bandwidth else navigator.mozConnection.bandwidth
                         # TODO: polyfill navigator.connection
-                        
+
                         $log.debug 'Bandwidth:', bandwidth
                         $log.debug 'Available:', available
                         best = switch bandwidth
@@ -61,7 +61,7 @@ app.factory 'AudioSrcFactory', ['$sce', 'EveryAyah', 'Preferences', 'RecitationS
                     .then (quality) ->
                         CacheService.put "audio:#{Preferences.audio.recitation.name}:quality", quality
                         quality
-           
+
                getQuality().then (quality) ->
                     id = Preferences.audio.recitation.subfolder.match(/^(.+)_\d+kbps/i)[1]
                     subfolder = "#{id}_#{quality}kbps"

@@ -2,7 +2,7 @@
 # q = require 'q'
 # module.exports = (app) ->
 app.controller 'ReadingController', ['$rootScope', '$scope', '$state', '$stateParams', '$log', 'ContentService', 'Preferences', ($rootScope, $scope, $state, $stateParams, $log, ContentService, Preferences) ->
-        
+
     $scope.playlist = []
 
     $scope.pages = []
@@ -22,17 +22,17 @@ app.controller 'ReadingController', ['$rootScope', '$scope', '$state', '$statePa
 
     # $scope.$on 'audioPlayer.play', (i) ->
     #     $log.debug "Playing #{i}"
-         
+
     transform = (docs) ->
         # default sorting
         _.chain docs
-        .map (aya, index) -> 
+        .map (aya, index) ->
             $scope.playlist.push aya.recitation
             aya.index = index
             aya
         # .sortBy 'gid'
         # .groupBy 'sura_id'
-        # .map (ayas, key) -> 
+        # .map (ayas, key) ->
         #     ayas: ayas
         #     sura_name: ayas[0].sura_name
         #     sura_name_romanization: ayas[0].sura_name_romanization

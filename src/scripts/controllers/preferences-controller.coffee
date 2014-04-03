@@ -5,7 +5,7 @@ app.controller 'PreferencesController', ['$scope', '$log', 'ExplanationService',
         (value: 'sura_name_en', name: 'English', example: 'The Opening')
         (value: 'sura_name_romanization', name: 'Romanized', example: 'Al-Fatiha')
     ]
-    
+
     $scope.themes = [
         (id: 'light', name: 'Light')
         (id: 'stable', name: 'Stable')

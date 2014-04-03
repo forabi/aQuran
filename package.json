@@ -38,7 +38,8 @@
     "gulp-tap": "^0.1.1",
     "graceful-fs": "^2.0.3",
     "gulp-cached": "0.0.3",
-    "protractor": "^0.20.1"
+    "protractor": "^0.20.1",
+    "gulp-sass": "^0.7.1"
   },
   "engines": {
     "node": ">=0.8.0"

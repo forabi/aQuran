@@ -22,7 +22,7 @@ ion-view(title='Preferences')
                     label.toggle
                         input(type='checkbox', ng-model='options.reader.colorized')
                         .track: .handle
-            
+
             .item.item-divider.item-text-wrap Translations
             .item.item-toggle.item-text-wrap Enable translations
                 label.toggle
@@ -43,7 +43,7 @@ ion-view(title='Preferences')
                     .track: .handle
             a.item.item-text-wrap(ui-sref='recitations', ng-if='options.audio.enabled')
                 | Choose recitation
-            
+
             .item.item-divider Search
             .item.item-toggle.item-text-wrap Use online search for better results
                 div: small When online, aQuran will connect to Al-Fanous web service to provide better search results.

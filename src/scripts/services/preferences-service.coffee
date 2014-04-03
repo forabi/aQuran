@@ -12,7 +12,7 @@ app.service 'Preferences', ['$localStorage', ($localStorage) ->
             online:
                 enabled: no
                 prompt: yes
-        
+
         explanations:
             enabled: yes
             ids: ['ar.muyassar', 'en.ahmedali']
@@ -29,7 +29,7 @@ app.service 'Preferences', ['$localStorage', ($localStorage) ->
             aya_mode: 'uthmani'
             sura_name: 'sura_name_romanization'
             sura_name_transliteration: on
-        
+
         audio:
             recitation:
                 subfolder: 'Abdul_Basit_Murattal_64kbps'

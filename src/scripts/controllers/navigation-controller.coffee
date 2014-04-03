@@ -1,3 +1,3 @@
-app.controller 'NavigationController', [() -> 
-	
+app.controller 'NavigationController', [() ->
+
 ]
