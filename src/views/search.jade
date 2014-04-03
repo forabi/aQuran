@@ -1,78 +1,79 @@
 ion-view(title='Search')
     ion-content(has-header='true')
-        
-        form.card.list(ng-submit='search.execute(search.query)', auto-direction='{{ search.query }}')
-            label.item.item-input
-                input(
-                    type='search',
-                    placeholder='Search in the Holy Quran',
-                    ng-model='search.query',
-                    ng-change='progress.status="init"'
-                    )
-                button.button.button-small.button-positive.button-icon(type='submit')
-                    i.icon.placeholder-icon.ion-ios7-search-strong
+        .list
+            form.item.item-input-inset(ng-submit='search.execute(search.query)', auto-direction='{{ search.query }}')
+                label.item-input-wrapper
+                    input(
+                        type='search',
+                        placeholder='Search in the Holy Quran',
+                        ng-model='search.query',
+                        ng-change='progress.status="init"'
+                        )
+                button.button.button-small.button-positive(type='submit')
+                    i.icon.ion-ios7-search-strong
                 
-        span(ng-switch='progress.status')
-            div(ng-switch-when='ready')
-                .card(ng-repeat='aya in search.results')
-                    small.item.item-divider.item-text-wrap
-                        a.subdued Juz {{ aya.juz_id }}
-                        a.subdued {{ aya.sura_name }}
-                        a.subdued Aya {{ aya.aya_id }}
-                    
-                    a.item.item-text-wrap.sura-body(
-                        ui-sref='reader({ current: {{ aya.page_id }}, scrollTo: {{ aya.gid }}, highlight: "{{ search.query }}" })')
-                        .aya(ng-switch='aya.html.length > 0')
-                            .aya-text.layers.search(
-                                ng-switch-default,
-                                colorize='{{ options.reader.colorized }}',
-                                colorize-text='{{ aya.standard_full }}',
-                                search-text='{{ aya.standard }}',
-                                highlight='{{ search.query }}'
-                                )
-                            .aya-text(
-                                ng-switch-when='true'
-                                ng-bind-html='aya.html')
+            span(ng-switch='progress.status')
+                div(ng-switch-when='ready')
+                    .item.item-text-wrap(ng-repeat='aya in search.results')
+                        div
+                            small
+                                a.subdued Juz {{ aya.juz_id }}
+                                a.subdued {{ aya.sura_name }}
+                                a.subdued Aya {{ aya.aya_id }}
+                        
+                        a.sura-body(
+                            ui-sref='reader({ current: {{ aya.page_id }}, scrollTo: {{ aya.gid }}, highlight: "{{ search.query }}" })')
+                            .aya.search(ng-switch='aya.html.length > 0')
+                                .aya-text.layers(
+                                    ng-switch-default,
+                                    colorize='{{ options.reader.colorized }}',
+                                    colorize-text='{{ aya.standard_full }}',
+                                    search-text='{{ aya.standard }}',
+                                    highlight='{{ search.query }}'
+                                    )
+                                .aya-text(
+                                    ng-switch-when='true'
+                                    ng-bind-html='aya.html')
 
 
-            .card.text-center(ng-switch-when='searching')
-                .item.item-body
-                    i.icon.placeholder-icon.ion-loading-c.icon-large
-                    //- h2 {{ progress.message }}
+                .card.text-center(ng-switch-when='searching')
+                    .item.item-body
+                        i.icon.placeholder-icon.ion-loading-c.icon-large
+                        //- h2 {{ progress.message }}
 
-            div(ng-switch-default)
-                .card(ng-if='online && options.search.online.prompt && !options.search.online.enabled')
-                    .item.item-text-wrap
-                        | This app can provide advanced search results using Al-Fanous Quranic API.
-                        br
-                        b Do you want to turn on online results?
-                    a(ng-click='options.search.online.enabled = true').item.item-text-wrap.item-icon-left.positive
-                        i.icon.ion-checkmark-round
-                        | Yes
-                    a(ng-click='options.search.online.prompt = false').item.item-text-wrap.item-icon-left
-                        i.icon.ion-close-round
-                        | Maybe later
-                    .item.item-text-wrap
-                        small You can change this setting later in the Search section of the Preferences view
-                .card.list(ng-if='options.search.history.length')
-                    a.item.item-text-wrap.item-icon-left.positive(
-                        ng-repeat='query in options.search.history',
-                        auto-direction='{{ query }}',
-                        ng-click='search.query = query; search.execute()'
-                    )
-                        i.icon.placeholder-icon.ion-android-clock
-                        | {{ query }}
+                div(ng-switch-default)
+                    .card(ng-if='online && options.search.online.prompt && !options.search.online.enabled')
+                        .item.item-text-wrap
+                            | This app can provide advanced search results using Al-Fanous Quranic API.
+                            br
+                            b Do you want to turn on online results?
+                        a(ng-click='options.search.online.enabled = true').item.item-text-wrap.item-icon-left.positive
+                            i.icon.ion-checkmark-round
+                            | Yes
+                        a(ng-click='options.search.online.prompt = false').item.item-text-wrap.item-icon-left
+                            i.icon.ion-close-round
+                            | Maybe later
+                        .item.item-text-wrap
+                            small You can change this setting later in the Search section of the Preferences view
+                    .card.list(ng-if='options.search.history.length')
+                        a.item.item-text-wrap.item-icon-left.positive(
+                            ng-repeat='query in options.search.history',
+                            auto-direction='{{ query }}',
+                            ng-click='search.query = query; search.execute()'
+                        )
+                            i.icon.placeholder-icon.ion-android-clock
+                            | {{ query }}
 
-        .card(ng-if='progress.status == "ready" && search.results.length == 0')
-            .item.item-body.text-center
-                i.icon.placeholder-icon.ion-alert.icon-large
-                h2 Could not find anything matching "{{ search.query }}"
-            div(ng-if='search.suggestions.length > 0')
-                .item.item-text-wrap.item-divider: b Here are some suggestions:
-                a.item.item-text-wrap.assertive(
-                        ui-sref='search({ query: "{{ suggestion.string }}" })',
-                        ng-repeat='suggestion in search.suggestions',
-                        auto-direction='{{ suggestion.string }}',
-                        emphasize='{{ suggestion.with }}',
-                    )
-                    | {{ suggestion.string }}
+            .card(ng-if='progress.status == "ready" && search.results.length == 0')
+                .item.item-body.text-center
+                    i.icon.placeholder-icon.ion-alert.icon-large
+                    h2 Could not find anything matching "{{ search.query }}"
+                div(ng-if='search.suggestions.length > 0')
+                    .item.item-text-wrap.item-divider: b Here are some suggestions:
+                    a.item.item-text-wrap.assertive(
+                            ui-sref='search({ query: "{{ suggestion.string }}" })',
+                            ng-repeat='suggestion in search.suggestions',
+                            auto-direction='{{ suggestion.string }}',
+                            emphasize='{{ suggestion.with }}',
+                        )
+                        | {{ suggestion.string }}

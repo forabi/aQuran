@@ -107,7 +107,7 @@ app.factory 'QueryBuilder', ['$q', '$log', ($q, $log) ->
                     exec: exec
                 else exec: exec, from: from, between: between, transform: transform # Syntactic sugar
             
-            between: between, 'is': is_, from: from, limit: limit, exec: exec, transform: transform
+            between: between, is: is_, from: from, limit: limit, exec: exec, transform: transform
 
         find = (query, range) ->
             switch 
