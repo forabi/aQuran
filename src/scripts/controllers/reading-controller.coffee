@@ -13,6 +13,15 @@ app.controller 'ReadingController', ['$rootScope', '$scope', '$state', '$statePa
         status: 'init'
         total: 0
         current: 0
+
+    $scope.$watch 'scrollTo', (n, o) ->
+        if n > o then $scope.loadMore()
+
+    # $scope.$on 'audioPlayer:ready', (player) ->
+    #     $log.debug 'Player ready', player
+
+    # $scope.$on 'audioPlayer.play', (i) ->
+    #     $log.debug "Playing #{i}"
          
     transform = (docs) ->
         # default sorting
@@ -35,7 +44,7 @@ app.controller 'ReadingController', ['$rootScope', '$scope', '$state', '$statePa
         query = {}
         query[$scope.view.type] = $scope.view.current
         # $scope.progress.status = 'loading'
-        ContentService.then (db) ->   
+        ContentService.then (db) ->
             db.find query
             .exec()
         .then transform

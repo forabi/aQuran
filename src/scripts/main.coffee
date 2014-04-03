@@ -4,7 +4,7 @@ app   =   angular.module 'quran', ['ngSanitize', 'ngStorage', 'ionic', 'audioPla
 app.constant 'API', 'http://www.alfanous.org/jos2'
 app.constant 'EveryAyah', 'http://www.everyayah.com/data'
 
-app.run ['$rootScope', 'Preferences', '$window', ($rootScope, Preferences, $window) ->
+app.run ['$rootScope', 'AppCacheManager', 'Preferences', '$window', ($rootScope, AppCacheManager, Preferences, $window) ->
     $rootScope.online = $window.navigator.onLine
     $rootScope.options = Preferences
     $window.addEventListener 'online',  () ->

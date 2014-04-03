@@ -73,12 +73,15 @@ app.factory 'QueryBuilder', ['$q', '$log', ($q, $log) ->
             # we get from the query.
             # A transform returns a modified result that is passed to the next transform
             _transforms.push fn
+            exec: exec
 
         limit = (limit) ->
             _limit = limit # Not implemented yet
+            limit: limit, transform: transform, exec: exec
 
         sort = (sort) ->
             _order = 'DESC' if sort.match /^des/gi or Number(sort) is -1
+            limit: limit, transform: transform, exec: exec
 
         where = (index) ->
             _index = index

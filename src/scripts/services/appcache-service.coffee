@@ -1,17 +1,24 @@
 app.service 'AppCacheManager', ['$window', '$rootScope', ($window, $rootScope) ->
-    $window.applicationCache.onchecking = () ->
+    $window.applicationCache.onchecking = (e) ->
+        $log.info 'AppCache Checking...', e
         # Checking for updates
-    $window.applicationCache.onupdateready = () ->
+    $window.applicationCache.onupdateready = (e) ->
+        $log.info 'AppCache Update Ready', e
         # Update is ready
-    $window.applicationCache.onobsolete = () ->
+    $window.applicationCache.onobsolete = (e) ->
+        $log.info 'AppCache Obsolete', e
         # Update is available
-    $window.applicationCache.ondownloading = () ->
+    $window.applicationCache.ondownloading = (e) ->
+        $log.info 'AppCache Downloading...', e
         # Downloading...
-    $window.applicationCache.onprogress = () ->
+    $window.applicationCache.onprogress = (e) ->
+        $log.info 'AppCache in progress', e
         # Progress
-    $window.applicationCache.onerror = () ->
+    $window.applicationCache.onerror = (e) ->
+        $log.error 'AppCache Error', e
         # Something wrong happened
-    $window.applicationCache.oncached = () ->
+    $window.applicationCache.oncached = (e) ->
+        $log.info 'AppCache Cached', e
         # The latest version is now available offline
     $window.applicationCache
 ]

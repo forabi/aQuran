@@ -7,6 +7,9 @@ app.factory 'AudioSrcFactory', ['$sce', 'EveryAyah', 'Preferences', 'RecitationS
     max = (array) ->
         Math.max.apply Math, array
 
+    min = (array) ->
+        Math.min.apply Math, array
+
     number = (n, z='3') ->
         n = repeat('0', z) + n
         n.substr n.length - 3
@@ -26,7 +29,7 @@ app.factory 'AudioSrcFactory', ['$sce', 'EveryAyah', 'Preferences', 'RecitationS
                 cached = CacheService.get "audio:#{Preferences.audio.recitation.name}:quality"
                 if cached then $q.when cached
                 else
-                    choose = (available) ->
+                    choose = (_available) ->
                         # We need to find the highest available bitrate that is
                         # not higher than our connection bandwidth so we can ensure a
                         # continuous stream
@@ -34,6 +37,7 @@ app.factory 'AudioSrcFactory', ['$sce', 'EveryAyah', 'Preferences', 'RecitationS
                         # The current working draft of the Network Information API
                         # provides an estimation of the bandwidth in MB/s
                         # When bandwidth is unknown, we get Infinity
+                        available = _.clone _available
                         bandwidth = if not Preferences.connection.auto then Preferences.connection.bandwidth else navigator.mozConnection.bandwidth
                         # TODO: polyfill navigator.connection
                         
@@ -45,7 +49,7 @@ app.factory 'AudioSrcFactory', ['$sce', 'EveryAyah', 'Preferences', 'RecitationS
                                 _.remove available, (item) -> bandwidth < item * 8 / 1024 # convert kbit/s to MB/s
                                 max available
                         # $log.debug "Best quality:", best
-                        if best is Infinity then available[0] else best # minimum available bitrate if bandwidth is too low
+                        if available.length == 0 then min _available else best # minimum available bitrate if bandwidth is too low
 
                     RecitationService.properties.then (db) ->
                         db.find().where('name').is(Preferences.audio.recitation.name).exec()

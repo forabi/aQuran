@@ -50,13 +50,15 @@
 }
 .aya {
     text-overflow: initial !important;
-    pointer-events: none;
     direction: rtl !important;
     .aya-text {
         white-space: normal;
         font-family: @aya-font-family;
         line-height: @aya-line-height;
         pointer-events: none;
+        .playing {
+            color: blue;
+        }
     }
     .aya-number {
         &:not(.explanation-aya-number) {

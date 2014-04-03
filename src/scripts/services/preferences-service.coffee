@@ -39,7 +39,7 @@ app.service 'Preferences', ['$localStorage', ($localStorage) ->
             enabled: yes
 
         connection:
-            bandwidth: 0.5 # MB/s
+            bandwidth: 0.25 # MB/s
             auto: no
 
 

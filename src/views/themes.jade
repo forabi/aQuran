@@ -1,5 +1,5 @@
 ion-content.list(has-header='true')
     label.item.item-radio(ng-repeat='theme in themes')
         input(type='radio', name='themes', ng-model='options.theme', ng-value='theme.id')
-        .item-content {{ theme.name }}
+        .item-content(class='{{ theme.id }}') {{ theme.name }}
         i.radio-icon.ion-checkmark
