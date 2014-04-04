@@ -152,7 +152,7 @@ app.factory 'QueryBuilder', ['$q', '$log', ($q, $log) ->
 
         findOneById = (id, query) ->
             _index = 'id'
-            find query
+            findOne query
 
         transform: transform
         find: find
