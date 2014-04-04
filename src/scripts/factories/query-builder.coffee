@@ -109,7 +109,7 @@ app.factory 'QueryBuilder', ['$q', '$log', ($q, $log) ->
 
             between: between, is: is_, from: from, limit: limit, exec: exec, transform: transform
 
-        find = (query, range) ->
+        find = (query, range...) ->
             switch
                 # db.find('page_id') or db.find()
                 when not query or typeof query is 'string'
@@ -140,19 +140,19 @@ app.factory 'QueryBuilder', ['$q', '$log', ($q, $log) ->
                     _parse_bounds range
                     exec: exec, limit: limit, sort: sort, transform: transform
 
-        findOne = (query) ->
+        findOne = (query...) ->
             _one = yes # Set query option to individual object instead of array
             delete query.limit if query # Delete limit if exists
             limit 1 # Force set limit to 1
-            find query # Perform a normal query, the result is transformed in the promise
+            find query... # Perform a normal query, the result is transformed in the promise
 
-        findById = (id, query, range) ->
+        findById = (id, query...) ->
             _index = 'id'
-            find query, range
+            find query...
 
-        findOneById = (id, query) ->
+        findOneById = (id, query...) ->
             _index = 'id'
-            findOne query
+            findOne query...
 
         transform: transform
         find: find
