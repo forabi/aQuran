@@ -12,7 +12,9 @@ icons/icon-64.png
 icons/icon-72.png
 icons/icon-80.png
 icons/icon-96.png
+resources/recitations.json
 resources/search.json
+resources/translations.json
 scripts/ionic.js
 scripts/main.js
 scripts/ng-modules.js
@@ -45,4 +47,4 @@ styles/ionic/release/fonts/ionicons.woff
 NETWORK:
 *
 
-# hash: e22fceac39b607356f00478721c8f2d563121126c5ec4c4b5108f9c7ac09db6e
+# hash: 0e6c7b450ef9637ba3ae2a0f0e42f8a9d531ee82875cc81f9a82863cce878259

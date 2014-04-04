@@ -13,6 +13,8 @@ app.directive("scrollTo",["$location","$anchorScroll","$timeout",function(r,n,o)
 app.factory("AudioSrcFactory",["$sce","EveryAyah","Preferences","RecitationService","$q","CacheService","$log",function(n,t,e,r,u,i,o){var a,c,d,f;return f=function(n,t){for(;t>0;)n+=n,t--;return n},a=function(n){return Math.max.apply(Math,n)},c=function(n){return Math.min.apply(Math,n)},d=function(n,t){return null==t&&(t="3"),n=f("0",t)+n,n.substr(n.length-3)},function(f,h){var s,l,p;return f=d(f),h=d(h),e.audio.auto_quality&&navigator.mozConnection?(s=function(){var n,t;return n=i.get("audio:"+e.audio.recitation.name+":quality"),n?u.when(n):(t=function(n){var t,r,u;return t=_.clone(n),r=e.connection.auto?navigator.mozConnection.bandwidth:e.connection.bandwidth,o.debug("Bandwidth:",r),o.debug("Available:",t),u=function(){switch(r){case 1/0:return a(t);default:return _.remove(t,function(n){return 8*n/1024>r}),a(t)}}(),0===t.length?c(n):u},r.properties.then(function(n){return n.find().where("name").is(e.audio.recitation.name).exec()}).then(function(n){return o.debug(n),n.map(function(n){return Number(n.subfolder.match(/(\d+)kbps/i)[1])})}).then(t).then(function(n){return i.put("audio:"+e.audio.recitation.name+":quality",n),n}))},s().then(function(r){var u;return u=e.audio.recitation.subfolder.match(/^(.+)_\d+kbps/i)[1],p=""+u+"_"+r+"kbps",l=""+t+"/"+p+"/"+f+h+".mp3",{src:n.trustAsResourceUrl(l),type:"audio/mp3"}})):(p=e.audio.recitation.subfolder,l=""+t+"/"+p+"/"+f+h+".mp3",u.when({src:n.trustAsResourceUrl(l),type:"audio/mp3"}))}}]);
 app.factory("ExplanationFactory",["ExplanationService",function(n){return function(t,e){return n.load(t).then(function(n){return n.findOne({gid:e}).exec()})}}]);
 var __slice=[].slice;app.factory("IDBStoreFactory",["$q","$http","$log","QueryBuilder","Preferences",function(e,r,n,t,a){return function(n,o){var s,u,i,f,c;return o=_.defaults(o,{dbVersion:1,storePrefix:"",transforms:[],transformResponse:function(e){return e.data}}),s=e.defer(),i=function(){return s.notify({action:"STORE.FETCHING",data:{storeName:o.storeName}}),r.get(n,{cache:!0}).then(o.transformResponse)},f=function(r){var n;return s.notify({action:"STORE.INSERTING",data:{storeName:o.storeName}}),n=e.defer(),c.putBatch(r,function(){return n.resolve(c)},function(e){return n.reject(e)}),a[""+o.storeName+"-version"]=o.dbVersion,n.promise},u=function(e){return{find:function(){var r,n;return r=1<=arguments.length?__slice.call(arguments,0):[],(n=t(e,o.transforms)).find.apply(n,r)},findOne:function(){var r,n;return r=1<=arguments.length?__slice.call(arguments,0):[],(n=t(e,o.transforms)).findOne.apply(n,r)},findById:function(){var r,n;return r=1<=arguments.length?__slice.call(arguments,0):[],(n=t(e,o.transforms)).findById.apply(n,r)},findOneById:function(){var r,n;return r=1<=arguments.length?__slice.call(arguments,0):[],(n=t(e,o.transforms)).findOneById.apply(n,r)},where:function(){var r,n;return r=1<=arguments.length?__slice.call(arguments,0):[],(n=t(e,o.transforms)).where.apply(n,r)}}},c=new IDBStore(o),c.onStoreReady=function(){return Number(a[""+o.storeName+"-version"]===o.dbVersion)?s.resolve(c):i().then(f).then(s.resolve)},c.onError=function(e){return s.reject(e)},s.promise.then(u)}}]);
+var __slice = [].slice;
+
 app.factory('QueryBuilder', [
   '$q', '$log', function($q, $log) {
     return function(db, transforms) {
@@ -171,8 +173,9 @@ app.factory('QueryBuilder', [
           transform: transform
         };
       };
-      find = function(query, range) {
-        var keys;
+      find = function() {
+        var keys, query, range;
+        query = arguments[0], range = 2 <= arguments.length ? __slice.call(arguments, 1) : [];
         switch (false) {
           case !(!query || typeof query === 'string'):
             _index = query;
@@ -208,21 +211,27 @@ app.factory('QueryBuilder', [
             };
         }
       };
-      findOne = function(query) {
+      findOne = function() {
+        var query;
+        query = 1 <= arguments.length ? __slice.call(arguments, 0) : [];
         _one = true;
         if (query) {
           delete query.limit;
         }
         limit(1);
-        return find(query);
+        return find.apply(null, query);
       };
-      findById = function(id, query, range) {
+      findById = function() {
+        var id, query;
+        id = arguments[0], query = 2 <= arguments.length ? __slice.call(arguments, 1) : [];
         _index = 'id';
-        return find(query, range);
+        return find.apply(null, query);
       };
-      findOneById = function(id, query) {
+      findOneById = function() {
+        var id, query;
+        id = arguments[0], query = 2 <= arguments.length ? __slice.call(arguments, 1) : [];
         _index = 'id';
-        return find(query);
+        return findOne.apply(null, query);
       };
       return {
         transform: transform,
