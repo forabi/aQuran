@@ -374,7 +374,10 @@ gulp.task 'cache', ['build'], () ->
             hash: yes
             timestamp: no
             filename: config.cacheManifest
-            exclude: config.cacheManifest
+            exclude: glob.sync("#{config.dist}/resources/translations/*.txt")
+            .map (txt) ->
+                path.relative config.dist, txt
+            .concat [config.cacheManifest, 'resources/quran.json']
         .pipe gulp.dest config.dist
     else
         gulp.src "#{config.dist}/#{config.cacheManifest}"
