@@ -34,9 +34,9 @@ ion-view(title='{{ title }}', right-buttons='rightButtons')
                     i.icon.placeholder-icon.ion-loading-c.icon-large
                     div(ng-if='progress.message')
                         h2
-                            span(ng-if='options.first_time') Indexing databases for the first time...
+                            div(ng-if='options.first_time') Indexing databases for the first time...
                             | {{ progress.message | progress }}
-                    small This may take a few minutes.
+                    small(ng-if='options.first_time') This may take a few minutes.
                         | Please allow the application to store data for offline use if asked by your browser
 
             .card.text-center(ng-switch-when='error')
