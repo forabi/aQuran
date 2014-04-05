@@ -86,15 +86,15 @@ config = _.defaults gutil.env,
             '*/**/controllers/*'
         ]
 
-config.dist = "dist/#{config.target}/#{config.env}"
+config.dest = "dist/#{config.target}/#{config.env}"
 
 try
     fs.mkdirSync "dist"
-    fs.mkdirSync config.dist
-    fs.mkdirSync "#{config.dist}/scripts"
-    fs.mkdirSync "#{config.dist}/resources"
-    fs.mkdirSync "#{config.dist}/translations" if config.translations
-    fs.mkdirSync "#{config.dist}/icons"
+    fs.mkdirSync config.dest
+    fs.mkdirSync "#{config.dest}/scripts"
+    fs.mkdirSync "#{config.dest}/resources"
+    fs.mkdirSync "#{config.dest}/translations" if config.translations
+    fs.mkdirSync "#{config.dest}/icons"
 
 gulp.task 'watch', () ->
     # server = livereload();
@@ -116,13 +116,13 @@ gulp.task 'manifest', () ->
     .pipe plugins.rename (file) ->
         file.extname = '.webapp' if config.target != 'chrome'
         file
-    .pipe gulp.dest config.dist
+    .pipe gulp.dest config.dest
 
 gulp.task 'flags', ['translations'], () ->
     gulp.src (config.countries.map (country) -> "flags/1x1/#{country.toLowerCase()}.*"), cwd: "#{config.bower}/flag-icon-css"
     .pipe plugins.using()
     .pipe plugins.cached()
-    .pipe gulp.dest "#{config.dist}/styles/flag-icon-css/flags/1x1"
+    .pipe gulp.dest "#{config.dest}/styles/flag-icon-css/flags/1x1"
 
 gulp.task 'scss', ['flags', 'css'], () ->
     gulp.src config.src.scss, cwd: 'src'
@@ -134,7 +134,7 @@ gulp.task 'scss', ['flags', 'css'], () ->
     .pipe plugins.cached()
     .pipe plugins.tap (file) ->
         config.styles.push path.relative 'src', file.path
-    .pipe gulp.dest "#{config.dist}/styles"
+    .pipe gulp.dest "#{config.dest}/styles"
 
 gulp.task 'css', () ->
     # bundle = (bundle) ->
@@ -145,17 +145,17 @@ gulp.task 'css', () ->
     .pipe plugins.tap (file) ->
         config.styles.push path.join 'styles', path.relative config.bower, file.path
     .pipe plugins.cached()
-    .pipe gulp.dest "#{config.dist}/styles"
+    .pipe gulp.dest "#{config.dest}/styles"
 
     plugins.bowerFiles()
     .pipe plugins.filter ['**/fonts/*']
     .pipe plugins.cached()
-    .pipe gulp.dest "#{config.dist}/styles"
+    .pipe gulp.dest "#{config.dest}/styles"
 
 gulp.task 'amiri', () ->
     gulp.src 'resources/amiri/*.ttf', cwd: 'src', base: 'src'
     .pipe plugins.cached()
-    .pipe gulp.dest config.dist
+    .pipe gulp.dest config.dest
 
 gulp.task 'styles', ['scss', 'css', 'amiri']
 
@@ -172,7 +172,7 @@ gulp.task 'jade', ['scripts', 'styles'], () ->
             scripts: scripts
             styles: styles
             manifest: config.cacheManifest
-    .pipe gulp.dest config.dist
+    .pipe gulp.dest config.dest
 
 gulp.task 'html', ['jade']
 
@@ -185,7 +185,7 @@ gulp.task 'coffee', ['js'], () ->
     .pipe (plugins.order config.coffeeConcat.src)
     .pipe plugins.tap (file) ->
         config.scripts.push path.relative 'src', file.path
-    .pipe gulp.dest "#{config.dist}/scripts"
+    .pipe gulp.dest "#{config.dest}/scripts"
 
 gulp.task 'js', (callback) ->
     bundle = (bundle) ->
@@ -198,7 +198,7 @@ gulp.task 'js', (callback) ->
             .pipe (if config.env is 'production' then plugins.uglify() else gutil.noop())
             # .pipe plugins.using()
             .pipe plugins.concat bundle.file
-            .pipe gulp.dest "#{config.dist}/scripts"
+            .pipe gulp.dest "#{config.dest}/scripts"
         )
 
     config.scripts = config.bundles.map (bundle) -> "scripts/#{bundle.file}"
@@ -209,7 +209,7 @@ gulp.task 'scripts', ['js', 'coffee']
 gulp.task 'icons', () ->
     gulp.src config.src.icons, cwd: 'src'
     # .pipe plugins.optimize()
-    .pipe gulp.dest "#{config.dist}/icons"
+    .pipe gulp.dest "#{config.dest}/icons"
 
 gulp.task 'images', ['icons']
 
@@ -217,7 +217,7 @@ gulp.task 'quran', (callback) ->
     db = new sqlite3.Database("src/#{config.src.database}", sqlite3.OPEN_READONLY);
     db.all 'SELECT gid, aya_id, page_id, sura_id, standard, standard_full, sura_name, sura_name_en, sura_name_romanization FROM aya ORDER BY gid', (err, rows) ->
         write = (json) ->
-            fs.writeFile "#{config.dist}/resources/quran.json", json, callback
+            fs.writeFile "#{config.dest}/resources/quran.json", json, callback
 
         if config.experimental
             # Read all files from khaledhosny-quran
@@ -254,7 +254,7 @@ gulp.task 'quran', (callback) ->
         else write JSON.stringify rows
 
 gulp.task 'search', ['quran'], () ->
-    gulp.src "#{config.dist}/resources/quran.json"
+    gulp.src "#{config.dest}/resources/quran.json"
     .pipe plugins.jsonEditor (ayas) ->
         # A subset of quran.json that only contains texts,
         # should be light enough to load in memory for offline search
@@ -262,7 +262,7 @@ gulp.task 'search', ['quran'], () ->
     .pipe plugins.rename (file) ->
         file.basename = 'search'
         file
-    .pipe gulp.dest "#{config.dist}/resources"
+    .pipe gulp.dest "#{config.dest}/resources"
 
 gulp.task 'translations', () ->
     ids = []
@@ -271,7 +271,7 @@ gulp.task 'translations', () ->
         .toString().split /\n/g
 
     write = (json) -> # Write translation metadata
-        fs.writeFileSync "#{config.dist}/resources/translations.json", json
+        fs.writeFileSync "#{config.dest}/resources/translations.json", json
 
     process = (file) ->
         deferred = Q.defer()
@@ -288,7 +288,7 @@ gulp.task 'translations', () ->
                     props = obj
                     callback err
             else if entry.name.match /.txt$/gi
-                file.extractEntryTo entry.name, "#{config.dist}/resources/translations", no, yes
+                file.extractEntryTo entry.name, "#{config.dest}/resources/translations", no, yes
                 callback()
         , (err) ->
             if err then throw err
@@ -366,22 +366,22 @@ gulp.task 'recitations', () ->
             delete item.index
             item
         .value()
-    .pipe gulp.dest "#{config.dist}/resources"
+    .pipe gulp.dest "#{config.dest}/resources"
 
 gulp.task 'cache', ['build'], () ->
     if config.target is 'web' and config.env is 'production'
-        gulp.src "#{config.dist}/**/*"
+        gulp.src "#{config.dest}/**/*"
         .pipe plugins.manifest
             hash: yes
             timestamp: no
             filename: config.cacheManifest
             exclude:
-                glob.sync("#{config.dist}/resources/translations/*.txt")
-                .map (txt) -> path.relative config.dist, txt
+                glob.sync("#{config.dest}/resources/translations/*.txt")
+                .map (txt) -> path.relative config.dest, txt
                 .concat [config.cacheManifest, 'resources/quran.json']
-        .pipe gulp.dest config.dist
+        .pipe gulp.dest config.dest
     else
-        gulp.src "#{config.dist}/#{config.cacheManifest}"
+        gulp.src "#{config.dest}/#{config.cacheManifest}"
         .pipe plugins.clean()
 
 gulp.task 'package', ['build', 'cache'], () ->
@@ -391,7 +391,7 @@ gulp.task 'package', ['build', 'cache'], () ->
         when 'firefox'
             # Create a zip file
             zip = new admZip()
-            zip.addLocalFolder config.dist
+            zip.addLocalFolder config.dest
             zip.writeZip "dist/#{config.name.toLowerCase()}-#{config.target}-v#{config.version}.zip"
         else # Standard web app
             # Something
@@ -407,6 +407,6 @@ gulp.task 'default', ['build', 'cache']
 
 gulp.task 'serve', () ->
     connect
-    .createServer connect.static "#{__dirname}/#{config.dist}"
+    .createServer connect.static "#{__dirname}/#{config.dest}"
     .listen config.port, () ->
         gutil.log "Server listening on port #{config.port}"
