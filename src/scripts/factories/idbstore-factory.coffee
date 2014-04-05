@@ -15,10 +15,10 @@ app.factory 'IDBStoreFactory', ['$q', '$http', '$log', 'QueryBuilder', 'Preferen
             $http.get url, cache: yes
             .then(options.transformResponse)
 
-        clear = (data) ->
+        clear = () ->
             d = $q.defer()
             store.clear () ->
-                d.resolve data
+                d.resolve()
             , (err) ->
                 $log.error err
                 d.reject err
@@ -48,10 +48,14 @@ app.factory 'IDBStoreFactory', ['$q', '$http', '$log', 'QueryBuilder', 'Preferen
 
         store = new IDBStore options
         store.onStoreReady = () ->
+            version = Preferences["#{options.storeName}-version"]
+            version = if version then Number version else -1
+            upgrade = yes if version > -1
             if Number Preferences["#{options.storeName}-version"] is options.dbVersion
                 deferred.resolve store
+            else if version > options.dbVersion
+                clear().then(get).then(insert).then deferred.resolve
             else
-                upgrade = yes
                 get().then(insert).then deferred.resolve
         store.onError = (err) ->
             deferred.reject err
