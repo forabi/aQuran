@@ -141,6 +141,7 @@ gulp.task 'css', () ->
     plugins.bowerFiles()
     .pipe plugins.filter ['**/ionic/**/*.css', '**/flag-icon-css/css/flag-icon.css']
     .pipe plugins.using()
+    # TODO: minify css for production
     .pipe plugins.tap (file) ->
         config.styles.push path.join 'styles', path.relative config.bower, file.path
     .pipe plugins.cached()
@@ -214,7 +215,7 @@ gulp.task 'images', ['icons']
 
 gulp.task 'quran', (callback) ->
     db = new sqlite3.Database("src/#{config.src.database}", sqlite3.OPEN_READONLY);
-    db.all 'SELECT * FROM aya ORDER BY gid', (err, rows) ->
+    db.all 'SELECT gid, aya_id, page_id, sura_id, standard, standard_full, sura_name, sura_name_en, sura_name_romanization FROM aya ORDER BY gid', (err, rows) ->
         write = (json) ->
             fs.writeFile "#{config.dist}/resources/quran.json", json, callback
 
@@ -374,10 +375,10 @@ gulp.task 'cache', ['build'], () ->
             hash: yes
             timestamp: no
             filename: config.cacheManifest
-            exclude: glob.sync("#{config.dist}/resources/translations/*.txt")
-            .map (txt) ->
-                path.relative config.dist, txt
-            .concat [config.cacheManifest, 'resources/quran.json']
+            exclude:
+                glob.sync("#{config.dist}/resources/translations/*.txt")
+                .map (txt) -> path.relative config.dist, txt
+                .concat [config.cacheManifest, 'resources/quran.json']
         .pipe gulp.dest config.dist
     else
         gulp.src "#{config.dist}/#{config.cacheManifest}"
