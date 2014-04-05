@@ -1,6 +1,7 @@
 # IDBStore = require 'idb-wrapper'
 app.factory 'IDBStoreFactory', ['$q', '$http', '$log', 'QueryBuilder', 'Preferences', ($q, $http, $log, QueryBuilder, Preferences) ->
     (url, options) ->
+        upgrade = no
         options = _.defaults options,
             dbVersion: 1
             storePrefix: ''
@@ -14,16 +15,28 @@ app.factory 'IDBStoreFactory', ['$q', '$http', '$log', 'QueryBuilder', 'Preferen
             $http.get url, cache: yes
             .then(options.transformResponse)
 
+        clear = (data) ->
+            d = $q.defer()
+            store.clear () ->
+                d.resolve data
+            , (err) ->
+                $log.error err
+                d.reject err
+            d.promise
+
         insert = (data) ->
-            # TODO: clear database
-            # console.log 'DATA:', data
-            deferred.notify action: "STORE.INSERTING", data: storeName: options.storeName
+            # $log.debug 'Inserting...'
+            deferred.notify
+                action: if upgrade then "STORE.UPDATING" else "STORE.INSERTING"
+                data: storeName: options.storeName
             d = $q.defer()
             store.putBatch data, () ->
+                $log.info 'Data inserted.'
+                Preferences["#{options.storeName}-version"] = options.dbVersion
                 d.resolve store
             , (err) ->
+                # $log.error 'Error inserting', err
                 d.reject err
-            Preferences["#{options.storeName}-version"] = options.dbVersion
             d.promise
 
         extend = (store) ->
@@ -37,7 +50,9 @@ app.factory 'IDBStoreFactory', ['$q', '$http', '$log', 'QueryBuilder', 'Preferen
         store.onStoreReady = () ->
             if Number Preferences["#{options.storeName}-version"] is options.dbVersion
                 deferred.resolve store
-            else get().then(insert).then deferred.resolve
+            else
+                upgrade = yes
+                get().then(insert).then deferred.resolve
         store.onError = (err) ->
             deferred.reject err
 
