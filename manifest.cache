@@ -35,8 +35,45 @@ resources/amiri/amiri-quran-letters.ttf
 resources/amiri/amiri-quran-quranic-signs.ttf
 resources/amiri/amiri-quran.ttf
 styles/flag-icon-css/css/flag-icon.css
+styles/flag-icon-css/flags/1x1/al.svg
+styles/flag-icon-css/flags/1x1/az.svg
+styles/flag-icon-css/flags/1x1/ba.svg
+styles/flag-icon-css/flags/1x1/bd.svg
+styles/flag-icon-css/flags/1x1/bg.svg
+styles/flag-icon-css/flags/1x1/cn.svg
+styles/flag-icon-css/flags/1x1/cz.svg
+styles/flag-icon-css/flags/1x1/de.svg
+styles/flag-icon-css/flags/1x1/dz.svg
+styles/flag-icon-css/flags/1x1/es.svg
+styles/flag-icon-css/flags/1x1/et.svg
+styles/flag-icon-css/flags/1x1/fr.svg
+styles/flag-icon-css/flags/1x1/id.svg
+styles/flag-icon-css/flags/1x1/in.svg
+styles/flag-icon-css/flags/1x1/iq.svg
+styles/flag-icon-css/flags/1x1/ir.svg
+styles/flag-icon-css/flags/1x1/it.svg
+styles/flag-icon-css/flags/1x1/jp.svg
+styles/flag-icon-css/flags/1x1/ke.svg
+styles/flag-icon-css/flags/1x1/kr.svg
+styles/flag-icon-css/flags/1x1/mv.svg
+styles/flag-icon-css/flags/1x1/my.svg
+styles/flag-icon-css/flags/1x1/ng.svg
+styles/flag-icon-css/flags/1x1/nl.svg
+styles/flag-icon-css/flags/1x1/no.svg
+styles/flag-icon-css/flags/1x1/pk.svg
+styles/flag-icon-css/flags/1x1/pl.svg
+styles/flag-icon-css/flags/1x1/pt.svg
+styles/flag-icon-css/flags/1x1/ro.svg
+styles/flag-icon-css/flags/1x1/ru.svg
 styles/flag-icon-css/flags/1x1/sa.svg
+styles/flag-icon-css/flags/1x1/se.svg
+styles/flag-icon-css/flags/1x1/so.svg
+styles/flag-icon-css/flags/1x1/th.svg
+styles/flag-icon-css/flags/1x1/tj.svg
+styles/flag-icon-css/flags/1x1/tr.svg
+styles/flag-icon-css/flags/1x1/tw.svg
 styles/flag-icon-css/flags/1x1/us.svg
+styles/flag-icon-css/flags/1x1/uz.svg
 styles/ionic/release/css/ionic.css
 styles/ionic/release/fonts/ionicons.eot
 styles/ionic/release/fonts/ionicons.svg
@@ -47,4 +84,4 @@ styles/ionic/release/fonts/ionicons.woff
 NETWORK:
 *
 
-# hash: 7f813d5e6b6be368ed5a0961fd9f51b7f40a640a47b9ea7612e1f6c99680fd40
+# hash: a203bc860c2c1ecc90d2d4175e09050b5566fa3b8b09449e68da4da37d432075
