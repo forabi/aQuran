@@ -142,6 +142,7 @@ gulp.task 'css', () ->
     .pipe plugins.filter ['**/ionic/**/*.css', '**/flag-icon-css/css/flag-icon.css']
     .pipe plugins.using()
     # TODO: minify css for production
+    .pipe if config.env is 'production' then plugins.minifyCss() else gutil.noop()
     .pipe plugins.tap (file) ->
         config.styles.push path.join 'styles', path.relative config.bower, file.path
     .pipe plugins.cached()
