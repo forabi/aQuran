@@ -1,7 +1,7 @@
 app.service 'ExplanationService', ['IDBStoreFactory', '$log', (IDBStoreFactory, $log) ->
     cache = []
     database = IDBStoreFactory 'resources/translations.json',
-        dbVersion: 2
+        dbVersion: 3
         storeName: 'explanations'
         keyPath: 'id'
         autoIncrement: no
