@@ -3,7 +3,7 @@
 # module.exports = (app) ->
 app.service 'ContentService', ['IDBStoreFactory', 'ExplanationFactory', 'AudioSrcFactory', 'Preferences', '$q', '$log', (IDBStoreFactory, ExplanationFactory, AudioSrcFactory, Preferences, $q, $log) ->
     IDBStoreFactory 'resources/quran.json',
-        dbVersion: 3
+        dbVersion: 7
         storeName: 'ayas'
         keyPath: 'gid'
         autoIncrement: no
