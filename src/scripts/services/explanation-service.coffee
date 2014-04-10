@@ -24,7 +24,7 @@ app.service 'ExplanationService', ['IDBStoreFactory', '$log', (IDBStoreFactory, 
                     response.data.split /\n/g
                     .map (item, index) ->
                         gid: index + 1, text: item
-                dbVersion: 1
+                dbVersion: explanation.version || 1
                 storeName: id
                 keyPath: 'gid'
                 autoIncrement: no

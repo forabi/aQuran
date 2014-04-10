@@ -39,8 +39,10 @@ app.service 'Preferences', ['$localStorage', ($localStorage) ->
             enabled: yes
 
         connection:
-            bandwidth: 0.25 # MB/s
-            auto: no
+            # bandwidth: 0.25 # MB/s
+            bandwidth: Infinity
+            # auto: no
+            auto: yes
 
 
     # get: (section) -> Storage.get section

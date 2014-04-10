@@ -6,6 +6,9 @@ app.controller 'PreferencesController', ['$scope', '$log', 'ExplanationService',
         (value: 'sura_name_romanization', name: 'Romanized', example: 'Al-Fatiha')
     ]
 
+    $scope.$watch 'options.reader.arabic_text', (value) ->
+        if not value then $scope.options.explanations.enabled = yes
+
     $scope.themes = [
         (id: 'light', name: 'Light')
         (id: 'stable', name: 'Stable')

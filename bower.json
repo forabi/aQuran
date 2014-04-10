@@ -32,7 +32,7 @@
     "idb-wrapper": "~1.4.1",
     "ionic": "1.0.0-beta.1",
     "nedb": "*",
-    "angular-audio-player": "mrgamer/angular-audio-player#~0.2.1",
+    "angular-audio-player": "mrgamer/angular-audio-player#latest",
     "ngstorage": "~0.3.0",
     "flag-icon-css": "~0.6.0"
   },

@@ -26,7 +26,7 @@ ion-view(title='Preferences')
             .item.item-divider.item-text-wrap Translations
             .item.item-toggle.item-text-wrap Enable translations
                 label.toggle
-                    input(type='checkbox', ng-model='options.explanations.enabled')
+                    input(type='checkbox', ng-model='options.explanations.enabled', ng-disabled='!options.reader.arabic_text')
                     .track: .handle
             a.item.item-text-wrap(ui-sref='explanations', ng-if='options.explanations.enabled') Manage translations
 

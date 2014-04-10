@@ -32,6 +32,7 @@ config = _.defaults gutil.env,
     recitations: yes # whether to include recitations metadata
     styles: []
     scripts: []
+    icons: []
     countries: ['*']
     bower: 'src/bower'
     cacheManifest: 'manifest.cache'
@@ -50,7 +51,7 @@ config = _.defaults gutil.env,
         )
         (file: 'ng-modules.js', src: [
             'ngStorage.js'
-            'angular-audio-player*.js'
+            'angular-media-player*.js'
             ]
         )
     ]
@@ -160,18 +161,20 @@ gulp.task 'amiri', () ->
 
 gulp.task 'styles', ['scss', 'css', 'amiri']
 
-gulp.task 'jade', ['scripts', 'styles'], () ->
+gulp.task 'jade', ['scripts', 'styles', 'icons'], () ->
 
     scripts = config.scripts || [] # TODO
     styles = config.styles || []
+    icons = config.icons || []
 
     gulp.src config.src.jade, cwd: 'src', base: 'src'
     .pipe plugins.using()
     .pipe plugins.jade
-        pretty: config.env is not 'production'
+        pretty: config.env != 'production'
         locals:
             scripts: scripts
             styles: styles
+            icons: icons
             manifest: config.cacheManifest
     .pipe gulp.dest config.dest
 
@@ -210,6 +213,11 @@ gulp.task 'scripts', ['js', 'coffee']
 gulp.task 'icons', () ->
     gulp.src config.src.icons, cwd: 'src'
     # .pipe plugins.optimize()
+    .pipe plugins.tap (file) ->
+        size = path.basename(file.path).match(/(\d+).*/i)[1]
+        config.icons.push
+            path: path.relative 'src', file.path
+            size: "#{size}x#{size}"
     .pipe gulp.dest "#{config.dest}/icons"
 
 gulp.task 'images', ['icons']

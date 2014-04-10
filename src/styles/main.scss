@@ -1,26 +1,11 @@
-@import "_variables";
-@import "_mixins";
+@import "variables", "mixins";
+
+@import "fonts",
+        "quran",
+        "reader",
+        "search";
+
 @import "flag-icon-css/css/flag-icon.css";
-
-@font-face {
-    font-family: "Amiri Quran";
-    src: url("../resources/amiri/amiri-quran.ttf");
-}
-
-@font-face {
-    font-family: "Amiri Quran Letters";
-    src: url("../resources/amiri/amiri-quran-letters.ttf");
-}
-
-@font-face {
-    font-family: "Amiri Quran Diacritics";
-    src: url("../resources/amiri/amiri-quran-diacritics.ttf");
-}
-
-@font-face {
-    font-family: "Amiri Quran Quanic Signs";
-    src: url("../resources/amiri/amiri-quran-quranic-signs.ttf");
-}
 
 .bar-header .button {
     border: 0;
@@ -30,138 +15,6 @@
     font-size: 250%;
 }
 
-.page {
-    display: inline-block !important;
-    direction: rtl !important;
-    // text-overflow: initial !important;
-    // white-space: nowrap;
-    text-align: justify;
-    &.arabic-only {
-        padding: 15px;
-        text-align-last: justify;
-        text-justify: auto;
-    }
-    .sura-name {
-        font-family: $sura-name-font-family;
-        font-size: $sura-name-font-size;
-        text-align: center;
-        font-weight: bold;
-    }
-}
-.aya {
-    text-overflow: initial !important;
-    direction: rtl !important;
-    .aya-text {
-        white-space: normal;
-        font-family: $aya-font-family;
-        line-height: $aya-line-height;
-        pointer-events: none;
-        .playing {
-            color: blue;
-        }
-    }
-    .aya-number {
-        &:not(.explanation-aya-number) {
-            line-height: $aya-line-height;
-            font-family: $aya-number-font-family;
-            font-size: $aya-number-font-size;
-            color: $aya-number-color;
-            margin-right: 4px;
-            margin-left: 4px;
-            &::before {
-                content: '\06DD';
-            }
-        }
-        &.explanation-aya-number {
-            color: gray;
-            margin-right: 4px;
-            &::before {
-                // content: '[';
-            }
-            &::after {
-                // content: ']';
-                content: '.';
-            }
-        }
-    }
-    &:not(.single-aya), &:not(.search) {
-        .aya-text {
-            font-size: $aya-font-size;
-        }
-    }
-    &.single-aya {
-        .aya-text {
-            font-size: $aya-font-size * 1.2;
-            text-align-last: initial;
-        }
-    }
-    &.search {
-        .aya-text {
-            line-height: $aya-line-height * .8;
-            font-size: $aya-font-size * .8;
-            text-align-last: initial;
-        }
-    }
-    .explanation-text {
-        padding-top: 15px;
-        font-family: $explanation-font-family;
-        font-size: $explanation-font-size;
-        line-height: $explanation-line-height;
-        text-align: justify;
-    }
-}
-
-.highlighted {
-    background-color: yellow;
-}
-
-[class^='match']:nth-child(2n+1) {
-    background-color: yellow;
-}
-
-[class^='match']:nth-child(2n+2) {
-    background-color: lightblue;
-}
-
-[class^='match']:nth-child(2n+3) {
-    background-color: lightcoral;
-}
-
-[class^='match']:nth-child(2n+4) {
-    background-color: lightgreen;
-}
-
-.layers {
-    display: inline-block;
-    position: relative;
-    text-overflow: initial !important;
-    font-family: "Amiri Quran";
-    color: transparent;
-    .diacritics, .quranic-signs, .overlay {
-        position: absolute;
-        top: 0;
-        right: 0;
-    }
-    .diacritics {
-        font-family: "Amiri Quran Diacritics";
-        color: $diacritic-color;
-        opacity: 0.8
-    }
-    .quranic-signs {
-        font-family: "Amiri Quran Quanic Signs";
-        color: $annotation-sings-color;
-        opacity: 0.8
-    }
-    .letters {
-        font-family: "Amiri Quran Letters";
-        display: inline;
-        text-align: justify;
-        color: black !important;
-    }
-    .overlay {
-        color: transparent;
-    }
-}
 em {
     font-weight: bold;
     font-style: italic;

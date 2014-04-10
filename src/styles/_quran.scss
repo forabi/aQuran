@@ -1,0 +1,31 @@
+.layers {
+    display: inline-block;
+    position: relative;
+    text-overflow: initial !important;
+    font-family: "Amiri Quran";
+    color: transparent;
+    .diacritics, .quranic-signs, .overlay {
+        position: absolute;
+        top: 0;
+        right: 0;
+    }
+    .diacritics {
+        font-family: "Amiri Quran Diacritics";
+        color: $diacritic-color;
+        opacity: 0.8
+    }
+    .quranic-signs {
+        font-family: "Amiri Quran Quanic Signs";
+        color: $annotation-sings-color;
+        opacity: 0.8
+    }
+    .letters {
+        font-family: "Amiri Quran Letters";
+        display: inline;
+        text-align: justify;
+        color: black !important;
+    }
+    .overlay {
+        color: transparent;
+    }
+}

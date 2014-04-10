@@ -1,5 +1,8 @@
-ion-content.list(has-header='true')
-    label.item.item-radio(ng-repeat='theme in themes')
-        input(type='radio', name='themes', ng-model='options.theme', ng-value='theme.id')
-        .item-content(class='{{ theme.id }}') {{ theme.name }}
-        i.radio-icon.ion-checkmark
+ion-view(title='Themes')
+    ion-content.list(has-header='true')
+        label.item.item-radio.icon-left(ng-repeat='theme in themes')
+            input(type='radio', name='themes', ng-model='options.theme', ng-value='theme.id')
+            .item-content
+                i.icon.ion-record(class='{{ theme.id }}')
+                | {{ theme.name }}
+            i.radio-icon.ion-checkmark

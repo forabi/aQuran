@@ -10,7 +10,7 @@ ion-view(title='About {{ info.name }}')
             a(href='{{ info.developer.url }}').item.item-text-wrap Developed by {{ info.developer.name }}
 
             .item.item-divider.item-text-wrap Components
-            small.item.item-text-wrap This app uses components from the following projects:
+            //- small.item.item-text-wrap This app uses components from the following projects:
             a(href='http://www.alfanous.org/').item.item-text-wrap
                 .positive Al-Fanous SQL database for standard texts and metadata
                 div: small Note: The database was modified with uthmanic script provided by Khaled Hosny
@@ -19,11 +19,11 @@ ion-view(title='About {{ info.name }}')
             a(href='http://www.everyayah.com').item.item-text-wrap.positive Recitations by the EveryAyah project
             a(href='http://zekr.org/resources.html').item.item-text-wrap.positive Translations and explanations by the Zekr project
 
-            .item.item-divider.item-text-wrap Special thanks
+            .item.item-divider.item-text-wrap Acknowledgments
             .item.item-text-wrap: b Al-Fanous team for the Dev API
-            .item.item-text-wrap <b>Khaled Hosny</b> for his Amiri Quran font and for providing me with
-                | modified copies of the font and for his help with the optimization
+            .item.item-text-wrap <b>Khaled Hosny</b> for contributing 
+                | modified copies of his <em>Amiri Quran</em> font and for his help with the optimization
                 | of the Uthamnic script
-            .item.item-text-wrap <b>The EveryAyah</b> team for the hosting of recitations
+            .item.item-text-wrap <b>The EveryAyah</b> team for hosting the recitations
             .item.item-text-wrap <b>The Arabia I/O community</b> for their kind support and suggestions
 

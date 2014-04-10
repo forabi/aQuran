@@ -8,7 +8,7 @@ ion-view(title='{{ title }}', right-buttons='rightButtons')
         div(ng-switch='progress.status')
             div(ng-switch-default)
                 .button-bar.bar-subheader(ng-if='online && options.audio.enabled')
-                    audio(audio-player, player-control='audioPlayer', playlist='playlist', player-name='audioPlayer')
+                    audio(media-player, playlist='playlist', player-name='audioPlayer')
                         | Play
                     //- button.button.button.icon.ion-ios7-rewind(ng-click='audioPlayer.prev()')
                     button.button.button.icon.ion-play(ng-show='!audioPlayer.playing', ng-click='audioPlayer.play()')
@@ -22,7 +22,7 @@ ion-view(title='{{ title }}', right-buttons='rightButtons')
                             span.aya-text(colorize='{{ options.reader.colorized }}', colorize-text='{{ aya.text }}', ng-class='{ playing: audioPlayer.currentTrack - 1 == aya.index }')
                             i.aya-number {{ aya.aya_id_display }}
                         .explanation-text(ng-repeat='explanation in aya.explanations', dir='{{ explanation.direction }}')
-                            i.aya-number.explanation-aya-number(ng-if='explanation.language != "ar"') {{ aya.aya_id }}
+                            i.aya-number.explanation-aya-number(ng-if='!options.reader.arabic_text || explanation.language != "ar"') {{ aya.aya_id }}
                             | {{ explanation.text }}
 
                 .item.item-text-wrap(ng-if='view.current < view.total')

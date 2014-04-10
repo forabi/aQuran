@@ -6,24 +6,12 @@ html(ng-app='quran', lang='en', manifest=manifest)
         title(ng-bind='title') The Holy Quran
         for style in styles
             link(rel='stylesheet', href=style)
-        link(rel='icon', href='icons/icon-128.png', sizes='128x128')
-        link(rel='icon', href='icons/icon-96.png', sizes='96x96')
-        link(rel='icon', href='icons/icon-72.png', sizes='72x72')
-        link(rel='icon', href='icons/icon-48.png', sizes='48x48')
-        link(rel='icon' href='icons/icon-24.png', sizes='24x24')
-        link(rel='icon', href='icons/icon-16.png', sizes='16x16')
+        for icon in icons
+            link(rel='icon', href=icon.path, sizes=icon.size)
     body
         ion-nav-bar.nav-title-slide-android(ng-class='{ "bar-{{ options.theme }}": true }', align-title='left')
             ion-nav-back-button.button-icon
                 i.ion-android-arrow-back
-
         ion-nav-view(animation='slide-left-right')
-
-        //- ion-footer-bar.bar.bar-footer(type='bar-stable')
-        //-     .button-bar
-        //-         button.button.icon.ion-navicon
-        //-         a(ui-sref='navigate').button.icon.ion-navigate
-        //-         a(ui-sref='preferences').button.icon.ion-ios7-gear
-        //-         button.button.icon.ion-ios7-more
         for script in scripts
             script(src=script)

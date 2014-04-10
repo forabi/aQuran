@@ -1,5 +1,5 @@
 # angular = require 'angular'
-app   =   angular.module 'quran', ['ngSanitize', 'ngStorage', 'ionic', 'audioPlayer']
+app   =   angular.module 'quran', ['ngSanitize', 'ngStorage', 'ionic', 'mediaPlayer']
 
 app.constant 'API', 'http://www.alfanous.org/jos2'
 app.constant 'EveryAyah', 'http://www.everyayah.com/data'
@@ -47,22 +47,22 @@ app.config ['$stateProvider', '$urlRouterProvider', '$locationProvider', '$logPr
       controller: 'PreferencesController'
 
     .state 'themes',
-      # url: '/themes'
+      url: '/preferences/themes'
       templateUrl: 'views/themes.html'
       controller: 'PreferencesController'
 
     .state 'sura-name',
-      # url: '/sura_name'
+      url: '/preferences/sura_name'
       templateUrl: 'views/sura_name.html'
       controller: 'PreferencesController'
 
     .state 'explanations',
-      url: '/explanations'
+      url: '/preferences/explanations'
       templateUrl: 'views/explanations.html'
       controller: 'ExplanationsController'
 
     .state 'recitations',
-      url: '/recitations'
+      url: '/preferences/recitations'
       templateUrl: 'views/recitations.html'
       controller: 'RecitationsController'
 
