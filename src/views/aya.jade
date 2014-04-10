@@ -14,7 +14,7 @@ ion-view(title='Aya')
                         .aya.single-aya
                             span.aya-text(colorize='{{ options.reader.colorized }}', colorize-text='{{ aya.text }}')
                             i.aya-number {{ aya.aya_id_display }}
-                
+
                 a.item.item-text-wrap.subdued(href='#', auto-direction='', ng-if='aya.topic.length > 0'): small الموضوع: {{ aya.topic }}
                 .item.tabs.tabs-secondary.tabs-icon-left
                     a.tab-item
@@ -23,8 +23,8 @@ ion-view(title='Aya')
                     a.tab-item
                         i.icon.ion-pricetag
                         | Tag
-                    
-                    audio(ng-if='options.audio.enabled', audio-player, player-control='ayaPlayer', player-name='ayaPlayer')
+
+                    audio(ng-if='options.audio.enabled', media-player='ayaPlayer')
                         source(ng-src='{{ aya.recitation.src }}', type='{{ aya.recitation.type }}')
 
                     a.tab-item(ng-if='options.audio.enabled && online && !ayaPlayer.playing', ng-click='ayaPlayer.play()')
