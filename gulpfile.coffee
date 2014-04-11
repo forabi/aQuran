@@ -73,6 +73,8 @@ config = _.defaults gutil.env,
         jade: ['index.jade', 'views/*.jade']
         coffee: ['!chromereload.coffee', '!launcher.coffee', '!manifest.coffee', 'scripts/**/*.coffee']
         js: 'scripts/*.js'
+    watch:
+        scss: 'styles/**/*.scss'
     coffeeConcat:
         file: 'main.js'
         src: [
@@ -109,7 +111,7 @@ gulp.task 'watch', () ->
     gulp.watch config.src.manifest, cwd: 'src', ['manifest']
     gulp.watch [config.src.coffee, config.src.js], cwd: 'src', ['scripts', 'html']
     gulp.watch config.src.jade, cwd: 'src', ['html']
-    gulp.watch config.src.scss, cwd: 'src', ['styles']
+    gulp.watch config.watch.scss, cwd: 'src', ['styles']
 
 gulp.task 'clean', () ->
     gulp.src config.target, cwd: 'dist'
@@ -137,7 +139,7 @@ gulp.task 'flags', ['translations'], () ->
 gulp.task 'scss', ['flags', 'css'], () ->
     gulp.src config.src.scss, cwd: 'src'
     .pipe plugins.sass
-        sourceComments: if config.env is not 'production' then 'map'
+        sourceComments: if config.env != 'production' then 'map'
         outputStyle: if config.env is 'production' then 'compressed'
         includePaths: [config.bower]
     .pipe plugins.using()
@@ -150,7 +152,7 @@ gulp.task 'css', () ->
     plugins.bowerFiles()
     .pipe plugins.filter ['**/ionic/**/*.css', '**/flag-icon-css/css/flag-icon.css']
     .pipe plugins.using()
-    .pipe if config.env is 'production' then plugins.minifyCss() else gutil.noop()
+    .pipe if config.env is 'production' then plugins.minifyCss keepSpecialComments: 0 else gutil.noop()
     .pipe plugins.tap (file) ->
         config.styles.push path.join 'styles', path.relative config.bower, file.path
     .pipe plugins.cached()
@@ -191,8 +193,8 @@ gulp.task 'coffee', ['js'], () ->
     gulp.src config.src.coffee, cwd: 'src'
     .pipe plugins.coffee bare: yes
     .pipe (plugins.order config.coffeeConcat.src)
-    .pipe (if config.env is 'production' then plugins.uglify() else gutil.noop())
     .pipe (if config.env is 'production' then plugins.concat config.coffeeConcat.file else gutil.noop())
+    .pipe (if config.env is 'production' then plugins.uglify() else gutil.noop())
     .pipe (plugins.order config.coffeeConcat.src)
     .pipe plugins.tap (file) ->
         config.scripts.push path.relative 'src', file.path
