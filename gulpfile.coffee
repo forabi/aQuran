@@ -191,7 +191,7 @@ gulp.task 'html', ['jade']
 
 gulp.task 'coffee', ['js'], () ->
     gulp.src config.src.coffee, cwd: 'src'
-    .pipe plugins.coffee bare: yes
+    .pipe plugins.coffee bare: yes, sourceMap: (yes if config.env != 'production')
     .pipe (plugins.order config.coffeeConcat.src)
     .pipe (if config.env is 'production' then plugins.concat config.coffeeConcat.file else gutil.noop())
     .pipe (if config.env is 'production' then plugins.uglify() else gutil.noop())
@@ -422,7 +422,8 @@ gulp.task 'build', ['data', 'flags', 'images', 'scripts', 'styles', 'html', 'man
 gulp.task 'default', ['build', 'cache']
 
 gulp.task 'serve', () ->
-    connect
-    .createServer connect.static "#{__dirname}/#{config.dest}"
-    .listen config.port, () ->
+    server = connect.createServer()
+    server.use '/', connect.static "#{__dirname}/#{config.dest}"
+    server.use '/', connect.static "#{__dirname}/src" if config.env != 'production'
+    server.listen config.port, () ->
         gutil.log "Server listening on port #{config.port}"
