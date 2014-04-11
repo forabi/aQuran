@@ -15,6 +15,7 @@ admZip          = require 'adm-zip'
 connect         = require 'connect'
 
 plugins = (require 'gulp-load-plugins')()
+
 config = _.defaults gutil.env,
     target: switch
         when gutil.env.chrome then 'chrome'
@@ -22,21 +23,26 @@ config = _.defaults gutil.env,
         else 'web' # web, chrome, firefox
     name: 'aQuran'
     version: 1
-    port: 7000 # on which port the server is hosted
+    port: 7000 # on which port the server will be listening
     env: if gutil.env.production then 'production' else 'development'
     sourceMaps: yes
     bump: yes # whether to increase the version of the app on 'release'
     experimental: yes # whether to use the Uthmanic script by Khaled Hosny
-    download: no
+    download: no # if set to false, assume we already have
+                 # recitations metadata and translation packages downloaded
     translations: yes # true, false, or an array of translations to include
     recitations: yes # whether to include recitations metadata
     styles: []
     scripts: []
     icons: []
-    countries: ['*']
+    countries: ['*'] # countries which have translations, used to copy
+                     # the corresponding flags to destination
     bower: 'src/bower'
-    cacheManifest: 'manifest.cache'
-    bundles: [
+    cacheManifest: 'manifest.cache' # name of HTML5's ApplicationCache manifest file
+    bundles: [ # bundles are used to concatenate and minify files, we use multiple
+               # bundles so users do not have to redownload a large file even
+               # if most of it did not change.
+               # We keep non-frequently changing files in separate bundles.
         (file: 'ionic.js', src: [
             'ionic.bundle.js'
             'angular-sanitize.js'
@@ -78,6 +84,7 @@ config = _.defaults gutil.env,
             # Factories
             '*/**/factories/*'
 
+            # Filters
             '*/**/filters/*'
 
             # Directives
@@ -112,9 +119,11 @@ gulp.task 'manifest', () ->
     gulp.src config.src.manifest, cwd: 'src'
     .pipe plugins.cson()
     .pipe plugins.jsonEditor (json) ->
+        # Chrome expects an array of permission keys
         json.permissions = _.keys json.permissions if config.target is 'chrome'
         json
     .pipe plugins.rename (file) ->
+        # Firefox packaged apps must have the manifest file named 'manifset.webapp'
         file.extname = '.webapp' if config.target != 'chrome'
         file
     .pipe gulp.dest config.dest
@@ -138,11 +147,9 @@ gulp.task 'scss', ['flags', 'css'], () ->
     .pipe gulp.dest "#{config.dest}/styles"
 
 gulp.task 'css', () ->
-    # bundle = (bundle) ->
     plugins.bowerFiles()
     .pipe plugins.filter ['**/ionic/**/*.css', '**/flag-icon-css/css/flag-icon.css']
     .pipe plugins.using()
-    # TODO: minify css for production
     .pipe if config.env is 'production' then plugins.minifyCss() else gutil.noop()
     .pipe plugins.tap (file) ->
         config.styles.push path.join 'styles', path.relative config.bower, file.path
@@ -196,11 +203,9 @@ gulp.task 'js', (callback) ->
         src = bundle.src.map (file) -> "*/**/#{file}"
         gutil.log 'Bundling file', gutil.colors.cyan bundle.file + '...'
         Q.when (plugins.bowerFiles()
-            # .pipe plugins.using()
             .pipe plugins.filter src
             .pipe plugins.order src
             .pipe (if config.env is 'production' then plugins.uglify() else gutil.noop())
-            # .pipe plugins.using()
             .pipe plugins.concat bundle.file
             .pipe gulp.dest "#{config.dest}/scripts"
         )
@@ -254,7 +259,7 @@ gulp.task 'quran', (callback) ->
 
             Q.all files.map process
             .then (suras) ->
-                _.flatten suras # [[{}, {}], [{}, {}]...] becomes [{}, {}, {}, {}...]
+                _.flatten suras # [[{0}, {1}], [{2}, {3}]...] becomes [{0}, {1}, {2}, {3}...]
             .then (json) ->
                 _.merge rows, json # Merge JSON with SQL data
             .then(JSON.stringify)
