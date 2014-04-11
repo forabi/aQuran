@@ -24,7 +24,7 @@ ion-view(title='Search')
                         a.sura-body(
                             ui-sref='reader({ current: {{ aya.page_id }}, scrollTo: {{ aya.gid }}, highlight: "{{ search.query }}" })')
                             .aya.search(ng-switch='aya.html.length > 0')
-                                .aya-text.layers(
+                                .aya-text(
                                     ng-switch-default,
                                     colorize='{{ options.reader.colorized }}',
                                     colorize-text='{{ aya.standard_full }}',

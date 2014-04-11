@@ -18,7 +18,7 @@ app.directive 'colorize', ['ArabicService', '$timeout', '$log', (Arabic, $timeou
         else html = text
 
         if searchText then html =
-            "<span class='layers'>
+            "<span class='search layers'>
                 <span class='original'>#{searchText}</span>
                 <span class='overlay'>#{html}</span>
             </span>"

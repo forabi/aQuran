@@ -80,7 +80,7 @@ app.factory 'QueryBuilder', ['$q', '$log', ($q, $log) ->
             limit: limit, transform: transform, exec: exec
 
         sort = (sort) ->
-            _order = 'DESC' if sort.match /^des/gi or Number(sort) is -1
+            _order = 'DESC' if Number(sort) is -1 or sort.match /^des/gi
             limit: limit, transform: transform, exec: exec
 
         where = (index) ->
