@@ -1,6 +1,5 @@
 # nedb = require 'nedb'
 # async = require 'async'
-# module.exports = (app) ->
 app.service 'ContentService', ['IDBStoreFactory', 'ExplanationFactory', 'AudioSrcFactory', 'Preferences', '$q', '$log', (IDBStoreFactory, ExplanationFactory, AudioSrcFactory, Preferences, $q, $log) ->
     IDBStoreFactory 'resources/quran.json',
         dbVersion: 7

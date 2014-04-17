@@ -16,14 +16,13 @@ ion-view(title='{{ title }}', right-buttons='rightButtons')
                     //- button.button.button.icon.ion-ios7-fastforward(ng-click='audioPlayer.next()')
                 //- TODO: fix index issue
                 span.page(ng-repeat='page in pages', scroll-to='{{ scrollTo }}', ng-class='{ "arabic-only": options.explanations.ids.length == 0 || !options.explanations.enabled }')
-                    span.aya(id='{{ aya.gid }}', ng-repeat='aya in page', ng-class='{ "item item-text-wrap": aya.explanations.length > 0 }')
-                        h2.sura-name.item.item-divider(ng-if='aya.aya_id == 1'): b {{ aya.sura_name }}
-                        span(ng-if='options.reader.arabic_text', ng-click='audioPlayer.play({{ aya.index }})', index='{{ aya.index }}')
-                            span.aya-text(colorize='{{ options.reader.colorized }}', colorize-text='{{ aya.text }}', ng-class='{ playing: audioPlayer.currentTrack - 1 == aya.index }')
-                            i.aya-number {{ aya.aya_id_display }}
-                        .explanation-text(ng-repeat='explanation in aya.explanations', dir='{{ explanation.direction }}')
-                            i.aya-number.explanation-aya-number(ng-if='!options.reader.arabic_text || explanation.language != "ar"') {{ aya.aya_id }}
-                            | {{ explanation.text }}
+                    span.aya(bo-id='aya.gid', bindonce, ng-repeat='aya in page', bo-class='{ "item item-text-wrap": aya.explanations.length > 0 }')
+                        h2.sura-name.item.item-divider(bo-if='aya.aya_id == 1'): b(bo-text='aya.sura_name')
+                        span(bindonce='aya.text', bo-if='options.reader.arabic_text', ng-click='audioPlayer.play({{ aya.index }})', bo-index='aya.index')
+                            span.aya-text(bo-attr, bo-colorize='options.reader.colorized', bo-colorize-text='aya.text', ng-class='{ playing: audioPlayer.currentTrack - 1 == aya.index }')
+                            i.aya-number(bo-text='aya.aya_id_display')
+                        .explanation-text(ng-repeat='explanation in aya.explanations', bindonce='explanation', dir='{{ explanation.direction }}')
+                            i.aya-number.explanation-aya-number(bo-if='!options.reader.arabic_text || explanation.language != "ar"', bo-text='explanation.text')
 
                 .item.item-text-wrap(ng-if='view.current < view.total')
                     //- button.button.button-block(ng-click='loadMore()') Load More...

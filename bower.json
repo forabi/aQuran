@@ -34,7 +34,8 @@
     "nedb": "*",
     "ngstorage": "~0.3.0",
     "flag-icon-css": "~0.6.0",
-    "angular-media-player": "~0.5.0"
+    "angular-media-player": "~0.5.0",
+    "angular-bindonce": "Pasvaz/bindonce#~0.3.1"
   },
   "overrides": {
     "ionic": {

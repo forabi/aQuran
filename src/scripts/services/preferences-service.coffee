@@ -44,9 +44,6 @@ app.service 'Preferences', ['$localStorage', ($localStorage) ->
             # auto: no
             auto: yes
 
-
-    # get: (section) -> Storage.get section
-    # set: (section) -> Storage.set section
     # defaults
     $localStorage.$default defaults
 ]

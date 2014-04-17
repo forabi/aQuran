@@ -5,7 +5,7 @@ app.controller 'ReadingController', ['$rootScope', '$scope', '$state', '$statePa
 
     $scope.playlist = []
 
-    $scope.pages = []
+    # $scope.pages = []
 
     $scope.view = _.defaults $stateParams, $scope.options.reader.view
 
@@ -71,7 +71,7 @@ app.controller 'ReadingController', ['$rootScope', '$scope', '$state', '$statePa
             $scope.$broadcast 'scroll.infiniteScrollComplete'
 
     loadContent().then (content) ->
-        $scope.pages.push content
+        $scope.pages = content
         $scope.options.first_time = no
         $scope.scrollTo = $stateParams.scrollTo
 
