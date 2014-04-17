@@ -56,6 +56,7 @@ config = _.defaults gutil.env,
             ]
         )
         (file: 'ng-modules.js', src: [
+            'bindonce*.js'
             'ngStorage.js'
             'angular-media-player*.js'
             ]
@@ -197,7 +198,7 @@ gulp.task 'coffee', ['js'], () ->
     .pipe (if config.env is 'production' then plugins.uglify() else gutil.noop())
     .pipe (plugins.order config.coffeeConcat.src)
     .pipe plugins.tap (file) ->
-        config.scripts.push path.relative 'src', file.path
+        config.scripts.push path.relative 'src', file.path if !file.path.match /.map$/gi
     .pipe gulp.dest "#{config.dest}/scripts"
 
 gulp.task 'js', (callback) ->
@@ -241,27 +242,34 @@ gulp.task 'quran', (callback) ->
             numbers = /[٠١٢٣٤٥٦٧٨٩]+/g # Hindi numbers
             strip = /\u06DD|[٠١٢٣٤٥٦٧٨٩]/g # Aya number and aya sign
 
-            process = (file) ->
+            process = (file, callback) ->
                 deferred = Q.defer()
                 fs.readFile (path.join 'src', file), (err, data) ->
-                    if err then throw err
-                    text = data.toString()
-                    aya_ids = text.match numbers # Get aya_ids from file contents
-                    sura_id = Number file.match /\d+/g # Get sura_id from filename
+                    if err then callback err
+                    else
+                        text = data.toString()
+                        aya_ids = text.match numbers # Get aya_ids from file contents
+                        sura_id = Number file.match /\d+/g # Get sura_id from filename
 
-                    text = text.replace strip, '' # Strip aya number and aya sign
-                    .trim()
-                    .split '\n'
-                    .map (line, index) ->
-                        sura_id: sura_id
-                        aya_id_display: aya_ids[index]
-                        uthmani: line.trim()
-                    deferred.resolve text
+                        text = text.replace strip, '' # Strip aya number and aya sign
+                        .trim()
+                        .split '\n'
+                        .map (line, index) ->
+                            sura_id: sura_id
+                            aya_id_display: aya_ids[index]
+                            uthmani: line.trim()
+                        callback null, text
+
+            processAll = () ->
+                deferred = Q.defer()
+                async.mapLimit files, 7, process, (err, suras) ->
+                    if err then deferred.reject err
+                    else deferred.resolve suras
                 deferred.promise
 
-            Q.all files.map process
+            processAll()
             .then (suras) ->
-                _.flatten suras # [[{0}, {1}], [{2}, {3}]...] becomes [{0}, {1}, {2}, {3}...]
+                _.flatten suras # [{0}, {1}], [{2}, {3}]...] becomes [{0}, {1}, {2}, {3}...]
             .then (json) ->
                 _.merge rows, json # Merge JSON with SQL data
             .then(JSON.stringify)
