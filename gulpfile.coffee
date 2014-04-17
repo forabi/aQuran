@@ -150,6 +150,7 @@ gulp.task 'scss', ['flags', 'css'], () ->
     .pipe gulp.dest "#{config.dest}/styles"
 
 gulp.task 'css', () ->
+    config.styles = []
     plugins.bowerFiles()
     .pipe plugins.filter ['**/ionic/**/*.css', '**/flag-icon-css/css/flag-icon.css']
     .pipe plugins.using()
@@ -169,7 +170,7 @@ gulp.task 'amiri', () ->
     .pipe plugins.cached()
     .pipe gulp.dest config.dest
 
-gulp.task 'styles', ['scss', 'css', 'amiri']
+gulp.task 'styles', ['css', 'scss', 'amiri']
 
 gulp.task 'jade', ['scripts', 'styles', 'icons'], () ->
 
@@ -219,6 +220,7 @@ gulp.task 'js', (callback) ->
 gulp.task 'scripts', ['js', 'coffee']
 
 gulp.task 'icons', () ->
+    config.icons = []
     gulp.src config.src.icons, cwd: 'src'
     # .pipe plugins.optimize()
     .pipe plugins.tap (file) ->
