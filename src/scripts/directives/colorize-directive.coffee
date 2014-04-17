@@ -37,4 +37,8 @@ app.directive 'colorize', ['ArabicService', '$timeout', '$log', (Arabic, $timeou
             # $log.debug 'Text', text
             # $log.debug 'Full Text', searchText
             $element.html text
+            # $element.removeAttr 'colorize'
+            # $element.removeAttr 'colorize-text'
+            # $element.removeAttr 'highlight'
+            # $element.removeAttr 'search-text'
 ]
