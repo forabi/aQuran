@@ -6,7 +6,7 @@ app.controller 'AyaController', ['$scope', 'ContentService' , '$stateParams', '$
     $scope.aya =
         gid: Number $stateParams.gid || 1
 
-    ContentService.then (db) ->
+    ContentService.ayas.then (db) ->
         db.findOne $scope.aya
         .exec()
         .then (aya) ->

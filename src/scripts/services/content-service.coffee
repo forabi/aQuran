@@ -1,7 +1,7 @@
 # nedb = require 'nedb'
 # async = require 'async'
 app.service 'ContentService', ['IDBStoreFactory', 'ExplanationFactory', 'AudioSrcFactory', 'Preferences', '$q', '$log', (IDBStoreFactory, ExplanationFactory, AudioSrcFactory, Preferences, $q, $log) ->
-    IDBStoreFactory 'resources/quran.json',
+    ayas:  IDBStoreFactory 'resources/quran.json',
         dbVersion: 7
         storeName: 'ayas'
         keyPath: 'gid'
@@ -40,6 +40,21 @@ app.service 'ContentService', ['IDBStoreFactory', 'ExplanationFactory', 'AudioSr
                             aya
                     else aya
         ]
-    .catch (err) ->
-        $log.error err
+    suras: IDBStoreFactory 'resources/quran.json',
+        dbVersion: 2
+        storeName: 'suras'
+        keyPath: 'sura_id'
+        autoIncrement: no
+        indexes: [ name: 'sura_id', unique: yes ]
+        transformResponse: (response) ->
+            _.chain response.data
+            .uniq yes, (aya) -> aya.sura_id
+            .map (aya) -> 
+                _.pick aya, 'sura_id', 'gid', 'page_id', 'sura_name', 'sura_name_en', 'sura_name_romanization'
+            .value()
+        transforms: [
+            (sura) ->
+                sura.sura_name = sura[Preferences.reader.sura_name]
+                sura
+        ]
 ]

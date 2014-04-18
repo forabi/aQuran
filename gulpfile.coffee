@@ -110,8 +110,8 @@ try
 gulp.task 'watch', () ->
     # server = livereload();
     gulp.watch config.src.manifest, cwd: 'src', ['manifest']
-    gulp.watch [config.src.coffee, config.src.js], cwd: 'src', ['scripts', 'html']
-    gulp.watch config.src.jade, cwd: 'src', ['html']
+    gulp.watch [config.src.coffee, config.src.js], cwd: 'src', ['scripts', 'styles', 'html']
+    gulp.watch config.src.jade, cwd: 'src', ['styles', 'html']
     gulp.watch config.watch.scss, cwd: 'src', ['styles']
 
 gulp.task 'clean', () ->
@@ -131,7 +131,8 @@ gulp.task 'manifest', () ->
         file
     .pipe gulp.dest config.dest
 
-gulp.task 'flags', ['translations'], () ->
+gulp.task 'flags', () ->
+    if not config.countries then gulp.run 'translations'
     gulp.src (config.countries.map (country) -> "flags/1x1/#{country.toLowerCase()}.*"), cwd: "#{config.bower}/flag-icon-css"
     .pipe plugins.using()
     .pipe plugins.cached()
@@ -150,7 +151,6 @@ gulp.task 'scss', ['flags', 'css'], () ->
     .pipe gulp.dest "#{config.dest}/styles"
 
 gulp.task 'css', () ->
-    config.styles = []
     plugins.bowerFiles()
     .pipe plugins.filter ['**/ionic/**/*.css', '**/flag-icon-css/css/flag-icon.css']
     .pipe plugins.using()
@@ -174,9 +174,9 @@ gulp.task 'styles', ['css', 'scss', 'amiri']
 
 gulp.task 'jade', ['scripts', 'styles', 'icons'], () ->
 
-    scripts = config.scripts || [] # TODO
-    styles = config.styles || []
-    icons = config.icons || []
+    scripts = _.uniq config.scripts || [] # TODO
+    styles = _.uniq config.styles || []
+    icons = _.uniq config.icons, (icon) -> icon.size || []
 
     gulp.src config.src.jade, cwd: 'src', base: 'src'
     .pipe plugins.using()
@@ -186,7 +186,7 @@ gulp.task 'jade', ['scripts', 'styles', 'icons'], () ->
             scripts: scripts
             styles: styles
             icons: icons
-            manifest: config.cacheManifest
+            manifest: config.cacheManifest if config.env is 'production'
     .pipe gulp.dest config.dest
 
 gulp.task 'html', ['jade']
@@ -220,7 +220,6 @@ gulp.task 'js', (callback) ->
 gulp.task 'scripts', ['js', 'coffee']
 
 gulp.task 'icons', () ->
-    config.icons = []
     gulp.src config.src.icons, cwd: 'src'
     # .pipe plugins.optimize()
     .pipe plugins.tap (file) ->
@@ -245,7 +244,6 @@ gulp.task 'quran', (callback) ->
             strip = /\u06DD|[٠١٢٣٤٥٦٧٨٩]/g # Aya number and aya sign
 
             process = (file, callback) ->
-                deferred = Q.defer()
                 fs.readFile (path.join 'src', file), (err, data) ->
                     if err then callback err
                     else
@@ -262,14 +260,14 @@ gulp.task 'quran', (callback) ->
                             uthmani: line.trim()
                         callback null, text
 
-            processAll = () ->
+            processAll = (files) ->
                 deferred = Q.defer()
                 async.mapLimit files, 7, process, (err, suras) ->
                     if err then deferred.reject err
                     else deferred.resolve suras
                 deferred.promise
 
-            processAll()
+            processAll files
             .then (suras) ->
                 _.flatten suras # [{0}, {1}], [{2}, {3}]...] becomes [{0}, {1}, {2}, {3}...]
             .then (json) ->

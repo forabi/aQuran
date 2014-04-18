@@ -13,7 +13,7 @@ app.factory 'IDBStoreFactory', ['$q', '$http', '$log', 'QueryBuilder', 'Preferen
         get = () ->
             deferred.notify action: "STORE.FETCHING", data: storeName: options.storeName
             $http.get url, cache: yes
-            .then(options.transformResponse)
+            .then options.transformResponse
 
         clear = () ->
             d = $q.defer()

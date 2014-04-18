@@ -24,27 +24,18 @@ app.controller 'ReadingController', ['$rootScope', '$scope', '$state', '$statePa
     #     $log.debug "Playing #{i}"
 
     transform = (docs) ->
-        # default sorting
         _.chain docs
         .map (aya, index) ->
             $scope.playlist.push aya.recitation
             aya.index = index
             aya
-        # .sortBy 'gid'
-        # .groupBy 'sura_id'
-        # .map (ayas, key) ->
-        #     ayas: ayas
-        #     sura_name: ayas[0].sura_name
-        #     sura_name_romanization: ayas[0].sura_name_romanization
-        #     sura_id: ayas[0].sura_id
-        # .sortBy 'sura_id'
         .value()
 
     loadContent = () ->
         query = {}
         query[$scope.view.type] = $scope.view.current
         # $scope.progress.status = 'loading'
-        ContentService.then (db) ->
+        ContentService.ayas.then (db) ->
             db.find query
             .exec()
         .then transform
@@ -74,6 +65,12 @@ app.controller 'ReadingController', ['$rootScope', '$scope', '$state', '$statePa
         $scope.pages.push content
         $scope.options.first_time = no
         $scope.scrollTo = $stateParams.scrollTo
+
+    ContentService.suras.then (db) ->
+        db.find()
+        .exec()
+    .then (data) ->
+        $scope.suras = data
 
     error = (err) ->
         $scope.progress.status = 'error'
