@@ -1,9 +1,13 @@
 .list(ng-controller='NavigationController')
+    label.item.item-input(auto-direction='{{ search.sura_name }}')
+        i.icon.placeholder-icon.ion-ios7-search-strong
+        input(type='search', placeholder='Filter', ng-model='search.sura_name')
+
     a.item.item-text-wrap(
-        ng-repeat='sura in suras',
+        ng-repeat='sura in suras | filter:search',
         bindonce,
         nav-clear,
-        auto-direction,
+        auto-direction='{{ sura.sura_name }}',
         ui-sref='reader({ current: {{ sura.page_id }}, scrollTo: {{ sura.gid }} })'
         )
         | {{ sura.sura_name }}
