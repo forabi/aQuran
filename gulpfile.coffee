@@ -76,6 +76,7 @@ config = _.defaults gutil.env,
         js: 'scripts/*.js'
     watch:
         scss: 'styles/**/*.scss'
+        jade: ['*/**/*.jade']
     coffeeConcat:
         file: 'main.js'
         src: [
@@ -111,7 +112,7 @@ gulp.task 'watch', () ->
     # server = livereload();
     gulp.watch config.src.manifest, cwd: 'src', ['manifest']
     gulp.watch [config.src.coffee, config.src.js], cwd: 'src', ['scripts', 'styles', 'html']
-    gulp.watch config.src.jade, cwd: 'src', ['styles', 'html']
+    gulp.watch config.watch.jade, cwd: 'src', ['styles', 'html']
     gulp.watch config.watch.scss, cwd: 'src', ['styles']
 
 gulp.task 'clean', () ->
@@ -233,7 +234,7 @@ gulp.task 'images', ['icons']
 
 gulp.task 'quran', (callback) ->
     db = new sqlite3.Database("src/#{config.src.database}", sqlite3.OPEN_READONLY);
-    db.all 'SELECT gid, aya_id, page_id, sura_id, standard, standard_full, sura_name, sura_name_en, sura_name_romanization FROM aya ORDER BY gid', (err, rows) ->
+    db.all 'SELECT gid, aya_id, page_id, juz_id, sura_id, standard, standard_full, sura_name, sura_name_en, sura_name_romanization FROM aya ORDER BY gid', (err, rows) ->
         write = (json) ->
             fs.writeFile "#{config.dest}/resources/quran.json", json, callback
 

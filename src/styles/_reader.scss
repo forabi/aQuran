@@ -9,11 +9,15 @@
         text-align-last: justify;
         text-justify: auto;
     }
-    .sura-name {
-        font-family: $sura-name-font-family;
+}
+
+.sura-name {
+    font-family: $sura-name-font-family;
+    font-size: 120%;
+    font-weight: bold;
+    .page & {
         font-size: $sura-name-font-size;
         text-align: center;
-        font-weight: bold;
     }
 }
 
@@ -22,7 +26,6 @@
     direction: rtl !important;
     .aya-text {
         font-family: $aya-font-family;
-        line-height: $aya-line-height;
         pointer-events: none;
         .playing {
             color: blue;
@@ -52,13 +55,21 @@
             }
         }
     }
-    &:not(.single-aya), &:not(.search) {
+    &:not(.single-aya), &:not(.search), &:not(.aya-nav) {
         .aya-text {
+            line-height: $aya-line-height;
             font-size: $aya-font-size;
+        }
+    }
+    &.aya-nav {
+        text-overflow: ellipsis !important;
+        .aya-text {
+            font-size: 120%;
         }
     }
     &.single-aya {
         .aya-text {
+            line-height: $aya-line-height * 1.2;
             font-size: $aya-font-size * 1.2;
             text-align-last: initial;
         }

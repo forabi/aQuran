@@ -9,7 +9,7 @@ html(ng-app='quran', lang='en', manifest=manifest)
         for icon in icons
             link(rel='icon', href=icon.path, sizes=icon.size)
     body
-        ion-nav-bar.nav-title-slide-android(ng-class='{ "bar-{{ options.theme }}": true }')
+        ion-nav-bar.bar-header.nav-title-slide-android(ng-class='{ "bar-{{ options.theme }}": true }')
             ion-nav-back-button.button-icon
                 i.ion-ios7-arrow-back
         ion-nav-view(animation='slide-left-right')

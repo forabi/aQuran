@@ -17,6 +17,10 @@ app.service 'Preferences', ['$localStorage', ($localStorage) ->
             enabled: yes
             ids: ['ar.muyassar', 'en.ahmedali']
 
+        nav:
+            view:
+                id: 'sura_id'
+
         reader:
             arabic_text: on
             standard_text: no

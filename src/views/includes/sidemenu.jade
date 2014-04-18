@@ -1,13 +1,16 @@
 .list(ng-controller='NavigationController')
-    label.item.item-input(auto-direction='{{ search.sura_name }}')
-        i.icon.placeholder-icon.ion-ios7-search-strong
-        input(type='search', placeholder='Filter', ng-model='search.sura_name')
+    .item.item-input.item-select
+        label.input-label Navigate by:
+        select(ng-model='view', ng-options='view.display for view in views')
 
-    a.item.item-text-wrap(
-        ng-repeat='sura in suras | filter:search',
-        bindonce,
+    label.item.item-input(auto-direction='{{ search.title }}')
+        i.icon.placeholder-icon.ion-ios7-search-strong
+        input(type='search', placeholder='Filter', ng-model='search.title')
+
+    a.item(
+        ng-repeat='item in items | filter:search',
         nav-clear,
-        auto-direction='{{ sura.sura_name }}',
-        ui-sref='reader({ current: {{ sura.page_id }}, scrollTo: {{ sura.gid }} })'
+        ui-sref='reader({ current: "{{ item.page_id }}", scrollTo: "{{ item.gid }}" })'
         )
-        | {{ sura.sura_name }}
+            .sura-name(auto-direction='{{ item.title }}') {{ item.title }}
+            .aya.aya-nav: small.aya-text(colorize='{{ options.reader.colorized }}', colorize-text='{{ item.uthmani }}') {{ item.uthmani }}

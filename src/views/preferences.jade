@@ -4,41 +4,41 @@ ion-view(title='Preferences')
             .item.item-divider.item-text-wrap Appearance
             a.item.item-toggle.item-text-wrap(ui-sref='themes') Select theme
             .item.item-toggle.item-text-wrap Show Arabic text
-                label.toggle
+                label.toggle(class='toggle-{{ options.theme }}')
                     input(type='checkbox', ng-model='options.reader.arabic_text')
                     .track: .handle
             a.item.item-toggle.item-text-wrap(ui-sref='sura-name') Select how to display sura names
                 //- div: small {{ sura_names[options.reader.sura_name].name }}, e.g. {{ sura_names[options.reader.sura_name].example }}
             div(ng-show='options.reader.arabic_text')
                 .item.item-toggle.item-text-wrap Standard text
-                    label.toggle
+                    label.toggle(class='toggle-{{ options.theme }}')
                         input(type='checkbox', ng-model='options.reader.standard_text')
                         .track: .handle
                 .item.item-toggle.item-text-wrap(ng-if='options.reader.standard_text') Show diacritics
-                    label.toggle
+                    label.toggle(class='toggle-{{ options.theme }}')
                         input(type='checkbox', ng-model='options.reader.diacritics')
                         .track: .handle
                 .item.item-toggle.item-text-wrap(ng-if='options.reader.diacritics') Use different colors for diacritics and Quranic annotation signs
-                    label.toggle
+                    label.toggle(class='toggle-{{ options.theme }}')
                         input(type='checkbox', ng-model='options.reader.colorized')
                         .track: .handle
 
             .item.item-divider.item-text-wrap Translations
             .item.item-toggle.item-text-wrap Enable translations
-                label.toggle
+                label.toggle(class='toggle-{{ options.theme }}')
                     input(type='checkbox', ng-model='options.explanations.enabled', ng-disabled='!options.reader.arabic_text')
                     .track: .handle
             a.item.item-text-wrap(ui-sref='explanations', ng-if='options.explanations.enabled') Manage translations
 
             .item.item-divider.item-text-wrap Recitation
             .item.item-toggle.item-text-wrap Enable recitation
-                label.toggle
+                label.toggle(class='toggle-{{ options.theme }}')
                     input(type='checkbox', ng-model='options.audio.enabled')
                     .track: .handle
             .item.item-toggle.item-text-wrap(ng-if='options.audio.enabled')
                 | Adapt streaming quality to network conditions
                 div: small Depending on the quality of your Internet connection, the quality of audio may change during playback
-                label.toggle
+                label.toggle(class='toggle-{{ options.theme }}')
                     input(type='checkbox', ng-model='options.audio.auto_quality')
                     .track: .handle
             a.item.item-text-wrap(ui-sref='recitations', ng-if='options.audio.enabled')
@@ -47,7 +47,7 @@ ion-view(title='Preferences')
             .item.item-divider Search
             .item.item-toggle.item-text-wrap Use online search for better results
                 div: small When online, aQuran will connect to Al-Fanous web service to provide better search results.
-                label.toggle
+                label.toggle(class='toggle-{{ options.theme }}')
                     input(type='checkbox', ng-model='options.search.online.enabled')
                     .track: .handle
 
