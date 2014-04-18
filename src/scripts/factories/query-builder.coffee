@@ -7,6 +7,7 @@ app.factory 'QueryBuilder', ['$q', '$log', ($q, $log) ->
         _upper = undefined
         _exclude_lower = no
         _exclude_upper = no
+        # _iterate = no
         _order = 'ASC'
         _one = no
         _transforms = transforms || []
@@ -53,7 +54,13 @@ app.factory 'QueryBuilder', ['$q', '$log', ($q, $log) ->
 
             # $log.debug 'Executing query:', options
             # IDBWrapper method
+            # if not _iterate
             db.query success, options
+            # else
+            #     db.iterate (current, cursor, trans) ->
+            #         deferred.resolve
+            #             value: current
+            #             next: cursor.continue
 
 
             deferred.promise
@@ -67,7 +74,10 @@ app.factory 'QueryBuilder', ['$q', '$log', ($q, $log) ->
                 results = results[0] || null if _one # Returns only one object for findOne()
                 results
 
-
+        toCursor = () ->
+            _iterate = yes
+            transform: transform, exec: exec
+        
         transform = (fn) ->
             # Tranfsorms are functions that are iterated over with each result
             # we get from the query.
@@ -77,10 +87,15 @@ app.factory 'QueryBuilder', ['$q', '$log', ($q, $log) ->
 
         limit = (limit) ->
             _limit = limit # Not implemented yet
-            limit: limit, transform: transform, exec: exec
+            transform: transform, exec: exec
 
         sort = (sort) ->
             _order = 'DESC' if Number(sort) is -1 or sort.match /^des/gi
+            limit: limit, transform: transform, exec: exec
+
+        
+        skip = (howMany) ->
+            # Not implemented yet
             limit: limit, transform: transform, exec: exec
 
         where = (index) ->
@@ -107,7 +122,7 @@ app.factory 'QueryBuilder', ['$q', '$log', ($q, $log) ->
                     exec: exec
                 else exec: exec, from: from, between: between, transform: transform # Syntactic sugar
 
-            between: between, is: is_, from: from, limit: limit, exec: exec, transform: transform
+            between: between, is: is_, from: from, skip: skip, limit: limit, exec: exec, transform: transform
 
         find = (query, range...) ->
             switch
@@ -115,7 +130,7 @@ app.factory 'QueryBuilder', ['$q', '$log', ($q, $log) ->
                 when not query or typeof query is 'string'
                     _index = query
                     _parse_bounds range
-                    exec: exec, where: where, limit: limit, sort: sort, transform: transform
+                    exec: exec, where: where, skip: skip, limit: limit, sort: sort, transform: transform
 
                 # db.find({ page_id: 4 }) or db.find({ page_id: [1, 3] })
                 # or
@@ -138,7 +153,7 @@ app.factory 'QueryBuilder', ['$q', '$log', ($q, $log) ->
                     # $log.debug "query[_index]", range
                     # debugger
                     _parse_bounds range
-                    exec: exec, limit: limit, sort: sort, transform: transform
+                    exec: exec, skip: skip, limit: limit, sort: sort, transform: transform
 
         findOne = (query...) ->
             _one = yes # Set query option to individual object instead of array

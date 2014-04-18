@@ -24,7 +24,7 @@ app.config ['$stateProvider', '$urlRouterProvider', '$locationProvider', '$logPr
     .state 'reader',
       url: '/reader/:current?highlight&scrollTo'
       templateUrl: 'views/reader.html'
-      controller: 'ReadingController'
+      # controller: 'ReadingController'
 
     .state 'aya',
       url: '/aya/:gid?highlight'

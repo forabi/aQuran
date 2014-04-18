@@ -1,0 +1,9 @@
+.list(ng-controller='NavigationController')
+    a.item.item-text-wrap(
+        ng-repeat='sura in suras',
+        bindonce,
+        nav-clear,
+        auto-direction,
+        ui-sref='reader({ current: {{ sura.page_id }}, scrollTo: {{ sura.gid }} })'
+        )
+        | {{ sura.sura_name }}

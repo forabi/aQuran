@@ -1,7 +1,7 @@
 # _ = require 'lodash'
 # q = require 'q'
 # module.exports = (app) ->
-app.controller 'ReadingController', ['$rootScope', '$scope', '$state', '$stateParams', '$log', 'ContentService', 'Preferences', ($rootScope, $scope, $state, $stateParams, $log, ContentService, Preferences) ->
+app.controller 'ContentController', ['$rootScope', '$scope', '$state', '$stateParams', '$log', 'ContentService', 'Preferences', ($rootScope, $scope, $state, $stateParams, $log, ContentService, Preferences) ->
 
     $scope.playlist = []
 
@@ -65,12 +65,6 @@ app.controller 'ReadingController', ['$rootScope', '$scope', '$state', '$statePa
         $scope.pages.push content
         $scope.options.first_time = no
         $scope.scrollTo = $stateParams.scrollTo
-
-    ContentService.suras.then (db) ->
-        db.find()
-        .exec()
-    .then (data) ->
-        $scope.suras = data
 
     error = (err) ->
         $scope.progress.status = 'error'

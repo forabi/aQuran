@@ -262,7 +262,7 @@ gulp.task 'quran', (callback) ->
 
             processAll = (files) ->
                 deferred = Q.defer()
-                async.mapLimit files, 7, process, (err, suras) ->
+                async.mapLimit files, 3, process, (err, suras) ->
                     if err then deferred.reject err
                     else deferred.resolve suras
                 deferred.promise
