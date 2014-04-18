@@ -61,7 +61,7 @@ ion-view(title='Search')
                             auto-direction='{{ query }}',
                             ng-click='search.query = query; search.execute()'
                         )
-                            i.icon.placeholder-icon.ion-android-clock
+                            i.icon.placeholder-icon.ion-ios7-clock-outline
                             | {{ query }}
 
             .card(ng-if='progress.status == "ready" && search.results.length == 0')
