@@ -4,9 +4,10 @@ app   =   angular.module 'quran', ['ngSanitize', 'ngStorage', 'ionic', 'mediaPla
 app.constant 'API', 'http://www.alfanous.org/jos2'
 app.constant 'EveryAyah', 'http://www.everyayah.com/data'
 
-app.run ['$rootScope', 'AppCacheManager', 'Preferences', '$window', ($rootScope, AppCacheManager, Preferences, $window) ->
+app.run ['$rootScope', 'AppCacheManager', 'Preferences', 'MessageService', '$window', ($rootScope, AppCacheManager, Preferences, MessageService, $window) ->
     $rootScope.online = $window.navigator.onLine
     $rootScope.options = Preferences
+    $rootScope.messages = MessageService.store
     $window.addEventListener 'online',  () ->
       $rootScope.online = yes
       $rootScope.$apply()
@@ -18,7 +19,7 @@ app.run ['$rootScope', 'AppCacheManager', 'Preferences', '$window', ($rootScope,
 
 app.config ['$stateProvider', '$urlRouterProvider', '$locationProvider', '$logProvider' , ($stateProvider, $urlRouterProvider, $locationProvider, $logProvider) ->
 
-    # $logProvider.debugEnabled no
+    $logProvider.debugEnabled no
 
     $stateProvider
     .state 'reader',

@@ -76,7 +76,7 @@ config = _.defaults gutil.env,
         js: 'scripts/*.js'
     watch:
         scss: 'styles/**/*.scss'
-        jade: ['*/**/*.jade']
+        jade: ['*.jade', '*/**/*.jade']
     coffeeConcat:
         file: 'main.js'
         src: [
@@ -111,9 +111,9 @@ try
 gulp.task 'watch', () ->
     # server = livereload();
     gulp.watch config.src.manifest, cwd: 'src', ['manifest']
-    gulp.watch [config.src.coffee, config.src.js], cwd: 'src', ['scripts', 'styles', 'html']
-    gulp.watch config.watch.jade, cwd: 'src', ['styles', 'html']
-    gulp.watch config.watch.scss, cwd: 'src', ['styles']
+    gulp.watch [config.src.coffee, config.src.js], cwd: 'src', ['scripts', 'styles', 'html', 'cache']
+    gulp.watch config.watch.jade, cwd: 'src', ['styles', 'html', 'cache']
+    gulp.watch config.watch.scss, cwd: 'src', ['styles', 'cache']
 
 gulp.task 'clean', () ->
     gulp.src config.target, cwd: 'dist'
@@ -133,7 +133,6 @@ gulp.task 'manifest', () ->
     .pipe gulp.dest config.dest
 
 gulp.task 'flags', () ->
-    if not config.countries then gulp.run 'translations'
     gulp.src (config.countries.map (country) -> "flags/1x1/#{country.toLowerCase()}.*"), cwd: "#{config.bower}/flag-icon-css"
     .pipe plugins.using()
     .pipe plugins.cached()
@@ -365,6 +364,9 @@ gulp.task 'translations', () ->
             items
         .then(JSON.stringify)
         .then(write)
+        .then () -> config.translations = no
+            # We do this so translations are only processed once in a session,
+            # this helps reduce rebuild time while watching
 
 gulp.task 'recitations', () ->
     (

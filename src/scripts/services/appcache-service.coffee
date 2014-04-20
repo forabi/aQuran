@@ -1,24 +1,27 @@
-app.service 'AppCacheManager', ['$window', '$rootScope', '$log', ($window, $rootScope, $log) ->
+app.service 'AppCacheManager', ['MessageService', '$window', '$rootScope', '$log', (MessageService, $window, $rootScope, $log) ->
+    id = undefined
     $window.applicationCache.onchecking = (e) ->
-        $log.info 'AppCache Checking...', e
-        # Checking for updates
+        id = MessageService.add text: 'Checking for updates...'
     $window.applicationCache.onupdateready = (e) ->
-        $log.info 'AppCache Update Ready', e
-        # Update is ready
-    $window.applicationCache.onobsolete = (e) ->
-        $log.info 'AppCache Obsolete', e
-        # Update is available
+        MessageService.update id,
+            text: 'Update is ready, changes will take effect after reload'
+            icon: 'ion-refresh'
+            action: () -> location.reload()
+    # $window.applicationCache.onobsolete = (e) ->
+    #     MessageService. 'AppCache Obsolete', e
+    #     # Update is available
     $window.applicationCache.ondownloading = (e) ->
-        $log.info 'AppCache Downloading...', e
-        # Downloading...
+        # $log.info 'AppCache Downloading...', e
+        MessageService.update id, text: 'Downloading updates...'
     $window.applicationCache.onprogress = (e) ->
-        $log.info 'AppCache in progress', e
-        # Progress
+        percent = ''
+        percent = " (#{(100 * e.loaded / e.total).toFixed 0}%)" if e.lengthComputable
+        MessageService.update id, text: "Downloading updates#{percent}..."
     $window.applicationCache.onerror = (e) ->
-        $log.error 'AppCache Error', e
-        # Something wrong happened
+        MessageService.update id, text: 'Error updating the application', type: 'error'
     $window.applicationCache.oncached = (e) ->
-        $log.info 'AppCache Cached', e
-        # The latest version is now available offline
+        MessageService.update id, text: 'This application is now avialable offline'
+    $window.applicationCache.onnoupdate = (e) ->
+        MessageService.update id, text: 'No updates found'
     $window.applicationCache
 ]

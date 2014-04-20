@@ -12,6 +12,15 @@ html(ng-app='quran', lang='en', manifest=manifest)
         ion-nav-bar.bar-header.nav-title-slide-android(ng-class='{ "bar-{{ options.theme }}": true }', align-title='left')
             ion-nav-back-button.button-icon
                 i.ion-android-arrow-back
+        
         ion-nav-view(animation='slide-left-right')
+        
+        .bar.bar-footer.bar-stable(ng-if='messages.length > 0 && !messages[0].dismissed')
+            .row
+                .col.col-center {{ messages[0].text }}
+                .pull-right.col-center
+                    button.button.icon-left(ng-if='messages[0].action', class='{{ messages[0].icon }}', ng-click='messages[0].action()')
+                    button.button.icon-left.ion-android-close(ng-if='messages[0].dismiss', ng-click='messages[0].dismiss()')
+
         for script in scripts
             script(src=script)

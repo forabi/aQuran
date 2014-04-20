@@ -46,7 +46,7 @@ app.controller 'ContentController', ['$rootScope', '$scope', '$stateParams', '$t
             .exec()
         .then transform
         .then (content) ->
-            $log.debug 'Content ready', content
+            # $log.debug 'Content ready', content
             $rootScope.title = content[0].sura_name # TODO: use a proper title
             $scope.progress.status = 'ready'
             content
