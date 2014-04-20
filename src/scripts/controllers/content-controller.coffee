@@ -1,7 +1,7 @@
 # _ = require 'lodash'
 # q = require 'q'
 # module.exports = (app) ->
-app.controller 'ContentController', ['$rootScope', '$scope', '$state', '$stateParams', '$log', 'ContentService', 'Preferences', ($rootScope, $scope, $state, $stateParams, $log, ContentService, Preferences) ->
+app.controller 'ContentController', ['$rootScope', '$scope', '$stateParams', '$timeout', '$log', 'ContentService', 'Preferences', ($rootScope, $scope, $stateParams, $timeout, $log, ContentService, Preferences) ->
 
     $scope.playlist = []
 
@@ -14,14 +14,16 @@ app.controller 'ContentController', ['$rootScope', '$scope', '$state', '$statePa
         total: 0
         current: 0
 
-    $scope.$watch 'scrollTo', (n, o) ->
-        if n > o then $scope.loadMore()
-
     # $scope.$on 'audioPlayer:ready', (player) ->
     #     $log.debug 'Player ready', player
 
     # $scope.$on 'audioPlayer.play', (i) ->
     #     $log.debug "Playing #{i}"
+
+    scroll = (id) ->
+        if id then $timeout () ->
+            elem = document.getElementById id
+            elem.scrollIntoView yes
 
     transform = (docs) ->
         _.chain docs
@@ -30,6 +32,10 @@ app.controller 'ContentController', ['$rootScope', '$scope', '$state', '$statePa
             aya.index = index
             aya
         .value()
+
+    $scope.$watch 'scrollTo', (n, o) ->
+        if n > o then $scope.loadMore()
+        scroll $scope.scrollTo
 
     loadContent = () ->
         query = {}
