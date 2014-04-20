@@ -9,9 +9,9 @@ app.controller 'AyaController', ['$scope', 'ContentService' , '$stateParams', '$
     ContentService.ayas.then (db) ->
         db.findOne $scope.aya
         .exec()
-        .then (aya) ->
-            $scope.aya = aya
-            $scope.progress.status = 'ready'
+    .then (aya) ->
+        $scope.aya = aya
+        $scope.progress.status = 'ready'
         # .catch (err) ->
         #     $scope...
 ]

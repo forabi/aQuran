@@ -13,6 +13,7 @@ app.controller 'NavigationController', ['ContentService', 'CacheService', '$scop
             item.title = switch $scope.view.id
                 when 'sura_id' then item[$scope.options.reader.sura_name]
                 when 'juz_id' then item.juz_id # TODO: filter()
+            # item.texts = [] # Add translations + Arabic text if enabled
             item
 
     $scope.$watch 'view.id', (id) ->

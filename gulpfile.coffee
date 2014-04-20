@@ -376,9 +376,6 @@ gulp.task 'recitations', () ->
                 file
             .pipe gulp.dest 'src/resources'
     )
-    .pipe plugins.rename (file) ->
-        file.extname = '.json'
-        file
     .pipe plugins.jsonEditor (json) ->
         delete json.ayahCount
         _.chain json

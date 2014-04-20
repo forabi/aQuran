@@ -1,5 +1,4 @@
 app.controller 'PreferencesController', ['$scope', '$log', 'ExplanationService', ($scope, $log, ExplanationService) ->
-    # $log.debug 'Here we go'
     $scope.sura_names = [
         (value: 'sura_name', name: 'Arabic', example: 'الفاتحة')
         (value: 'sura_name_en', name: 'English', example: 'The Opening')
