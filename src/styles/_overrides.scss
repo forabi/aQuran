@@ -1,0 +1,13 @@
+
+// Remove the ?v=x.x suffix to allow caching
+$ionicons-font-path: './ionic/release/fonts';
+@font-face {
+    font-family: $ionicons-font-family;
+    src:url("#{$ionicons-font-path}/ionicons.eot");
+    src:url("#{$ionicons-font-path}/ionicons.eot") format("embedded-opentype"),
+    url("#{$ionicons-font-path}/ionicons.ttf") format("truetype"),
+    url("#{$ionicons-font-path}/ionicons.woff") format("woff"),
+    url("#{$ionicons-font-path}/ionicons.svg#Ionicons") format("svg");
+    font-weight: normal;
+    font-style: normal;
+}

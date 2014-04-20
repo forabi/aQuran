@@ -1,11 +1,13 @@
+@import "ionic/scss/ionic";
 @import "variables", "mixins";
 
 @import "fonts",
         "quran",
         "reader",
-        "search";
+        "search",
+        "overrides";
 
-@import "flag-icon-css/css/flag-icon.css";
+// @import "flag-icon-css/css/flag-icon.css";
 
 .bar-header .button {
     border: 0;

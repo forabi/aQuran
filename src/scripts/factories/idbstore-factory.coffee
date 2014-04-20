@@ -55,8 +55,10 @@ app.factory 'IDBStoreFactory', ['$q', '$http', '$log', 'QueryBuilder', 'Preferen
                 deferred.resolve store
             else if version > options.dbVersion
                 clear().then(get).then(insert).then deferred.resolve
+                .catch deferred.reject
             else
                 get().then(insert).then deferred.resolve
+                .catch deferred.reject
         store.onError = (err) ->
             deferred.reject err
 

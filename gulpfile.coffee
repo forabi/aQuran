@@ -150,18 +150,23 @@ gulp.task 'scss', ['flags', 'css'], () ->
         config.styles.push path.relative 'src', file.path
     .pipe gulp.dest "#{config.dest}/styles"
 
-gulp.task 'css', () ->
+gulp.task 'fonts', () ->
     plugins.bowerFiles()
-    .pipe plugins.filter ['**/ionic/**/*.css', '**/flag-icon-css/css/flag-icon.css']
+    .pipe plugins.filter ['**/fonts/*']
+    .pipe plugins.using()
+    .pipe plugins.cached()
+    .pipe gulp.dest "#{config.dest}/styles"
+
+gulp.task 'css', ['fonts'], () ->
+    plugins.bowerFiles()
+    .pipe plugins.filter [
+        # '**/ionic/**/*.css'
+        '**/flag-icon-css/css/flag-icon.css'
+    ]
     .pipe plugins.using()
     .pipe if config.env is 'production' then plugins.minifyCss keepSpecialComments: 0 else gutil.noop()
     .pipe plugins.tap (file) ->
         config.styles.push path.join 'styles', path.relative config.bower, file.path
-    .pipe plugins.cached()
-    .pipe gulp.dest "#{config.dest}/styles"
-
-    plugins.bowerFiles()
-    .pipe plugins.filter ['**/fonts/*']
     .pipe plugins.cached()
     .pipe gulp.dest "#{config.dest}/styles"
 
