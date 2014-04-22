@@ -284,7 +284,6 @@ styles/flag-icon-css/flags/1x1/yt.svg
 styles/flag-icon-css/flags/1x1/za.svg
 styles/flag-icon-css/flags/1x1/zm.svg
 styles/flag-icon-css/flags/1x1/zw.svg
-styles/ionic/release/css/ionic.css
 styles/ionic/release/fonts/ionicons.eot
 styles/ionic/release/fonts/ionicons.svg
 styles/ionic/release/fonts/ionicons.ttf
@@ -294,4 +293,4 @@ styles/ionic/release/fonts/ionicons.woff
 NETWORK:
 *
 
-# hash: 53fb465ddee3cc6b097a931afc5eba036f0346ee5d9827e4f1031b01dd9486dd
+# hash: a57f56eb311940afe33b4ccbae9ea55e4c8aea9a73332d655f41b355874b3e0f
