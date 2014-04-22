@@ -15,7 +15,7 @@ html(ng-app='quran', lang='en', manifest=manifest)
         
         ion-nav-view(animation='slide-left-right')
         
-        .bar.bar-footer.bar-stable(ng-if='messages.length > 0 && !messages[0].dismissed')
+        .bar.bar-footer.msg(ng-if='messages.length > 0 && !messages[0].dismissed', class='{{ messages[0].type }}')
             .row
                 .col.col-center {{ messages[0].text }}
                 .pull-right.col-center

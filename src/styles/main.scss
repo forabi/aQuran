@@ -21,3 +21,16 @@ em {
     font-weight: bold;
     font-style: italic;
 }
+
+
+.msg {
+    &.error {
+        @extend .bar-assertive;
+    }
+    &.info {
+        @extend .bar-positive;
+    }
+    &.sucesss {
+        @extend .bar-balanced;
+    }
+}

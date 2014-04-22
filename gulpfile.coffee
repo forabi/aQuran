@@ -111,9 +111,9 @@ try
 gulp.task 'watch', () ->
     # server = livereload();
     gulp.watch config.src.manifest, cwd: 'src', ['manifest']
-    gulp.watch [config.src.coffee, config.src.js], cwd: 'src', ['scripts', 'styles', 'html', 'cache']
-    gulp.watch config.watch.jade, cwd: 'src', ['styles', 'html', 'cache']
-    gulp.watch config.watch.scss, cwd: 'src', ['styles', 'cache']
+    gulp.watch [config.src.coffee, config.src.js], cwd: 'src', ['scripts', 'styles', 'html']
+    gulp.watch config.watch.jade, cwd: 'src', ['styles', 'html']
+    gulp.watch config.watch.scss, cwd: 'src', ['styles']
 
 gulp.task 'clean', () ->
     gulp.src config.target, cwd: 'dist'
@@ -128,7 +128,7 @@ gulp.task 'manifest', () ->
         json
     .pipe plugins.rename (file) ->
         # Firefox packaged apps must have the manifest file named 'manifset.webapp'
-        file.extname = '.webapp' if config.target != 'chrome'
+        file.extname = '.webapp' if config.target isnt 'chrome'
         file
     .pipe gulp.dest config.dest
 
@@ -141,7 +141,7 @@ gulp.task 'flags', () ->
 gulp.task 'scss', ['flags', 'css'], () ->
     gulp.src config.src.scss, cwd: 'src'
     .pipe plugins.sass
-        sourceComments: if config.env != 'production' then 'map'
+        sourceComments: if config.env isnt 'production' then 'map'
         outputStyle: if config.env is 'production' then 'compressed'
         includePaths: [config.bower]
     .pipe plugins.using()
@@ -186,7 +186,7 @@ gulp.task 'jade', ['scripts', 'styles', 'icons'], () ->
     gulp.src config.src.jade, cwd: 'src', base: 'src'
     .pipe plugins.using()
     .pipe plugins.jade
-        pretty: config.env != 'production'
+        pretty: config.env isnt 'production'
         locals:
             scripts: scripts
             styles: styles
@@ -198,7 +198,7 @@ gulp.task 'html', ['jade']
 
 gulp.task 'coffee', ['js'], () ->
     gulp.src config.src.coffee, cwd: 'src'
-    .pipe plugins.coffee bare: yes, sourceMap: (yes if config.env != 'production')
+    .pipe plugins.coffee bare: yes, sourceMap: (yes if config.env isnt 'production')
     .pipe (plugins.order config.coffeeConcat.src)
     .pipe (if config.env is 'production' then plugins.concat config.coffeeConcat.file else gutil.noop())
     .pipe (if config.env is 'production' then plugins.uglify() else gutil.noop())
@@ -437,6 +437,6 @@ gulp.task 'default', ['build', 'cache']
 gulp.task 'serve', () ->
     server = connect.createServer()
     server.use '/', connect.static "#{__dirname}/#{config.dest}"
-    server.use '/', connect.static "#{__dirname}/src" if config.env != 'production'
+    server.use '/', connect.static "#{__dirname}/src" if config.env isnt 'production'
     server.listen config.port, () ->
         gutil.log "Server listening on port #{config.port}"

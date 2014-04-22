@@ -20,8 +20,8 @@ app.service 'AppCacheManager', ['MessageService', '$window', '$rootScope', '$log
     $window.applicationCache.onerror = (e) ->
         MessageService.update id, text: 'Error updating the application', type: 'error'
     $window.applicationCache.oncached = (e) ->
-        MessageService.update id, text: 'This application is now avialable offline'
+        MessageService.update id, text: 'This application is now avialable offline', type: 'success'
     $window.applicationCache.onnoupdate = (e) ->
-        MessageService.update id, text: 'No updates found'
+        MessageService.update id, text: 'No updates found', type: 'info'
     $window.applicationCache
 ]
