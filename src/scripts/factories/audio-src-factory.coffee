@@ -1,4 +1,4 @@
- app.factory 'AudioSrcFactory', ['$sce', 'EveryAyah', 'Preferences', 'RecitationService', '$q', 'CacheService', '$log', ($sce, EveryAyah, Preferences, RecitationService, $q, CacheService, $log) ->
+app.factory 'AudioSrcFactory', ['$sce', 'EveryAyah', 'Preferences', 'RecitationService', '$q', 'CacheService', '$log', ($sce, EveryAyah, Preferences, RecitationService, $q, CacheService, $log) ->
     repeat = (str, n) ->
         while n > 0
             str += str
@@ -70,4 +70,4 @@
                     # $log.debug 'audio src:', src
                     src: $sce.trustAsResourceUrl src
                     type: 'audio/mp3'
-  ]
+]

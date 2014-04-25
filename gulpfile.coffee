@@ -5,6 +5,7 @@ Q               = require 'q'
 combine         = require 'stream-combiner'
 
 fs              = require 'graceful-fs'
+through         = require 'through'
 path            = require 'path'
 async           = require 'async'
 glob            = require 'glob'
@@ -15,6 +16,12 @@ admZip          = require 'adm-zip'
 connect         = require 'connect'
 
 plugins = (require 'gulp-load-plugins')()
+
+minifyJSON = ->
+    plugins.tap (file) ->
+        json = JSON.parse file.contents.toString()
+        file.contents = new Buffer JSON.stringify json
+        file
 
 config = _.defaults gutil.env,
     target: switch
@@ -95,11 +102,14 @@ config = _.defaults gutil.env,
             # Controllers
             '*/**/controllers/*'
         ]
-if config.env isnt 'proudction'
+if config.env isnt 'production'
     config = _.defaults config,
         lint: yes
         sourceMaps: yes
         experimental: yes # whether to use the Uthmanic script by Khaled Hosny
+else
+    config = _.defaults config,
+        experimental: yes
 
 config.dest = "dist/#{config.target}/#{config.env}"
 
@@ -134,6 +144,7 @@ gulp.task 'manifest', ->
         # Firefox packaged apps must have the manifest file named 'manifset.webapp'
         file.extname = '.webapp' if config.target isnt 'chrome'
         file
+    .pipe if config.env is 'production' then minifyJSON() else gutil.noop()
     .pipe gulp.dest config.dest
 
 gulp.task 'flags', ->
@@ -242,51 +253,49 @@ gulp.task 'icons', ->
 
 gulp.task 'images', ['icons']
 
-gulp.task 'quran', (callback) ->
+gulp.task 'quran', ->
     db = new sqlite3.Database("src/#{config.src.database}", sqlite3.OPEN_READONLY);
     db.all 'SELECT gid, aya_id, page_id, juz_id, sura_id, standard, standard_full, sura_name, sura_name_en, sura_name_romanization FROM aya ORDER BY gid', (err, rows) ->
-        write = (json) ->
-            fs.writeFile "#{config.dest}/resources/quran.json", json, callback
-
         if config.experimental
-            # Read all files from khaledhosny-quran
-            files = glob.sync config.src.hosny, cwd: 'src'
             numbers = /[٠١٢٣٤٥٦٧٨٩]+/g # Hindi numbers
             strip = /\u06DD|[٠١٢٣٤٥٦٧٨٩]/g # Aya number and aya sign
 
-            process = (file, callback) ->
-                fs.readFile (path.join 'src', file), (err, data) ->
-                    if err then callback err
-                    else
-                        text = data.toString()
-                        aya_ids = text.match numbers # Get aya_ids from file contents
-                        sura_id = Number file.match /\d+/g # Get sura_id from filename
+            concat = (filename) ->
+                joinedContent = []
 
-                        text = text.replace strip, '' # Strip aya number and aya sign
-                        .trim()
-                        .split '\n'
-                        .map (line, index) ->
-                            sura_id: sura_id
-                            aya_id_display: aya_ids[index]
-                            uthmani: line.trim()
-                        callback null, text
+                process = (file) ->
+                    text = file.contents.toString()
+                    aya_ids = text.match numbers # Get aya_ids from file contents
+                    sura_id = Number path.basename(file.path).match /\d+/g # Get sura_id from filename
 
-            processAll = (files) ->
-                deferred = Q.defer()
-                async.mapLimit files, 3, process, (err, suras) ->
-                    if err then deferred.reject err
-                    else deferred.resolve suras
-                deferred.promise
+                    text = text.replace strip, '' # Strip aya number and aya sign
+                    .trim()
+                    .split '\n'
+                    .map (line, index) ->
+                        sura_id: sura_id
+                        aya_id_display: aya_ids[index]
+                        uthmani: line.trim()
+                    joinedContent = Array.prototype.concat joinedContent, text
 
-            processAll files
-            .then (suras) ->
-                _.flatten suras # [{0}, {1}], [{2}, {3}]...] becomes [{0}, {1}, {2}, {3}...]
-            .then (json) ->
-                _.merge rows, json # Merge JSON with SQL data
-            .then(JSON.stringify)
-            .then(write)
+                endStream = ->
+                    joinedFile = new gutil.File
+                        path: filename
+                        contents: new Buffer JSON.stringify _.merge joinedContent, rows
+                    @emit 'data', joinedFile
+                    @emit 'end'
 
-        else write JSON.stringify rows
+                through process, endStream
+
+            gulp.src config.src.hosny, cwd: 'src'
+            .pipe plugins.using()
+            .pipe plugins.cached()
+            .pipe concat 'quran.json'
+            .pipe if config.env is 'production' then minifyJSON() else gutil.noop()
+            .pipe gulp.dest "#{config.dest}/resources"
+
+        else
+            data = JSON.stringify rows
+            fs.writeFileSync "#{config.dest}/resources/quran.json", data
 
 gulp.task 'search', ['quran'], ->
     gulp.src "#{config.dest}/resources/quran.json"
@@ -297,6 +306,7 @@ gulp.task 'search', ['quran'], ->
     .pipe plugins.rename (file) ->
         file.basename = 'search'
         file
+    .pipe if config.env is 'production' then minifyJSON() else gutil.noop()
     .pipe gulp.dest "#{config.dest}/resources"
 
 gulp.task 'translations', ->
@@ -305,43 +315,49 @@ gulp.task 'translations', ->
         fs.readFileSync "src/#{config.src.translationsTxt}"
         .toString().split /\n/g
 
-    write = (json) -> # Write translation metadata
-        fs.writeFileSync "#{config.dest}/resources/translations.json", json
+    concat = (filename) ->
+        files = []
+        json = []
+        process = (file) ->
+            self = @
+            gutil.log "[#{gutil.colors.green 'translations'}] Processing entry #{gutil.colors.cyan path.basename file.path}..."
+            file = new admZip path.join file.path
+            entries = file.getEntries()
+            # Walk through zip contents and process each entry
+            async.each entries, (entry, callback) ->
+                if entry.name.match /.properties$/gi
+                    text = entry.getData().toString 'utf-8'
+                    props = properties.parse text, (err, props) ->
+                        delete props.signature
+                        delete props.delimiter if not props.delimiter
+                        delete props.lineDelimiter if not props.lineDelimiter
+                        json.push props
+                        callback err
+                else if entry.name.match /.txt$/gi
+                    file = new gutil.File
+                        contents: entry.getData()
+                        path: "translations/#{entry.name}"
+                    self.emit 'data', file
+                    callback null
+            , (err) ->
+                files.push new gutil.File
+                    contents: new Buffer JSON.stringify json
+                    path: filename
 
-    process = (file) ->
-        deferred = Q.defer()
-        gutil.log 'Processing file', gutil.colors.cyan file
-        file = new admZip path.join 'src', file
-        entries = file.getEntries()
-        props = undefined
-        # Walk through zip contents and process each entry
-        async.each entries, (entry, callback) ->
-            if entry.name.match /.properties$/gi
-                text = entry.getData().toString 'utf-8'
-                properties.parse text, (err, obj) ->
-                    if err then throw err
-                    props = obj
-                    callback err
-            else if entry.name.match /.txt$/gi
-                file.extractEntryTo entry.name, "#{config.dest}/resources/translations", no, yes
-                callback()
-        , (err) ->
-            if err then throw err
-            deferred.resolve props
+        endStream = ->
+            @emit 'data', file for file in files
+            @emit 'end'
 
-        deferred.promise
+        through process, endStream
 
-    download = (id) ->
-        dest = "resources/translations/#{id}.trans.zip"
-        deferred = Q.defer()
-        if not config.download then deferred.resolve dest
-        else
-            url = _.findWhere urls, (url) -> url.match id
-            # gutil.log "Downloading: #{url}"
-            plugins.download url
-            .pipe (gulp.dest 'src/resources/translations').on('end', -> deferred.resolve dest)
-
-        deferred.promise
+    flags = ->
+        plugins.tap (file) ->
+            items = JSON.parse file.contents.toString()
+            config.countries = _.chain items
+                .pluck 'country'
+                .uniq().value()
+            gutil.log 'Countries:', gutil.colors.green config.countries
+            file
 
     if config.translations
         if typeof config.translations is 'string'
@@ -358,24 +374,20 @@ gulp.task 'translations', ->
         urls = _.chain(urls).flatten().uniq().value()
         # Extract IDs from URLs
         ids = urls.map (file) -> file.match(/.+\/(.+).trans.zip$/i)[1]
+        files = ids.map (id) -> "resources/translations/#{id}.trans.zip"
         gutil.log 'Translations IDs', gutil.colors.green ids
 
-        Q.all ids.map download
-        .then (files) ->
-            Q.all files.map process
-        .then (items) ->
-            # We need to know which countries have translations
-            # so we can copy the corresponding flags to the dist folder
-            config.countries = _.chain items
-                .pluck 'country'
-                .uniq().value()
-            gutil.log 'Countries:', gutil.colors.green config.countries
-            items
-        .then(JSON.stringify)
-        .then(write)
-        .then -> config.translations = no
-            # We do this so translations are only processed once in a session,
-            # this helps reduce rebuild time while watching
+        (
+            if config.download
+                plugins.download urls
+                .pipe gulp.dest 'src/resources/translations'
+            else
+                gulp.src files, cwd: 'src'
+        )
+        .pipe plugins.cached()
+        .pipe concat 'translations.json'
+        # .pipe flags()
+        .pipe gulp.dest "#{config.dest}/resources"
 
 gulp.task 'recitations', ->
     (
@@ -399,6 +411,7 @@ gulp.task 'recitations', ->
             delete item.index
             item
         .value()
+    .pipe if config.env is 'production' then minifyJSON() else gutil.noop()
     .pipe gulp.dest "#{config.dest}/resources"
 
 gulp.task 'cache', ['build'], ->

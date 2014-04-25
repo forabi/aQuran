@@ -17,8 +17,7 @@ app.factory 'QueryBuilder', ['$q', '$log', ($q, $log) ->
                 _lower = range[0]
                 _upper = range[1] || null
             else # Number, String...
-                _lower = range
-                _upper = _lower
+                _upper = _lower = range
 
         _make_range = ->
             # $log.debug 'Making key range for', _upper, _lower
@@ -105,8 +104,7 @@ app.factory 'QueryBuilder', ['$q', '$log', ($q, $log) ->
             between = (lower, upper) ->
                 _lower = lower
                 _upper = upper
-                _exclude_lower = yes
-                _exclude_upper = yes
+                _exclude_lower = _exclude_upper = yes
                 { limit, sort, transform, exec }
 
             from = (lower) ->
@@ -116,10 +114,10 @@ app.factory 'QueryBuilder', ['$q', '$log', ($q, $log) ->
                     { limit, sort, transform, exec }
                 }
 
-            is_ = (value) -> # Do not confuse with findOne(), this may match multiple objects
+            is_ = (value) -> # Do not confuse with findOne(),
+                             # this may match multiple objects
                 if value
-                    _lower = value
-                    _upper = value
+                    _lower = _upper = value
                     { exec }
                 else { exec, from, between, transform } # Syntactic sugar
 

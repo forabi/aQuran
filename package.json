@@ -40,7 +40,10 @@
     "gulp-cached": "0.0.3",
     "protractor": "^0.20.1",
     "gulp-sass": "^0.7.1",
-    "gulp-minify-css": "^0.3.0"
+    "gulp-minify-css": "^0.3.0",
+    "gulp-imagemin": "^0.4.0",
+    "imagemin-pngcrush": "^0.1.0",
+    "through": "^2.3.4"
   },
   "engines": {
     "node": ">=0.8.0"

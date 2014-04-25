@@ -20,7 +20,6 @@ app.factory 'IDBStoreFactory', ['$q', '$http', '$log', 'QueryBuilder', 'Preferen
             store.clear ->
                 d.resolve()
             , (err) ->
-                $log.error err
                 d.reject err
             d.promise
 
@@ -50,7 +49,7 @@ app.factory 'IDBStoreFactory', ['$q', '$http', '$log', 'QueryBuilder', 'Preferen
         store = new IDBStore options
         store.onStoreReady = ->
             version = Preferences["#{options.storeName}-version"]
-            if not version then version = -1
+            version = -1 if not version
             upgrade = yes if version > -1
             if Number Preferences["#{options.storeName}-version"] is options.dbVersion
                 deferred.resolve store

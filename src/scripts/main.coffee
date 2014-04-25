@@ -1,5 +1,5 @@
 # angular = require 'angular'
-app   =   angular.module 'quran', ['ngSanitize', 'ngStorage', 'ionic', 'mediaPlayer']
+app = angular.module 'quran', ['ngSanitize', 'ngStorage', 'ionic', 'mediaPlayer']
 
 app.constant 'API', 'http://www.alfanous.org/jos2'
 app.constant 'EveryAyah', 'http://www.everyayah.com/data'
@@ -8,14 +8,15 @@ app.run ['$rootScope', 'AppCacheManager', 'Preferences', 'MessageService', '$win
     $rootScope.online = $window.navigator.onLine
     $rootScope.options = Preferences
     $rootScope.messages = MessageService.store
-    $window.addEventListener 'online',  ->
-      $rootScope.online = yes
-      $rootScope.$apply()
-    $window.addEventListener 'offline', ->
-      $rootScope.online = no
-      $rootScope.$apply()
-  ]
 
+    $window.addEventListener 'online',  ->
+        $rootScope.online = yes
+        $rootScope.$apply()
+
+    $window.addEventListener 'offline', ->
+        $rootScope.online = no
+        $rootScope.$apply()
+]
 
 app.config ['$stateProvider', '$urlRouterProvider', '$locationProvider', '$logProvider' , ($stateProvider, $urlRouterProvider, $locationProvider, $logProvider) ->
 
@@ -76,7 +77,6 @@ app.config ['$stateProvider', '$urlRouterProvider', '$locationProvider', '$logPr
           # $scope.info = _.merge response.data, response.data.locales.ar
           $scope.info = response.data
       ]
-
 
     $urlRouterProvider.otherwise '/reader/1'
     # $locationProvider.html5Mode on
