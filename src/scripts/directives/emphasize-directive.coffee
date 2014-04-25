@@ -8,7 +8,7 @@ app.directive 'emphasize', ['$timeout', ($timeout) ->
             console.log text.replace regexp, '<em>$1</em>'
             text.replace regexp, '<em>$1</em>'
 
-        $timeout () ->
+        $timeout ->
             term = $attrs['emphasize']
             $element.html emphasize $element.text(), term
 ]

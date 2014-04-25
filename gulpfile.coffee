@@ -25,9 +25,7 @@ config = _.defaults gutil.env,
     version: 1
     port: 7000 # on which port the server will be listening
     env: if gutil.env.production then 'production' else 'development'
-    sourceMaps: yes
     bump: yes # whether to increase the version of the app on 'release'
-    experimental: yes # whether to use the Uthmanic script by Khaled Hosny
     download: no # if set to false, assume we already have
                  # recitations metadata and translation packages downloaded
     translations: yes # true, false, or an array of translations to include
@@ -97,8 +95,14 @@ config = _.defaults gutil.env,
             # Controllers
             '*/**/controllers/*'
         ]
+if config.env isnt 'proudction'
+    config = _.defaults config,
+        lint: yes
+        sourceMaps: yes
+        experimental: yes # whether to use the Uthmanic script by Khaled Hosny
 
 config.dest = "dist/#{config.target}/#{config.env}"
+
 
 try
     fs.mkdirSync "dist"
@@ -108,18 +112,18 @@ try
     fs.mkdirSync "#{config.dest}/translations" if config.translations
     fs.mkdirSync "#{config.dest}/icons"
 
-gulp.task 'watch', () ->
+gulp.task 'watch', ->
     # server = livereload();
     gulp.watch config.src.manifest, cwd: 'src', ['manifest']
     gulp.watch [config.src.coffee, config.src.js], cwd: 'src', ['scripts', 'styles', 'html']
     gulp.watch config.watch.jade, cwd: 'src', ['styles', 'html']
     gulp.watch config.watch.scss, cwd: 'src', ['styles']
 
-gulp.task 'clean', () ->
+gulp.task 'clean', ->
     gulp.src config.target, cwd: 'dist'
     .pipe plugins.clean()
 
-gulp.task 'manifest', () ->
+gulp.task 'manifest', ->
     gulp.src config.src.manifest, cwd: 'src'
     .pipe plugins.cson()
     .pipe plugins.jsonEditor (json) ->
@@ -132,13 +136,13 @@ gulp.task 'manifest', () ->
         file
     .pipe gulp.dest config.dest
 
-gulp.task 'flags', () ->
+gulp.task 'flags', ->
     gulp.src (config.countries.map (country) -> "flags/1x1/#{country.toLowerCase()}.*"), cwd: "#{config.bower}/flag-icon-css"
     .pipe plugins.using()
     .pipe plugins.cached()
     .pipe gulp.dest "#{config.dest}/styles/flag-icon-css/flags/1x1"
 
-gulp.task 'scss', ['flags', 'css'], () ->
+gulp.task 'scss', ['flags', 'css'], ->
     gulp.src config.src.scss, cwd: 'src'
     .pipe plugins.sass
         sourceComments: if config.env isnt 'production' then 'map'
@@ -150,14 +154,14 @@ gulp.task 'scss', ['flags', 'css'], () ->
         config.styles.push path.relative 'src', file.path
     .pipe gulp.dest "#{config.dest}/styles"
 
-gulp.task 'fonts', () ->
+gulp.task 'fonts', ->
     plugins.bowerFiles()
     .pipe plugins.filter ['**/fonts/*']
     .pipe plugins.using()
     .pipe plugins.cached()
     .pipe gulp.dest "#{config.dest}/styles"
 
-gulp.task 'css', ['fonts'], () ->
+gulp.task 'css', ['fonts'], ->
     plugins.bowerFiles()
     .pipe plugins.filter [
         # '**/ionic/**/*.css'
@@ -170,14 +174,14 @@ gulp.task 'css', ['fonts'], () ->
     .pipe plugins.cached()
     .pipe gulp.dest "#{config.dest}/styles"
 
-gulp.task 'amiri', () ->
+gulp.task 'amiri', ->
     gulp.src 'resources/amiri/*.ttf', cwd: 'src', base: 'src'
     .pipe plugins.cached()
     .pipe gulp.dest config.dest
 
 gulp.task 'styles', ['css', 'scss', 'amiri']
 
-gulp.task 'jade', ['scripts', 'styles', 'icons'], () ->
+gulp.task 'jade', ['scripts', 'styles', 'icons'], ->
 
     scripts = _.uniq config.scripts || [] # TODO
     styles = _.uniq config.styles || []
@@ -196,8 +200,10 @@ gulp.task 'jade', ['scripts', 'styles', 'icons'], () ->
 
 gulp.task 'html', ['jade']
 
-gulp.task 'coffee', ['js'], () ->
+gulp.task 'coffee', ['js'], ->
     gulp.src config.src.coffee, cwd: 'src'
+    .pipe (if config.lint then plugins.coffeelint() else gutil.noop())
+    .pipe (if config.lint then plugins.coffeelint.reporter() else gutil.noop())
     .pipe plugins.coffee bare: yes, sourceMap: (yes if config.env isnt 'production')
     .pipe (plugins.order config.coffeeConcat.src)
     .pipe (if config.env is 'production' then plugins.concat config.coffeeConcat.file else gutil.noop())
@@ -224,7 +230,7 @@ gulp.task 'js', (callback) ->
 
 gulp.task 'scripts', ['js', 'coffee']
 
-gulp.task 'icons', () ->
+gulp.task 'icons', ->
     gulp.src config.src.icons, cwd: 'src'
     # .pipe plugins.optimize()
     .pipe plugins.tap (file) ->
@@ -282,7 +288,7 @@ gulp.task 'quran', (callback) ->
 
         else write JSON.stringify rows
 
-gulp.task 'search', ['quran'], () ->
+gulp.task 'search', ['quran'], ->
     gulp.src "#{config.dest}/resources/quran.json"
     .pipe plugins.jsonEditor (ayas) ->
         # A subset of quran.json that only contains texts,
@@ -293,7 +299,7 @@ gulp.task 'search', ['quran'], () ->
         file
     .pipe gulp.dest "#{config.dest}/resources"
 
-gulp.task 'translations', () ->
+gulp.task 'translations', ->
     ids = []
     urls = # Load URLs of translation packages from translations.txt
         fs.readFileSync "src/#{config.src.translationsTxt}"
@@ -333,9 +339,7 @@ gulp.task 'translations', () ->
             url = _.findWhere urls, (url) -> url.match id
             # gutil.log "Downloading: #{url}"
             plugins.download url
-            .pipe (gulp.dest 'src/resources/translations').on('end', () ->
-                deferred.resolve dest
-                )
+            .pipe (gulp.dest 'src/resources/translations').on('end', -> deferred.resolve dest)
 
         deferred.promise
 
@@ -369,11 +373,11 @@ gulp.task 'translations', () ->
             items
         .then(JSON.stringify)
         .then(write)
-        .then () -> config.translations = no
+        .then -> config.translations = no
             # We do this so translations are only processed once in a session,
             # this helps reduce rebuild time while watching
 
-gulp.task 'recitations', () ->
+gulp.task 'recitations', ->
     (
         if not config.download then gulp.src 'resources/recitations.json', cwd: 'src'
         else
@@ -397,7 +401,7 @@ gulp.task 'recitations', () ->
         .value()
     .pipe gulp.dest "#{config.dest}/resources"
 
-gulp.task 'cache', ['build'], () ->
+gulp.task 'cache', ['build'], ->
     if config.target is 'web' and config.env is 'production'
         gulp.src "#{config.dest}/**/*"
         .pipe plugins.manifest
@@ -413,7 +417,7 @@ gulp.task 'cache', ['build'], () ->
         gulp.src "#{config.dest}/#{config.cacheManifest}"
         .pipe plugins.clean()
 
-gulp.task 'package', ['build', 'cache'], () ->
+gulp.task 'package', ['build', 'cache'], ->
     switch config.target
         when 'chrome'
             '' # Do something
@@ -425,7 +429,7 @@ gulp.task 'package', ['build', 'cache'], () ->
         else # Standard web app
             # Something
 
-gulp.task 'release', () ->
+gulp.task 'release', ->
     if config.bump
         config.version += 1
         config.date = new Date()
@@ -434,9 +438,9 @@ gulp.task 'data', ['quran', 'recitations', 'translations', 'search']
 gulp.task 'build', ['data', 'flags', 'images', 'scripts', 'styles', 'html', 'manifest']
 gulp.task 'default', ['build', 'cache']
 
-gulp.task 'serve', () ->
+gulp.task 'serve', ->
     server = connect.createServer()
     server.use '/', connect.static "#{__dirname}/#{config.dest}"
     server.use '/', connect.static "#{__dirname}/src" if config.env isnt 'production'
-    server.listen config.port, () ->
+    server.listen config.port, ->
         gutil.log "Server listening on port #{config.port}"

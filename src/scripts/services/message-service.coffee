@@ -1,14 +1,14 @@
 app.service 'MessageService', ['$timeout', '$log', ($timeout, $log) ->
     class Message
         _timeout = undefined
-        constructor: (msg, @dismissable=yes) ->
+        constructor: (msg, @dismissable = yes) ->
             msg = _.defaults msg,
                 type: 'info', dismissed = no, timeout: 5000
             for value, key in msg
                 @[key] = value
             @id = _.uniqueId()
-        
-        
+
+
         dismiss: ->
             @dismissed = yes
 
@@ -16,9 +16,10 @@ app.service 'MessageService', ['$timeout', '$log', ($timeout, $log) ->
 
         reset: ->
             @dismissed = no
-            try 
-                $timeout.cancel _timeout
+            try
+                _timeout.cancel()
             _timeout = $timeout @.dismiss, @.timeout
+
 
     @store = []
     @add = (msg, dismissable) ->

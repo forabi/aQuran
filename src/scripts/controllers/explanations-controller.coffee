@@ -11,12 +11,8 @@ app.controller 'ExplanationsController', ['$scope', '$log', 'ExplanationService'
             .value()
 
         $scope.toggle = (item) ->
-            if not $scope.isEnabled item
-                # $log.debug "Item #{item.id} will be enabled now"
-                $scope.explanations.enabled.push item
-            else
-                # $log.debug "Item #{item.id} will be disabled now"
-                _.remove $scope.explanations.enabled, id: item.id
+            if not $scope.isEnabled item then $scope.explanations.enabled.push item
+            else _.remove $scope.explanations.enabled, id: item.id
             $scope.options.explanations.ids = _.pluck $scope.explanations.enabled, 'id'
 
         $scope.isEnabled = (item) ->

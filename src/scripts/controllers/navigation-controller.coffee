@@ -1,6 +1,6 @@
 app.controller 'NavigationController', ['ContentService', 'CacheService', '$scope', '$log', (ContentService, CacheService, $scope, $log) ->
     $scope.search = {}
-    
+
     $scope.views = [
         (id: 'sura_id', display: 'Sura', store: 'suras')
         (id: 'juz_id', display: 'Juz', store: 'juzs')
@@ -18,7 +18,7 @@ app.controller 'NavigationController', ['ContentService', 'CacheService', '$scop
 
     $scope.$watch 'view.id', (id) ->
         cached = CacheService.get "navigation.#{id}"
-        if not cached 
+        if not cached
             cached = ContentService[$scope.view.store].then (db) ->
                 db.find $scope.view.id
                 .exec()

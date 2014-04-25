@@ -7,7 +7,7 @@ app.service 'SearchService', ['APIService', 'ContentService', 'ArabicService', '
     # queries with MongoDb-like syntax
 
     database = undefined
-    loadDatabase = () ->
+    loadDatabase = ->
         database = $http.get 'resources/search.json', cache: yes
         .then (response) ->
             response.data
@@ -37,7 +37,7 @@ app.service 'SearchService', ['APIService', 'ContentService', 'ArabicService', '
     methods = {}
     methods.online = (str, options) ->
         $log.debug 'Searching online...'
-        APIService.query
+        APIService.query(
             action: 'search'
             unit: 'aya'
             traduction: 1
@@ -52,7 +52,7 @@ app.service 'SearchService', ['APIService', 'ContentService', 'ArabicService', '
             vocalized: 'True'
             range: '25'
             perpage: '25'
-        .then (response) ->
+        ).then (response) ->
             $log.debug 'Online search response:', response
             # Remap response to match assumed schema
             data = _(response.data.search.ayas).map (aya, index) ->
@@ -89,7 +89,7 @@ app.service 'SearchService', ['APIService', 'ContentService', 'ArabicService', '
                 #
                 # TODO
                 _re = new RegExp "[](?! " + Arabic.Diacritics.String + ")", 'g'
-                str = str.replace _re, + '$1(?' + Arabic.Diacritics.String + ')*'
+                str = str.replace _re, '$1(?' + Arabic.Diacritics.String + ')*'
                 options.field = 'standard_full'
 
             else
@@ -175,6 +175,6 @@ app.service 'SearchService', ['APIService', 'ContentService', 'ArabicService', '
                     Preferences.search.history.unshift str
                     Preferences.search.history = Preferences.search.history.slice 0, Preferences.search.max_history
                     results
-                else throw 'NO_RESULTS'
+                else throw new Error 'NO_RESULTS'
 
 ]

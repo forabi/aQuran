@@ -1,7 +1,5 @@
-app.service 'LocalizationService', () ->
-
-    sanitizeText = (text) ->
-        text.replace /@\w+/, ''
+app.service 'LocalizationService', [ ->
+    sanitizeText = (text) -> text.replace /@\w+/, ''
 
     countMatches = (text, match) ->
         matches = text.match new RegExp match, 'g'
@@ -9,5 +7,6 @@ app.service 'LocalizationService', () ->
 
     isRTL: (text) ->
         text = sanitizeText text
-        count_arb = countMatches text, '[\\u060C-\\u06FE\\uFB50-\\uFEFC]'
-        count_arb * 100 / text.length > 20
+        count_rtl = countMatches text, '[\\u060C-\\u06FE\\uFB50-\\uFEFC]'
+        count_rtl * 100 / text.length > 20
+]

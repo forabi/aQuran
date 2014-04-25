@@ -8,10 +8,10 @@ app.run ['$rootScope', 'AppCacheManager', 'Preferences', 'MessageService', '$win
     $rootScope.online = $window.navigator.onLine
     $rootScope.options = Preferences
     $rootScope.messages = MessageService.store
-    $window.addEventListener 'online',  () ->
+    $window.addEventListener 'online',  ->
       $rootScope.online = yes
       $rootScope.$apply()
-    $window.addEventListener 'offline', () ->
+    $window.addEventListener 'offline', ->
       $rootScope.online = no
       $rootScope.$apply()
   ]

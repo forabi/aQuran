@@ -1,6 +1,6 @@
 app.service 'APIService', ['API', '$http', '$log', (API, $http, $log) ->
     checkForErrors = (response) ->
-        throw 'API Error' if response.data.error.code is not 0
+        throw new Error 'API Error' if response.data.error.code is not 0
         response
     query: (params) ->
         $http.get API, cache: true, params: _.defaults params, (action: 'search', unit: 'aya', traduction: 1, fuzzy: 'True')
@@ -11,10 +11,11 @@ app.service 'APIService', ['API', '$http', '$log', (API, $http, $log) ->
             $log.debug 'Response for suggestions', response
             suggestions = []
             _(response.data.suggest).each (words, key) ->
-                words.forEach (word) -> suggestions.push
+                words.forEach (word) -> suggestions.push(
                     string: term.replace key, word
                     replace: key
                     with: word
+                    )
             _.remove suggestions, string: term
             suggestions
 ]

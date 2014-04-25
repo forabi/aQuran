@@ -1,6 +1,6 @@
 # module.exports = (app) ->
 app.directive 'colorize', ['ArabicService', '$timeout', '$log', (Arabic, $timeout, $log) ->
-    process = (text, searchText, highlight, colorized=yes) ->
+    process = (text, searchText, highlight, colorized = yes) ->
         if searchText and highlight
             if typeof highlight is 'string'
                 highlight = Arabic.getRegExp highlight
@@ -27,7 +27,7 @@ app.directive 'colorize', ['ArabicService', '$timeout', '$log', (Arabic, $timeou
     restrict: 'A'
     replace: yes
     link: ($scope, $element, $attrs) ->
-        $timeout () ->
+        $timeout ->
             colorized = false
             colorized = yes if $attrs.colorize and $attrs.colorize != 'false'
             text = $attrs.colorizeText

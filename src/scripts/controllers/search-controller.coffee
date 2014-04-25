@@ -32,7 +32,7 @@ app.controller 'SearchController', ['$scope', '$rootScope', '$state', '$log', '$
                     $scope.search.suggestions = suggestions || []
                     # $log.debug 'Suggestions:', $scope.search.suggestions
                     suggestions
-                .then () ->
+                .then ->
                     $scope.progress.status = 'ready'
                 .catch error
                 # .then undefined, undefined, (message) ->

@@ -1,4 +1,4 @@
-app.service 'ArabicService', [() ->
+app.service 'ArabicService', [ ->
 
     _arabic_alphapet = /[\u060c-\u06fe\ufb50-\ufefc]/g
     # _diacritics_str = '([\u064b-\u0652])'

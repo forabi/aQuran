@@ -10,14 +10,14 @@ app.factory 'IDBStoreFactory', ['$q', '$http', '$log', 'QueryBuilder', 'Preferen
 
         deferred = $q.defer()
 
-        get = () ->
+        get = ->
             deferred.notify action: "STORE.FETCHING", data: storeName: options.storeName
             $http.get url, cache: yes
             .then options.transformResponse
 
-        clear = () ->
+        clear = ->
             d = $q.defer()
-            store.clear () ->
+            store.clear ->
                 d.resolve()
             , (err) ->
                 $log.error err
@@ -26,11 +26,12 @@ app.factory 'IDBStoreFactory', ['$q', '$http', '$log', 'QueryBuilder', 'Preferen
 
         insert = (data) ->
             # $log.debug 'Inserting...'
-            deferred.notify
+            deferred.notify(
                 action: if upgrade then "STORE.UPDATING" else "STORE.INSERTING"
                 data: storeName: options.storeName
+                )
             d = $q.defer()
-            store.putBatch data, () ->
+            store.putBatch data, ->
                 $log.info 'Data inserted.'
                 Preferences["#{options.storeName}-version"] = options.dbVersion
                 d.resolve store
@@ -47,7 +48,7 @@ app.factory 'IDBStoreFactory', ['$q', '$http', '$log', 'QueryBuilder', 'Preferen
             where: (args...) -> QueryBuilder(store, options.transforms).where args...
 
         store = new IDBStore options
-        store.onStoreReady = () ->
+        store.onStoreReady = ->
             version = Preferences["#{options.storeName}-version"]
             if not version then version = -1
             upgrade = yes if version > -1

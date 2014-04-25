@@ -6,7 +6,7 @@ app.service 'AppCacheManager', ['MessageService', '$window', '$rootScope', '$log
         MessageService.update id,
             text: 'Update is ready, changes will take effect after reload'
             icon: 'ion-refresh'
-            action: () -> location.reload()
+            action: -> location.reload()
     # $window.applicationCache.onobsolete = (e) ->
     #     MessageService. 'AppCache Obsolete', e
     #     # Update is available

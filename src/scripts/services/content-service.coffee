@@ -17,7 +17,7 @@ app.service 'ContentService', ['IDBStoreFactory', 'ExplanationFactory', 'AudioSr
         # where we can fill properties from other collections using references
         transforms: [
             (aya) ->
-                aya.sura_name = aya[Preferences.reader.sura_name] if aya.aya_id == 1 
+                aya.sura_name = aya[Preferences.reader.sura_name] if aya.aya_id == 1
                 aya.text = switch
                     when not Preferences.reader.diacritics then aya.standard
                     when Preferences.reader.standard_text and Preferences.reader.diacritics then aya.standard_full
@@ -42,7 +42,7 @@ app.service 'ContentService', ['IDBStoreFactory', 'ExplanationFactory', 'AudioSr
                             aya
                     else aya
         ]
-    
+
     suras = IDBStoreFactory 'resources/quran.json',
         dbVersion: 3
         storeName: 'suras'
@@ -52,7 +52,7 @@ app.service 'ContentService', ['IDBStoreFactory', 'ExplanationFactory', 'AudioSr
         transformResponse: (response) ->
             _.chain response.data
             .uniq yes, (aya) -> aya.sura_id
-            .map (aya) -> 
+            .map (aya) ->
                 _.pick aya, 'sura_id', 'gid', 'page_id', 'sura_name', 'sura_name_en', 'sura_name_romanization', 'standard', 'standard_full', 'uthmani'
             .value()
         # Note: we do not need a transform for sura_name here
@@ -69,7 +69,7 @@ app.service 'ContentService', ['IDBStoreFactory', 'ExplanationFactory', 'AudioSr
         transformResponse: (response) ->
             _.chain response.data
             .uniq yes, (aya) -> aya.juz_id
-            .map (aya) -> 
+            .map (aya) ->
                 _.pick aya, 'juz_id', 'gid', 'page_id', 'standard', 'standard_full', 'uthmani'
             .value()
 
