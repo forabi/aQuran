@@ -1,7 +1,4 @@
-# _ = require 'lodash'
-# q = require 'q'
-# module.exports = (app) ->
-app.controller 'ContentController', ['$rootScope', '$scope', '$stateParams', '$timeout', '$log', '$document', 'ContentService', 'Preferences', ($rootScope, $scope, $stateParams, $timeout, $log, $document, ContentService, Preferences) ->
+app.controller 'ContentController', ['$rootScope', '$scope', '$stateParams', '$timeout', '$log', 'ContentService', 'Preferences', ($rootScope, $scope, $stateParams, $timeout, $log, ContentService, Preferences) ->
 
     $scope.playlist = []
 
@@ -15,14 +12,14 @@ app.controller 'ContentController', ['$rootScope', '$scope', '$stateParams', '$t
         current: 0
 
     # $scope.$on 'audioPlayer:ready', (player) ->
-    #     $log.debug 'Player ready', player
+    # $log.debug 'Player ready', player
 
     # $scope.$on 'audioPlayer.play', (i) ->
-    #     $log.debug "Playing #{i}"
+    # $log.debug "Playing #{i}"
 
     scroll = (id) ->
-        if id then $timeout ->
-            elem = $document.getElementById id
+        if id then $timeout () ->
+            elem = document.getElementById id
             elem.scrollIntoView yes
 
     transform = (docs) ->
@@ -37,7 +34,7 @@ app.controller 'ContentController', ['$rootScope', '$scope', '$stateParams', '$t
         if n > o then $scope.loadMore()
         scroll $scope.scrollTo
 
-    loadContent = ->
+    loadContent = () ->
         query = {}
         query[$scope.view.type] = $scope.view.current
         # $scope.progress.status = 'loading'
@@ -53,7 +50,7 @@ app.controller 'ContentController', ['$rootScope', '$scope', '$stateParams', '$t
         , error, (message) ->
             $scope.progress.message = message
 
-    $scope.loadMore = ->
+    $scope.loadMore = () ->
         # $log.debug 'Loading more...'
         $scope.view.current++
         loadContent()
