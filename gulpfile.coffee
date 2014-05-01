@@ -253,7 +253,7 @@ gulp.task 'icons', ->
 
 gulp.task 'images', ['icons']
 
-gulp.task 'quran', ->
+gulp.task 'quran', (callback) ->
     db = new sqlite3.Database("src/#{config.src.database}", sqlite3.OPEN_READONLY);
     db.all 'SELECT gid, aya_id, page_id, juz_id, sura_id, standard, standard_full, sura_name, sura_name_en, sura_name_romanization FROM aya ORDER BY gid', (err, rows) ->
         if config.experimental
@@ -292,10 +292,10 @@ gulp.task 'quran', ->
             .pipe concat 'quran.json'
             .pipe if config.env is 'production' then minifyJSON() else gutil.noop()
             .pipe gulp.dest "#{config.dest}/resources"
-
+            .on 'end', -> callback()
         else
             data = JSON.stringify rows
-            fs.writeFileSync "#{config.dest}/resources/quran.json", data
+            fs.writeFile "#{config.dest}/resources/quran.json", data, callback
 
 gulp.task 'search', ['quran'], ->
     gulp.src "#{config.dest}/resources/quran.json"
