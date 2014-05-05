@@ -18,7 +18,7 @@ app.controller 'ContentController', ['$rootScope', '$scope', '$stateParams', '$t
     # $log.debug "Playing #{i}"
 
     scroll = (id) ->
-        if id then $timeout () ->
+        if id then $timeout ->
             elem = $document.getElementById id
             elem.scrollIntoView yes
 

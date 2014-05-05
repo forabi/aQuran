@@ -1,4 +1,4 @@
-app.factory 'AudioSrcFactory', ['$sce', 'EveryAyah', 'Preferences', 'RecitationService', '$q', 'CacheService', '$log', ($sce, EveryAyah, Preferences, RecitationService, $q, CacheService, $log) ->
+app.factory 'AudioSrcFactory', ['$sce', 'EVERY_AYAH', 'Preferences', 'RecitationService', '$q', 'CacheService', '$log', ($sce, EVERY_AYAH, Preferences, RecitationService, $q, CacheService, $log) ->
     repeat = (str, n) ->
         while n > 0
             str += str
@@ -20,7 +20,7 @@ app.factory 'AudioSrcFactory', ['$sce', 'EveryAyah', 'Preferences', 'RecitationS
 
         if not Preferences.audio.auto_quality or not navigator.mozConnection
             subfolder = Preferences.audio.recitation.subfolder
-            src = "#{EveryAyah}/#{subfolder}/#{sura}#{aya}.mp3"
+            src = "#{EVERY_AYAH}/#{subfolder}/#{sura}#{aya}.mp3"
             $q.when(
                 src: $sce.trustAsResourceUrl src
                 type: 'audio/mp3'
@@ -66,7 +66,7 @@ app.factory 'AudioSrcFactory', ['$sce', 'EveryAyah', 'Preferences', 'RecitationS
                getQuality().then (quality) ->
                     id = Preferences.audio.recitation.subfolder.match(/^(.+)_\d+kbps/i)[1]
                     subfolder = "#{id}_#{quality}kbps"
-                    src = "#{EveryAyah}/#{subfolder}/#{sura}#{aya}.mp3"
+                    src = "#{EVERY_AYAH}/#{subfolder}/#{sura}#{aya}.mp3"
                     # $log.debug 'audio src:', src
                     src: $sce.trustAsResourceUrl src
                     type: 'audio/mp3'

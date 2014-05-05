@@ -1,5 +1,5 @@
-app.service 'RecitationService', ['IDBStoreFactory', (IDBStoreFactory) ->
-    properties = IDBStoreFactory 'resources/recitations.json',
+app.service 'RecitationService', ['IDBStoreFactory', 'RESOURCES', (IDBStoreFactory, RESOURCES) ->
+    properties = IDBStoreFactory "#{RESOURCES}/recitations.json",
         dbVersion: 1
         storeName: 'recitations'
         keyPath: 'subfolder'

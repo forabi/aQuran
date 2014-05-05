@@ -1,6 +1,6 @@
-app.service 'ExplanationService', ['IDBStoreFactory', '$log', (IDBStoreFactory, $log) ->
-    cache = []
-    database = IDBStoreFactory 'resources/translations.json',
+app.service 'ExplanationService', ['IDBStoreFactory', 'RESOURCES', '$log', (IDBStoreFactory, RESOURCES, $log) ->
+    cache = {}
+    database = IDBStoreFactory "#{RESOURCES}/translations.json",
         dbVersion: 3
         storeName: 'explanations'
         keyPath: 'id'
@@ -18,7 +18,7 @@ app.service 'ExplanationService', ['IDBStoreFactory', '$log', (IDBStoreFactory, 
             properties.findOne id: id
             .exec()
         .then (explanation) ->
-            IDBStoreFactory "resources/translations/#{explanation.file}",
+            IDBStoreFactory "#{RESOURCES}/translations/#{explanation.file}",
                 transformResponse: (response) ->
                     # $log.debug 'Got response:', response
                     response.data.split /\n/g
