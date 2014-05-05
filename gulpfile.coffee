@@ -132,7 +132,7 @@ gulp.task 'watch', ->
     gulp.watch config.watch.scss, cwd: 'src', ['styles']
 
 gulp.task 'clean', ->
-    gulp.src config.dest
+    gulp.src ['**/*', '!.gitignore'], cwd: config.dest
     .pipe plugins.clean()
 
 gulp.task 'manifest', ->
