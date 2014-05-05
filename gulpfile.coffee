@@ -4,7 +4,7 @@ _               = require 'lodash'
 Q               = require 'q'
 combine         = require 'stream-combiner'
 
-fs              = require 'graceful-fs'
+fs              = require 'fs'
 through         = require 'through'
 path            = require 'path'
 async           = require 'async'
@@ -113,12 +113,13 @@ else
         experimental: yes
 
 config.dest = if config.target isnt 'cordova'
+        try fs.mkdirSync 'dist'
         "dist/#{config.target}/#{config.env}"
     else 'www'
 
 
 try
-    fs.mkdirpSync cofig.dest
+    fs.mkdirSync cofig.dest
     fs.mkdirSync "#{config.dest}/scripts"
     fs.mkdirSync "#{config.dest}/resources"
     fs.mkdirSync "#{config.dest}/translations" if config.translations
