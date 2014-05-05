@@ -5,7 +5,6 @@ temp
 .tmp
 tmp
 dist
-www
 .sass-cache
 *.sublime-workspace
 *.sublime-project
