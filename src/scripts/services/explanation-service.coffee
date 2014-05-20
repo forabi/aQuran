@@ -1,5 +1,5 @@
 app.service 'ExplanationService', ['IDBStoreFactory', 'RESOURCES', '$log', (IDBStoreFactory, RESOURCES, $log) ->
-    cache = {}
+    cache = []
     database = IDBStoreFactory "#{RESOURCES}/translations.json",
         dbVersion: 3
         storeName: 'explanations'

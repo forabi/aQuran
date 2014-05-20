@@ -17,7 +17,7 @@ app.service 'MessageService', ['$timeout', '$log', ($timeout, $log) ->
         reset: ->
             @dismissed = no
             try
-                _timeout.cancel()
+                $timeout.cancel _timeout
             _timeout = $timeout @.dismiss, @.timeout
 
 

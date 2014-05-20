@@ -4,22 +4,125 @@
         "uninstalled": []
     },
     "config_munge": {
-        "res/xml/config.xml": {
-            "/*": {
-                "<feature name=\"Device\"><param name=\"android-package\" value=\"org.apache.cordova.device.Device\" /></feature>": 1
+        "files": {
+            "res/xml/config.xml": {
+                "parents": {
+                    "/*": [
+                        {
+                            "xml": "<feature name=\"Device\"><param name=\"android-package\" value=\"org.apache.cordova.device.Device\" /></feature>",
+                            "count": 1
+                        },
+                        {
+                            "xml": "<feature name=\"File\"><param name=\"android-package\" value=\"org.apache.cordova.file.FileUtils\" /><param name=\"onload\" value=\"true\" /></feature>",
+                            "count": 1
+                        },
+                        {
+                            "xml": "<feature name=\"InAppBrowser\"><param name=\"android-package\" value=\"org.apache.cordova.inappbrowser.InAppBrowser\" /></feature>",
+                            "count": 1
+                        },
+                        {
+                            "xml": "<feature name=\"NetworkStatus\"><param name=\"android-package\" value=\"org.apache.cordova.networkinformation.NetworkManager\" /></feature>",
+                            "count": 1
+                        }
+                    ],
+                    "/widget": [
+                        {
+                            "xml": "<feature name=\"ChromeNavigation\"><param name=\"android-package\" value=\"org.chromium.ChromeNavigation\" /><param name=\"onload\" value=\"true\" /></feature>",
+                            "count": 1
+                        },
+                        {
+                            "xml": "<feature name=\"ChromeStorage\"><param name=\"android-package\" value=\"org.chromium.ChromeStorage\" /></feature>",
+                            "count": 1
+                        },
+                        {
+                            "xml": "<feature name=\"ChromeBootstrap\"><param name=\"android-package\" value=\"org.chromium.ChromeBootstrap\" /><param name=\"onload\" value=\"true\" /></feature>",
+                            "count": 1
+                        },
+                        {
+                            "xml": "<feature name=\"ChromeExtensionURLs\"><param name=\"android-package\" value=\"org.chromium.ChromeExtensionURLs\" /><param name=\"onload\" value=\"true\" /></feature>",
+                            "count": 1
+                        },
+                        {
+                            "xml": "<access origin=\"chrome-extension://*\" />",
+                            "count": 1
+                        },
+                        {
+                            "xml": "<preference name=\"DisallowOverscroll\" value=\"true\" />",
+                            "count": 1
+                        },
+                        {
+                            "xml": "<feature name=\"ChromeI18n\"><param name=\"android-package\" value=\"org.chromium.ChromeI18n\" /><param name=\"onload\" value=\"true\" /></feature>",
+                            "count": 1
+                        }
+                    ]
+                }
+            },
+            "AndroidManifest.xml": {
+                "parents": {
+                    "/*": [
+                        {
+                            "xml": "<uses-permission android:name=\"android.permission.WRITE_EXTERNAL_STORAGE\" />",
+                            "count": 1
+                        },
+                        {
+                            "xml": "<uses-permission android:name=\"android.permission.ACCESS_NETWORK_STATE\" />",
+                            "count": 1
+                        }
+                    ]
+                }
             }
         }
     },
     "installed_plugins": {
         "org.apache.cordova.console": {
-            "PACKAGE_NAME": "net.forabi.aquran"
+            "PACKAGE_NAME": "com.ionicframework.starter"
         },
         "org.apache.cordova.device": {
-            "PACKAGE_NAME": "net.forabi.aquran"
+            "PACKAGE_NAME": "com.ionicframework.starter"
         },
         "org.apache.cordova.statusbar": {
-            "PACKAGE_NAME": "net.forabi.aquran"
+            "PACKAGE_NAME": "com.ionicframework.starter"
+        },
+        "org.apache.cordova.file": {
+            "PACKAGE_NAME": "com.ionicframework.starter"
+        },
+        "org.apache.cordova.inappbrowser": {
+            "PACKAGE_NAME": "com.ionicframework.starter"
+        },
+        "org.apache.cordova.network-information": {
+            "PACKAGE_NAME": "com.ionicframework.starter"
+        },
+        "org.apache.cordova.keyboard": {
+            "PACKAGE_NAME": "com.ionicframework.starter"
+        },
+        "org.chromium.navigation": {
+            "PACKAGE_NAME": "com.ionicframework.starter"
+        },
+        "org.chromium.bootstrap": {
+            "PACKAGE_NAME": "com.ionicframework.starter"
+        },
+        "org.chromium.i18n": {
+            "PACKAGE_NAME": "com.ionicframework.starter"
+        },
+        "org.chromium.polyfill.CustomEvent": {
+            "PACKAGE_NAME": "com.ionicframework.starter"
+        },
+        "org.chromium.polyfill.xhr_features": {
+            "PACKAGE_NAME": "com.ionicframework.starter"
+        },
+        "org.chromium.polyfill.blob_constructor": {
+            "PACKAGE_NAME": "com.ionicframework.starter"
         }
     },
-    "dependent_plugins": {}
+    "dependent_plugins": {
+        "org.chromium.common": {
+            "PACKAGE_NAME": "com.ionicframework.starter"
+        },
+        "org.chromium.storage": {
+            "PACKAGE_NAME": "com.ionicframework.starter"
+        },
+        "org.chromium.runtime": {
+            "PACKAGE_NAME": "com.ionicframework.starter"
+        }
+    }
 }
