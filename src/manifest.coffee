@@ -2,7 +2,7 @@
     name: 'aQuran'
     description: 'A full-featured Quran app with multiple translations and recitations'
 
-    version: '1'
+    version: '1.0.0'
     released: new Date()
     manifest_version: 2
 

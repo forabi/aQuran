@@ -1,4 +1,5 @@
 # _ = require('lodash')
+# $q = Q
 app.factory 'QueryBuilder', ['$q', '$log', ($q, $log) ->
     (db, transforms) ->
         _index = undefined
@@ -47,7 +48,7 @@ app.factory 'QueryBuilder', ['$q', '$log', ($q, $log) ->
 
             # Options for IDBWrapper
             options =
-                index: _index
+                index: _index || db.keyPath
                 keyRange: _make_range()
                 order: _order
                 onError: error

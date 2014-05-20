@@ -115,8 +115,7 @@ config.dest = "dist/#{config.target}/#{config.env}"
 
 
 try
-    fs.mkdirSync "dist"
-    fs.mkdirSync config.dest
+    fs.mkdirSync cofig.dest
     fs.mkdirSync "#{config.dest}/scripts"
     fs.mkdirSync "#{config.dest}/resources"
     fs.mkdirSync "#{config.dest}/translations" if config.translations
@@ -130,7 +129,7 @@ gulp.task 'watch', ->
     gulp.watch config.watch.scss, cwd: 'src', ['styles']
 
 gulp.task 'clean', ->
-    gulp.src config.target, cwd: 'dist'
+    gulp.src ['**/*', '!.gitignore'], cwd: config.dest
     .pipe plugins.clean()
 
 gulp.task 'manifest', ->
@@ -253,7 +252,7 @@ gulp.task 'icons', ->
 
 gulp.task 'images', ['icons']
 
-gulp.task 'quran', (callback) ->
+gulp.task 'quran', (done) ->
     db = new sqlite3.Database("src/#{config.src.database}", sqlite3.OPEN_READONLY);
     db.all 'SELECT gid, aya_id, page_id, juz_id, sura_id, standard, standard_full, sura_name, sura_name_en, sura_name_romanization FROM aya ORDER BY gid', (err, rows) ->
         if config.experimental
@@ -290,12 +289,12 @@ gulp.task 'quran', (callback) ->
             .pipe plugins.using()
             .pipe plugins.cached()
             .pipe concat 'quran.json'
-            .pipe if config.env is 'production' then minifyJSON() else gutil.noop()
+            # .pipe if config.env is 'production' then minifyJSON() else gutil.noop()
             .pipe gulp.dest "#{config.dest}/resources"
-            .on 'end', -> callback()
+            .on 'end', done
         else
             data = JSON.stringify rows
-            fs.writeFile "#{config.dest}/resources/quran.json", data, callback
+            fs.writeFile "#{config.dest}/resources/quran.json", data, done
 
 gulp.task 'search', ['quran'], ->
     gulp.src "#{config.dest}/resources/quran.json"
@@ -306,7 +305,7 @@ gulp.task 'search', ['quran'], ->
     .pipe plugins.rename (file) ->
         file.basename = 'search'
         file
-    .pipe if config.env is 'production' then minifyJSON() else gutil.noop()
+    # .pipe if config.env is 'production' then minifyJSON() else gutil.noop()
     .pipe gulp.dest "#{config.dest}/resources"
 
 gulp.task 'translations', ->
@@ -411,7 +410,7 @@ gulp.task 'recitations', ->
             delete item.index
             item
         .value()
-    .pipe if config.env is 'production' then minifyJSON() else gutil.noop()
+    # .pipe if config.env is 'production' then minifyJSON() else gutil.noop()
     .pipe gulp.dest "#{config.dest}/resources"
 
 gulp.task 'cache', ['build'], ->
@@ -446,6 +445,23 @@ gulp.task 'release', ->
     if config.bump
         config.version += 1
         config.date = new Date()
+
+gulp.task 'test', ->
+    gulp.src [
+        '../node_modules/q/q.js'
+        'bower/lodash/dist/lodash.js'
+        'bower/idb-wrapper/idbstore.min.js'
+        'bower/angular/angular.js'
+        'bower/angular-mocks/angular-mocks.js'
+        'tests/main.coffee'
+        'scripts/factories/query-builder.coffee'
+        'tests/unit/*.coffee'], cwd: 'src'
+    # .pipe plugins.coffee bare: yes
+    # .pipe plugins.rename (file) ->
+    #     file.extname = '.js'
+    #     file
+    .pipe plugins.karma action: 'run', configFile: 'karma.conf.coffee'
+    .on 'error', (err) -> throw err
 
 gulp.task 'data', ['quran', 'recitations', 'translations', 'search']
 gulp.task 'build', ['data', 'flags', 'images', 'scripts', 'styles', 'html', 'manifest']

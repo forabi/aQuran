@@ -1,9 +1,9 @@
 # _ = require 'lodash'
 # module.exports = (app) ->
 app.service 'SearchService', [
-    'APIService', 'ContentService', 'ArabicService',
+    'APIService', 'ContentService', 'ArabicService', 'RESOURCES',
     'Preferences', '$log', '$http', '$q',
-    (APIService, ContentService, Arabic, Preferences, $log, $http, $q) ->
+    (APIService, ContentService, Arabic, RESOURCES, Preferences, $log, $http, $q) ->
         # We cannot perform a regex search on an indexedDB
         # so we load a subset of ayas data into memory with
         # the excellent louischatriot/nedb which allows
@@ -11,7 +11,7 @@ app.service 'SearchService', [
 
         database = undefined
         loadDatabase = ->
-            database = $http.get 'resources/search.json', cache: yes
+            database = $http.get "#{RESOURCES}/search.json", cache: yes
             .then (response) ->
                 response.data
             .then (ayas) ->
