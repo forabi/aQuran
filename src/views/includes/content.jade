@@ -8,7 +8,7 @@ div(ng-controller='ContentController', ng-switch='progress.status')
             button.button.button.icon.ion-pause(ng-show='audioPlayer.playing', ng-click='audioPlayer.pause()')
             //- button.button.button.icon.ion-ios7-fastforward(ng-click='audioPlayer.next()')
         //- TODO: fix index issue
-        span.page(ng-repeat='page in pages', page='{{ $index }}', ng-class='{ "arabic-only": options.explanations.ids.length == 0 || !options.explanations.enabled }')
+        span.page(ng-repeat='page in pages', page='{{ $index }}')
             //- span.aya(id='{{ aya.gid }}', bindonce, ng-repeat='aya in page', ng-class='{ "item item-text-wrap": aya.explanations.length > 0 }')
             //-     h2.sura-name.item.item-divider(ng-if='aya.aya_id == 1'): b(ng-bind='aya.sura_name')
             //-     span(ng-if='options.reader.arabic_text', ng-click='audioPlayer.play({{ aya.index }})', index='{{ aya.index }}')

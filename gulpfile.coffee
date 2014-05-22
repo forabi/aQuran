@@ -221,6 +221,7 @@ gulp.task 'coffee', ['js'], ->
     .pipe (plugins.order config.coffeeConcat.src)
     .pipe plugins.tap (file) ->
         config.scripts.push path.relative 'src', file.path if !file.path.match /.map$/gi
+    .pipe plugins.cached()
     .pipe gulp.dest "#{config.dest}/scripts"
 
 gulp.task 'js', (callback) ->
