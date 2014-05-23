@@ -290,7 +290,7 @@ gulp.task 'quran', (done) ->
             .pipe plugins.using()
             .pipe plugins.cached()
             .pipe concat 'quran.json'
-            # .pipe if config.env is 'production' then minifyJSON() else gutil.noop()
+            .pipe if config.env is 'production' then minifyJSON() else gutil.noop()
             .pipe gulp.dest "#{config.dest}/resources"
             .on 'end', done
         else
@@ -306,7 +306,7 @@ gulp.task 'search', ['quran'], ->
     .pipe plugins.rename (file) ->
         file.basename = 'search'
         file
-    # .pipe if config.env is 'production' then minifyJSON() else gutil.noop()
+    .pipe if config.env is 'production' then minifyJSON() else gutil.noop()
     .pipe gulp.dest "#{config.dest}/resources"
 
 gulp.task 'translations', ->
@@ -337,15 +337,16 @@ gulp.task 'translations', ->
                     file = new gutil.File
                         contents: entry.getData()
                         path: "translations/#{entry.name}"
+                    files.push file
                     self.emit 'data', file
                     callback null
             , (err) ->
-                files.push new gutil.File
+                files.push metadata = new gutil.File
                     contents: new Buffer JSON.stringify json
                     path: filename
+                self.emit 'data', metadata
 
         endStream = ->
-            @emit 'data', file for file in files
             @emit 'end'
 
         through process, endStream
@@ -367,8 +368,7 @@ gulp.task 'translations', ->
             when config.translations instanceof Array
                 config.translations.map (id) ->
                     regex = new RegExp ".+\/#{id}.*.trans.zip$", 'gi'
-                    _.where urls, (url) ->
-                        url.match regex
+                    _.where urls, (url) -> url.match regex
             else urls
 
         urls = _.chain(urls).flatten().uniq().value()
@@ -411,7 +411,7 @@ gulp.task 'recitations', ->
             delete item.index
             item
         .value()
-    # .pipe if config.env is 'production' then minifyJSON() else gutil.noop()
+    .pipe if config.env is 'production' then minifyJSON() else gutil.noop()
     .pipe gulp.dest "#{config.dest}/resources"
 
 gulp.task 'cache', ['build'], ->
