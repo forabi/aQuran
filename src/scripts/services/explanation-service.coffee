@@ -1,7 +1,7 @@
-app.service 'ExplanationService', ['IDBStoreFactory', 'RESOURCES', '$log', (IDBStoreFactory, RESOURCES, $log) ->
+app.service 'ExplanationService', ['IDBStoreFactory', 'DownloadQueue', 'ONLINE_RESOURCES', 'RESOURCES', '$log', (IDBStoreFactory, DownloadQueue, ONLINE_RESOURCES, RESOURCES, $log) ->
     cache = []
     database = IDBStoreFactory "#{RESOURCES}/translations.json",
-        dbVersion: 3
+        dbVersion: 4
         storeName: 'explanations'
         keyPath: 'id'
         autoIncrement: no
@@ -14,11 +14,13 @@ app.service 'ExplanationService', ['IDBStoreFactory', 'RESOURCES', '$log', (IDBS
     properties: database
     load: (id) ->
         # $log.debug "Loading store for #{id}"
+        DownloadQueue.push "trans:#{id}"
         cache["trans:#{id}"] || cache["trans:#{id}"] = database.then (properties) ->
             properties.findOne id: id
             .exec()
         .then (explanation) ->
-            IDBStoreFactory "#{RESOURCES}/translations/#{explanation.file}",
+            $log.debug "Explanation", explanation
+            IDBStoreFactory "#{if explanation.offline then RESOURCES else ONLINE_RESOURCES}/translations/#{explanation.file}",
                 transformResponse: (response) ->
                     # $log.debug 'Got response:', response
                     response.data.split /\n/g
@@ -36,7 +38,9 @@ app.service 'ExplanationService', ['IDBStoreFactory', 'RESOURCES', '$log', (IDBS
         .then (store) ->
             # Store in cache
             $log.debug "Store ready for explanation #{id}"
+            _.pull DownloadQueue, "trans:#{id}"
             store
         .catch (err) ->
             $log.error err
+            _.pull DownloadQueue, "trans:#{id}"
 ]

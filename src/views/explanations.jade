@@ -16,5 +16,6 @@ ion-view(title='Translations')
                 i.icon.flag-icon.flag-icon-squared(ng-class='"flag-icon-" + explanation.country.toLowerCase()')
                 | {{ explanation.name }}
                 label.toggle
-                    input(type='checkbox', ng-checked='isEnabled(explanation)', ng-click='toggle(explanation)')
+                    i.icon.icon-loading-c(ng-show='isLoading(explanation)')
+                    input(type='checkbox', ng-disabled='isLoading(explanation)', ng-checked='isEnabled(explanation)', ng-click='toggle(explanation)')
                     .track: .handle

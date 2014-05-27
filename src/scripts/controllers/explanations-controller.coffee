@@ -1,4 +1,4 @@
-app.controller 'ExplanationsController', ['$scope', '$log', 'ExplanationService', ($scope, $log, ExplanationService) ->
+app.controller 'ExplanationsController', ['$scope', '$log', 'DownloadQueue', 'ExplanationService', ($scope, $log, DownloadQueue, ExplanationService) ->
     # $log.debug 'Here we go'
     $scope.explanations =
         enabled: []
@@ -19,6 +19,9 @@ app.controller 'ExplanationsController', ['$scope', '$log', 'ExplanationService'
             # $log.debug 'item.id:', item.id
             # $log.debug '$scope.options.explanations.ids:', $scope.options.explanations.ids
             _.contains $scope.options.explanations.ids, item.id
+
+        $scope.isLoading = (item) ->
+            _.contains DownloadQueue, "trans:#{item.id}"
 
         db.find()
         # .sort language: 1

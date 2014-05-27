@@ -43,6 +43,7 @@
     "karma-coffee-preprocessor": "^0.2.1",
     "karma-jasmine": "~0.2.0",
     "karma-phantomjs-launcher": "^0.1.4",
+    "lingo": "0.0.5",
     "lodash": "^2.4.1",
     "properties": "^1.2.1",
     "q": "^1.0.1",

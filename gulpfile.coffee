@@ -15,6 +15,9 @@ properties      = require 'properties'
 admZip          = require 'adm-zip'
 connect         = require 'connect'
 
+lingo           = require 'lingo'
+en              = lingo.en
+
 plugins = (require 'gulp-load-plugins')()
 
 minifyJSON = ->
@@ -35,7 +38,7 @@ config = _.defaults gutil.env,
     bump: yes # whether to increase the version of the app on 'release'
     download: no # if set to false, assume we already have
                  # recitations metadata and translation packages downloaded
-    translations: yes # true, false, or an array of translations to include
+    translations: 'en\.ahmedali,ar\.muyassar' # true, false, or an array of translations to include as offline packages
     recitations: yes # whether to include recitations metadata
     styles: []
     scripts: []
@@ -146,7 +149,7 @@ gulp.task 'manifest', ->
     .pipe if config.env is 'production' then minifyJSON() else gutil.noop()
     .pipe gulp.dest config.dest
 
-gulp.task 'flags', ->
+gulp.task 'flags', ['translations'], ->
     gulp.src (config.countries.map (country) -> "flags/1x1/#{country.toLowerCase()}.*"), cwd: "#{config.bower}/flag-icon-css"
     .pipe plugins.using()
     .pipe plugins.cached()
@@ -311,36 +314,44 @@ gulp.task 'search', ['quran'], ->
 
 gulp.task 'translations', ->
     ids = []
+    json = []
+    offlineBasenames = []
     urls = # Load URLs of translation packages from translations.txt
         fs.readFileSync "src/#{config.src.translationsTxt}"
         .toString().split /\n/g
 
     concat = (filename) ->
         files = []
-        json = []
         process = (file) ->
+            basename = path.basename file.path
+            offline = _.contains offlineBasenames, basename
             self = @
-            gutil.log "[#{gutil.colors.green 'translations'}] Processing entry #{gutil.colors.cyan path.basename file.path}..."
+            if offline
+                gutil.log "[#{gutil.colors.green 'translations'}] Processing entry #{gutil.colors.cyan basename} for offline usage..."
             file = new admZip path.join file.path
             entries = file.getEntries()
             # Walk through zip contents and process each entry
             async.each entries, (entry, callback) ->
                 if entry.name.match /.properties$/gi
                     text = entry.getData().toString 'utf-8'
-                    props = properties.parse text, (err, props) ->
+                    properties.parse text, (err, props) ->
                         delete props.signature
                         delete props.delimiter if not props.delimiter
                         delete props.lineDelimiter if not props.lineDelimiter
+                        props.offline = offline
                         json.push props
                         callback err
-                else if entry.name.match /.txt$/gi
-                    file = new gutil.File
-                        contents: entry.getData()
-                        path: "translations/#{entry.name}"
-                    files.push file
-                    self.emit 'data', file
-                    callback null
+                else # if entry.name.match /.txt$/gi
+                    if offline
+                        file = new gutil.File
+                            contents: entry.getData()
+                            path: "translations/#{entry.name}"
+                        files.push file
+                        self.emit 'data', file
+                        callback null
+                    else callback null
             , (err) ->
+                # console.log json
                 files.push metadata = new gutil.File
                     contents: new Buffer JSON.stringify json
                     path: filename
@@ -351,43 +362,48 @@ gulp.task 'translations', ->
 
         through process, endStream
 
-    flags = ->
-        plugins.tap (file) ->
-            items = JSON.parse file.contents.toString()
-            config.countries = _.chain items
-                .pluck 'country'
-                .uniq().value()
-            gutil.log 'Countries:', gutil.colors.green config.countries
-            file
+    flags = (json) ->
+        config.countries = _.chain json
+            .pluck 'country'
+            .uniq().value()
+        gutil.log 'Countries:', gutil.colors.green config.countries
 
     if config.translations
-        if typeof config.translations is 'string'
-                config.translations = config.translations.split /,/g
 
-        urls = switch
+        if typeof config.translations is 'string'
+            config.translations = config.translations.split /,/g
+
+        config.translations = switch
             when config.translations instanceof Array
                 config.translations.map (id) ->
                     regex = new RegExp ".+\/#{id}.*.trans.zip$", 'gi'
                     _.where urls, (url) -> url.match regex
             else urls
 
+
         urls = _.chain(urls).flatten().uniq().value()
+        config.translations = _.chain(config.translations).flatten().uniq().value()
+
         # Extract IDs from URLs
-        ids = urls.map (file) -> file.match(/.+\/(.+).trans.zip$/i)[1]
-        files = ids.map (id) -> "resources/translations/#{id}.trans.zip"
-        gutil.log 'Translations IDs', gutil.colors.green ids
+        ids = urls.map (url) -> url.match(/.+\/(.+).trans.zip$/i)[1]
+        offlineBasenames = config.translations.map (file) -> file.match(/.+\/(.+.trans.zip)$/i)[1]
+        gutil.log gutil.colors.cyan "#{ offlineBasenames.length } out of #{ ids.length } translation #{ en.pluralize 'package' } will be included offline"
+        # files = ids.map (id) -> "resources/translations/#{id}.trans.zip"
+        # gutil.log 'Translations IDs', gutil.colors.green ids
 
         (
             if config.download
                 plugins.download urls
                 .pipe gulp.dest 'src/resources/translations'
             else
-                gulp.src files, cwd: 'src'
+                gulp.src 'resources/translations/*.trans.zip', cwd: 'src', read: no
+                # gulp.src files, cwd: 'src'
         )
         .pipe plugins.cached()
         .pipe concat 'translations.json'
         # .pipe flags()
         .pipe gulp.dest "#{config.dest}/resources"
+        .on 'end', -> flags json
 
 gulp.task 'recitations', ->
     (
@@ -447,22 +463,22 @@ gulp.task 'release', ->
         config.version += 1
         config.date = new Date()
 
-gulp.task 'test', ->
-    gulp.src [
-        '../node_modules/q/q.js'
-        'bower/lodash/dist/lodash.js'
-        'bower/idb-wrapper/idbstore.min.js'
-        'bower/angular/angular.js'
-        'bower/angular-mocks/angular-mocks.js'
-        'tests/main.coffee'
-        'scripts/factories/query-builder.coffee'
-        'tests/unit/*.coffee'], cwd: 'src'
-    # .pipe plugins.coffee bare: yes
-    # .pipe plugins.rename (file) ->
-    #     file.extname = '.js'
-    #     file
-    .pipe plugins.karma action: 'run', configFile: 'karma.conf.coffee'
-    .on 'error', (err) -> throw err
+# gulp.task 'test', ->
+#     gulp.src [
+#         '../node_modules/q/q.js'
+#         'bower/lodash/dist/lodash.js'
+#         'bower/idb-wrapper/idbstore.min.js'
+#         'bower/angular/angular.js'
+#         'bower/angular-mocks/angular-mocks.js'
+#         'tests/main.coffee'
+#         'scripts/factories/query-builder.coffee'
+#         'tests/unit/*.coffee'], cwd: 'src'
+#     # .pipe plugins.coffee bare: yes
+#     # .pipe plugins.rename (file) ->
+#     #     file.extname = '.js'
+#     #     file
+#     .pipe plugins.karma action: 'run', configFile: 'karma.conf.coffee'
+#     .on 'error', (err) -> throw err
 
 gulp.task 'data', ['quran', 'recitations', 'translations', 'search']
 gulp.task 'build', ['data', 'flags', 'images', 'scripts', 'styles', 'html', 'manifest']
