@@ -1,0 +1,26 @@
+doctype html
+html(lang='en', manifest=manifest)
+    head
+        meta(charset='utf-8')
+        meta(name='viewport',
+            content='width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no')
+        title The Holy Quran
+        link(rel='stylesheet', href='/main.css')
+    body#app
+        section(role='region')
+            header
+                menu(type='toolbar'): a(href='#'): span.icon.icon-config
+                h1 The Holy Quran
+
+        a(href='#/preferences') Preferences
+        a(href='#/search') Search
+        
+        div(v-view='currentView')
+
+        script#search-view(type='x-template')
+            include partials/search
+
+        script#perferences-view(type='x-template')
+            include partials/preferences
+        
+        script(src='/bundle.js')

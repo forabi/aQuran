@@ -1,0 +1,20 @@
+{
+    "name": "aQuran",
+    "description": "A full-featured Quran app with multiple translations and recitations",
+    "default_locale": "en",
+    "version": "2.0.0",
+    "permissions": {
+        "systemXHR": {
+            "description": "Required to communicate with Al-Fanous web service when performing an online search"
+        },
+        "storage": {
+            "description": "Required to store application databases, including translations"
+        }
+    },
+    "launch_path": "/index.html",
+    "manifest_version": 2,
+    "developer": {
+        "name": "Muhammad Fawwaz Orabi",
+        "url": "http://j.mp/forabi"
+    }
+}

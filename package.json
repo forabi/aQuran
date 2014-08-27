@@ -1,0 +1,29 @@
+{
+  "name": "aquran",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "postinstall": "mkdir -p ./build",
+    "watch-js": "watchify -t coffeeify src/index.coffee -o src/bundle.js -dv",
+    "build-js": "browserify -t coffeeify src/index.coffee -o src/bundle.js -dv",
+    "server": "harp server --port 8080 src",
+    "start": "npm run server & npm run watch-js",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "Muhammad Fawwaz Orabi",
+  "license": "Wakf",
+  "dependencies": {
+    "Dexie": "git+https://github.com/dfahlander/Dexie.js.git",
+    "director": "^1.2.3",
+    "lodash.throttle": "^2.4.1",
+    "page": "^1.3.7",
+    "vue": "^0.10.6"
+  },
+  "devDependencies": {
+    "coffeeify": "^0.7.0",
+    "gulp": "^3.8.7",
+    "lodash": "^2.4.1",
+    "sqlite3": "^2.2.7"
+  }
+}

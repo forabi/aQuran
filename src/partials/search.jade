@@ -1,0 +1,12 @@
+form(role='search')
+    button(type='submit') Search
+    p
+        input(v-model='searchTerm', v-on='input: search', type='search', placeholder='Search', required)
+        button(type='reset') Clear
+
+section(v-repeat='results', data-type='list')
+    header {{ $key }}
+    li(v-repeat='$value')
+        a.amiri(href='#')
+            p {{ text }} {{ aya_id | ayaNumber }}
+            p {{ aya_id }}
